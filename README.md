@@ -16,4 +16,5 @@
    4: php artisan optimize:clear
    5: php artisan migrate
    6: php artisan db:seed
-   7: php artisan passport:install```
+   7: php artisan passport:install
+   ```
