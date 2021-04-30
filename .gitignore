@@ -1,0 +1,25 @@
+/node_modules
+/public/hot
+*.key
+/vendor
+.env
+.env.backup
+.env.example
+.env.swp
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+.idea/
+npm-debug.log
+yarn-error.log
+
+
+# Dynamic Content
+public\storage
+storage\**\*
+
+# Allow
+!storage\framework\cache\.gitignore
+!storage\framework\sessions\.gitignore
+!storage\framework\views\.gitignore
+
