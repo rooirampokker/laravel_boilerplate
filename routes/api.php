@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 */
-Route::group(['namespace' => '\App\Http\Controllers\API'], function () {
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
   //Open routes...
   Route::match(array('GET', 'POST'), 'user/login', 'UserController@login')->name('user/login');
 
