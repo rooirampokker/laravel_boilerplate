@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,14 +16,17 @@ class PasswordResetController extends Controller
     public $recordNotFoundStatus = 404;
     public $successStatus = 200;
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return mixed
      */
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         try {
-            $request->validate([
+            $request->validate(
+                [
                 'email' => 'required|string|email',
-            ]);
+                ]
+            );
             $user = User::where('email', $request->email)->first();
             if (!$user) {
                 return response()->json(['failed' => __('validation.reset_token.invalid_email')], $this->recordNotFoundStatus);
@@ -36,7 +40,7 @@ class PasswordResetController extends Controller
             if ($user && $passwordReset) {
                 $user->notify(new PasswordResetRequest($passwordReset->token));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $httpStatus = getExceptionType($e);
 
             return response()->json(['failure' => __('validation.reset_token.failed', ['message' => $e->getMessage()])], $httpStatus);
@@ -45,10 +49,11 @@ class PasswordResetController extends Controller
     }
 
     /**
-     * @param $token
+     * @param  $token
      * @return mixed
      */
-    public function find($token) {
+    public function find($token)
+    {
         $passwordReset = PasswordReset::where('token', $token)->first();
         if (!$passwordReset) {
             return response()->json(['failed' => ""], $this->recordNotFoundStatus);
@@ -62,10 +67,11 @@ class PasswordResetController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return mixed
      */
-    public function reset(Request $request) {
+    public function reset(Request $request)
+    {
         $validateFields = [
             'email'    => 'required|email',
             'password' => 'required',
@@ -74,10 +80,12 @@ class PasswordResetController extends Controller
         ];
         Validator::make($request->all(), $validateFields);
 
-        $passwordReset = PasswordReset::where([
+        $passwordReset = PasswordReset::where(
+            [
             ['token', $request->token],
             ['email', $request->email]
-        ])->first();
+            ]
+        )->first();
         if (!$passwordReset) {
             return response()->json(['failed' =>  __('validation.reset_token.invalid')], $this->recordNotFoundStatus);
         }

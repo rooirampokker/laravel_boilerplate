@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Default guard that Laravel uses to give the service authentication in the system
+ * Allows Super-admin access to everything
+ */
+
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -25,10 +30,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-          Gate::before(function ($user, $ability) {
+          Gate::before(function ($user) {
             return $user->hasRole('super-admin') ? true : null;
           });
-				//}
-
     }
 }
