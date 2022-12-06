@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\UserData;
 use App\Http\Resources\UserCollection;
 
-use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class UserController extends Controller {
@@ -22,22 +21,13 @@ class UserController extends Controller {
      * @return mixed
      */
     public function index() {
-        try {
-            $this->authorize('viewAny', $this->user);
+        $response = $this->userRepository->index();
 
-            $userCollection = (User::with('data')->get());
-            $users          = [];
-            //iterates over all users, collapses user->data into user and return data
-            foreach ($userCollection as $user) {
-                array_push($users, $this->collapseUserDataIntoParent($user));
-            }
-        } catch(\Exception $e) {
-            $httpStatus = getExceptionType($e);
-
-            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        if ($response) {
+            return response()->json(['success' => $response],httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')],httpStatusCode('UNAUTHORISED'));
         }
-
-        return response()->json(['success'=> $users],httpStatusCode('SUCCESS'));
     }
 
     /**
@@ -63,7 +53,7 @@ class UserController extends Controller {
    */
   public function login(Request $request)
   {
-      $response = $this->userRepository->login($equest);
+      $response = $this->userRepository->login($request);
       if ($response) {
           return response()->json(['success' => $response],httpStatusCode('SUCCESS'));
       } else {

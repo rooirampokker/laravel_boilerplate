@@ -9,13 +9,13 @@ interface EloquentRepositoryInterface
      *
      * @return mixed
      */
-    public function all();
+    public function index();
     /**
      * Get all trashed models
      *
      * @return mixed
      */
-    public function allTrashed();
+    public function indexTrashed();
 
     /**
      * Show model by id

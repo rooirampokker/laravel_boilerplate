@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquent;
 
 use App\Repository\EloquentRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
@@ -15,14 +16,20 @@ class BaseRepository implements EloquentRepositoryInterface
     /**
      * @return mixed|void
      */
-    public function all() {
+    public function index() {
+        try {
+            return $this->model::all();
 
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
     }
 
     /**
      * @return mixed|void
      */
-    public function allTrashed() {
+    public function indexTrashed() {
 
     }
 
