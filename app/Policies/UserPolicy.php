@@ -17,9 +17,9 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-      if ($user->hasPermissionTo('list users', 'api')) {
-        return true;
-      }
+        if ($user->hasPermissionTo('list users', 'api')) {
+            return true;
+        }
     }
 
     /**
@@ -32,7 +32,7 @@ class UserPolicy
     public function view(User $user, User $model)
     {
       // users can view their own profiles
-      return $user->id == $model->id;
+        return $user->id == $model->id;
     }
 
     /**
@@ -43,9 +43,9 @@ class UserPolicy
      */
     public function create(User $user)
     {
-      if ($user->hasPermissionTo('create users', 'api')) {
-        return true;
-      }
+        if ($user->hasPermissionTo('create users', 'api')) {
+            return true;
+        }
     }
 
     /**
@@ -58,12 +58,12 @@ class UserPolicy
     public function update(User $user, User $model)
     {
 
-      if ($user->hasPermissionTo('update users', 'api')) {
-        return true;
-      }
+        if ($user->hasPermissionTo('update users', 'api')) {
+            return true;
+        }
 
       //users should be able to update their own profiles
-      return $user->id == $model->id;
+        return $user->id == $model->id;
     }
 
     /**
@@ -75,9 +75,9 @@ class UserPolicy
      */
     public function destroy(User $user, User $model)
     {
-      if ($user->hasPermissionTo('delete users', 'api')) {
-        return true;
-      }
+        if ($user->hasPermissionTo('delete users', 'api')) {
+            return true;
+        }
 
       //should users be able to delete their own profiles?
       //return $user->id == $model->user_id;
@@ -92,9 +92,9 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-      if ($user->hasPermissionTo('restore users', 'api')) {
-        return true;
-      }
+        if ($user->hasPermissionTo('restore users', 'api')) {
+            return true;
+        }
     }
 
     /**

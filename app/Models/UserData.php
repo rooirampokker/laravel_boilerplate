@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UserData extends Model
 {
     use SoftDeletes;
+
     /**
      * The table associated with the model.
      *

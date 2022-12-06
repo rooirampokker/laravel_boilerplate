@@ -4,11 +4,9 @@ namespace App\Repository\Eloquent;
 
 use App\Models\User;
 use App\Repository\UserRepositoryInterface;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -27,16 +25,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $success = false;
         $request = $request->all();
         try {
-            if (Auth::attempt(
-                [
+            if (
+                Auth::attempt(
+                    [
                     'email' => $request['email'],
-                    'password' => $request['password']])) {
+                    'password' => $request['password']]
+                )
+            ) {
                 $user = Auth::user();
                 $success['token'] = $user->createToken('LaravelBoilerplate')->accessToken;
                 $success['id'] = $user->id;
                 $success['email'] = $user->email;
             }
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class PasswordResetController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         try {
             $request->validate([
                 'email' => 'required|string|email',
@@ -36,7 +38,7 @@ class PasswordResetController extends Controller
             if ($user && $passwordReset) {
                 $user->notify(new PasswordResetRequest($passwordReset->token));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $httpStatus = getExceptionType($e);
 
             return response()->json(['failure' => __('validation.reset_token.failed', ['message' => $e->getMessage()])], $httpStatus);
@@ -48,7 +50,8 @@ class PasswordResetController extends Controller
      * @param $token
      * @return mixed
      */
-    public function find($token) {
+    public function find($token)
+    {
         $passwordReset = PasswordReset::where('token', $token)->first();
         if (!$passwordReset) {
             return response()->json(['failed' => ""], $this->recordNotFoundStatus);
@@ -65,7 +68,8 @@ class PasswordResetController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function reset(Request $request) {
+    public function reset(Request $request)
+    {
         $validateFields = [
             'email'    => 'required|email',
             'password' => 'required',

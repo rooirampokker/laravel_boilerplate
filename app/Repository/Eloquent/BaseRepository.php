@@ -9,17 +9,18 @@ class BaseRepository implements EloquentRepositoryInterface
 {
     protected $model;
 
-    public function __construct(Model $model) {
+    public function __construct(Model $model)
+    {
         $this->model = $model;
     }
 
     /**
      * @return mixed|void
      */
-    public function index() {
+    public function index()
+    {
         try {
             return $this->model::all();
-
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
@@ -29,24 +30,24 @@ class BaseRepository implements EloquentRepositoryInterface
     /**
      * @return mixed|void
      */
-    public function indexTrashed() {
-
+    public function indexTrashed()
+    {
     }
 
     /**
      * @param $id
      * @return mixed|void
      */
-    public function show($id) {
-
+    public function show($id)
+    {
     }
 
     /**
      * @param array $data
      * @return mixed|void
      */
-    public function store(array $data) {
-
+    public function store(array $data)
+    {
     }
 
     /**
@@ -54,15 +55,15 @@ class BaseRepository implements EloquentRepositoryInterface
      * @param $id
      * @return mixed|void
      */
-    public function update(array $data, $id) {
-
+    public function update(array $data, $id)
+    {
     }
 
     /**
      * @param $id
      * @return mixed|void
      */
-    public function delete($id) {
-
+    public function delete($id)
+    {
     }
 }

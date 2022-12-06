@@ -5,13 +5,14 @@ if (!function_exists('getExceptionType')) {
      * @param \Exception $e
      * @return mixed
      */
-    function getExceptionType(\Exception $e) {
+    function getExceptionType(\Exception $e)
+    {
         if (strpos(get_class($e), "AuthorizationException")) {
-            $httpStatus =  httpStatusCode ('FORBIDDEN');
-        } else if (strpos(get_class($e),"ModelNotFoundException")) {
-            $httpStatus = httpStatusCode ('NOT_FOUND');
+            $httpStatus =  httpStatusCode('FORBIDDEN');
+        } elseif (strpos(get_class($e), "ModelNotFoundException")) {
+            $httpStatus = httpStatusCode('NOT_FOUND');
         } else {
-            $httpStatus = httpStatusCode ('NOT_IMPLEMENTED');
+            $httpStatus = httpStatusCode('NOT_IMPLEMENTED');
         }
         return $httpStatus;
     }
@@ -25,7 +26,8 @@ if (!function_exists('httpStatusCode')) {
      * @param $statusLabel
      * @return mixed
      */
-    function httpStatusCode ($statusLabel) {
+    function httpStatusCode($statusLabel)
+    {
         $statusMapping = [
             'SUCCESS' => 200,
             'CREATED' => 201,

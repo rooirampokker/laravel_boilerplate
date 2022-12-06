@@ -40,7 +40,7 @@ class PasswordResetSuccess extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line("Your password reset has been successful.")
             ->line("Thank you for using our application!");
     }
