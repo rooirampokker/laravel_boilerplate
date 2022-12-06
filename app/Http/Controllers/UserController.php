@@ -2,41 +2,73 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserData;
 use App\Http\Resources\UserCollection;
 
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Permission;
 use Validator;
 
 class UserController extends Controller {
   private $user;
+  private $userRepository;
 
-  public function __construct() {
-    //controllers are loaded before middleware in Laravel >5, so the following closure is required to get user ID from constructor
-    $this->middleware(function (Request $request, $next) {
-      $this->user = User::find(Auth::id());
-
-      return $next($request);
-    });
+  public function __construct(UserRepositoryInterface $userRepository) {
+      $this->userRepository = $userRepository;
   }
+    /**
+     * @return mixed
+     */
+    public function index() {
+        try {
+            $this->authorize('viewAny', $this->user);
+
+            $userCollection = (User::with('data')->get());
+            $users          = [];
+            //iterates over all users, collapses user->data into user and return data
+            foreach ($userCollection as $user) {
+                array_push($users, $this->collapseUserDataIntoParent($user));
+            }
+        } catch(\Exception $e) {
+            $httpStatus = getExceptionType($e);
+
+            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        }
+
+        return response()->json(['success'=> $users],httpStatusCode('SUCCESS'));
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function show($id) {
+        try {
+            $userCollection = User::with('data')->findOrFail($id);
+            $this->authorize('view', $userCollection);
+
+            $updated        = $this->collapseUserDataIntoParent($userCollection);
+        } catch (\Exception $e) {
+            $httpStatus = getExceptionType($e);
+
+            return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        }
+
+        return response()->json(['success'=>[$updated]],httpStatusCode('SUCCESS'));
+    }
   /**
    * @return \Illuminate\Http\Response
    */
-  public function login() {
-    if(Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-      $user = Auth::user();
-      $success['token'] =  $user->createToken('LotteriesCouncil')-> accessToken;
-      $success['id']    = $user->id;
-      $success['email'] =  $user->email;
-
-      return response()->json(['success' => $success],httpStatusCode('SUCCESS'));
-    } else {
-      return response()->json(['error' => __('auth.unauthorized')],httpStatusCode('UNAUTHORISED'));
-    }
+  public function login(Request $request)
+  {
+      $response = $this->userRepository->login($equest);
+      if ($response) {
+          return response()->json(['success' => $response],httpStatusCode('SUCCESS'));
+      } else {
+          return response()->json(['error' => __('auth.unauthorized')],httpStatusCode('UNAUTHORISED'));
+      }
   }
   /**
    * @param Request $request
@@ -66,46 +98,6 @@ class UserController extends Controller {
     }
 
     return response()->json(['success'=>$success],httpStatusCode('SUCCESS'));
-  }
-  /**
-   * @return mixed
-   */
-  public function index() {
-    try {
-      $this->authorize('viewAny', $this->user);
-
-      $userCollection = (User::with('data')->get());
-      $users          = [];
-      //iterates over all users, collapses user->data into user and return data
-      foreach ($userCollection as $user) {
-        array_push($users, $this->collapseUserDataIntoParent($user));
-      }
-    } catch(\Exception $e) {
-      $httpStatus = getExceptionType($e);
-
-      return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
-    }
-
-    return response()->json(['success'=> $users],httpStatusCode('SUCCESS'));
-  }
-
-  /**
-   * @param $id
-   * @return mixed
-   */
-  public function show($id) {
-    try {
-     $userCollection = User::with('data')->findOrFail($id);
-     $this->authorize('view', $userCollection);
-
-      $updated        = $this->collapseUserDataIntoParent($userCollection);
-    } catch (\Exception $e) {
-      $httpStatus = getExceptionType($e);
-
-      return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
-    }
-
-    return response()->json(['success'=>[$updated]],httpStatusCode('SUCCESS'));
   }
 
   /**

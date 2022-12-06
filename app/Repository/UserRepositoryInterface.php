@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use App\Repository\Eloquent\EloquentRepositoryInterface;
+use Illuminate\Http\Request;
 
 interface UserRepositoryInterface extends EloquentRepositoryInterface
 {
-
+    public function login(Request $request);
 }
