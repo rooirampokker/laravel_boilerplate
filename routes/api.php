@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +15,12 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
   Route::get('password/find/{token}', 'PasswordResetController@find');
   Route::post('password/reset', 'PasswordResetController@reset');
   //Authenticated routes...
-  Route::group(['middleware' => 'auth:api'], function () {
+  Route::group([
+      'middleware' => [
+          'auth:api',
+          'authorize',
+      ]
+    ], function () {
     Route::resource('user', 'UserController');
     Route::put('user/{id}/restore', 'UserController@restore')->name('user/restore');
   });
