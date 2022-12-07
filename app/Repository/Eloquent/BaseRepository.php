@@ -3,7 +3,6 @@
 namespace App\Repository\Eloquent;
 
 use App\Repository\EloquentRepositoryInterface;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -57,8 +56,9 @@ class BaseRepository implements EloquentRepositoryInterface
 
             foreach ($data as $key => $value) {
                 //complex data types should be saved in the model-specific repository
-                if (!is_array($value))
+                if (!is_array($value)) {
                     $this->model->$key = $value;
+                }
             }
             $this->model->save();
 

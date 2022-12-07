@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-
     private $userControllerService;
 
     public function __construct(User $model)
@@ -54,8 +53,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function store($request): mixed {
-        $this->userControllerService->validateInput($request,'store');
+    public function store($request): mixed
+    {
+        $this->userControllerService->validateInput($request, 'store');
         //password confirmation not required for storing - only validation
         $request->request->remove('c_password');
         $response = parent::store($request);
@@ -67,5 +67,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         return $response;
+    }
+
+    public function show($id)
+    {
+        try {
+            $userCollection = User::with('data')->findOrFail($id);
+            $updated        = $this->userControllerService->collapseUserDataIntoParent($userCollection);
+
+            return $userCollection;
+        } catch (\Exception $e) {
+            $httpStatus = getExceptionType($e);
+
+            return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        }
+
+        return response()->json(['success' => [$updated]], httpStatusCode('SUCCESS'));
     }
 }

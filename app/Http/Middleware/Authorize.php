@@ -22,7 +22,6 @@ class Authorize
         }
 
         $user = $request->user();
-
         if (!empty($user) && $user->can($controllerAndMethod[1], $controllerAndMethod[0])) {
             return $next($request);
         }

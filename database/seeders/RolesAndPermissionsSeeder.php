@@ -31,6 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
     Permission::create(['guard_name' => 'api', 'name' => 'user-update']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-delete']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-restore']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-show']);
 
 
     // create roles and assign existing permissions

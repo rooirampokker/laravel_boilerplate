@@ -6,7 +6,6 @@ use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserData;
-
 use App\Http\Resources\UserCollection;
 use Validator;
 
@@ -40,18 +39,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        try {
-            $userCollection = User::with('data')->findOrFail($id);
-            $this->authorize('view', $userCollection);
+        $response = $this->userRepository->show($id);
 
-            $updated        = $this->collapseUserDataIntoParent($userCollection);
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-
-            return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        if ($response) {
+            return response()->json(['success' => [$response]], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
-
-        return response()->json(['success' => [$updated]], httpStatusCode('SUCCESS'));
     }
   /**
    * @return \Illuminate\Http\Response
@@ -163,45 +157,5 @@ class UserController extends Controller
         }
 
         return response()->json(['success' => __('general.record.restore.success', ['id' => $id])], httpStatusCode('SUCCESS'));
-    }
-  /**
-   * @param $user
-   * @return array
-   */
-    public function collapseUserDataIntoParent($user)
-    {
-        $dataCollection = [];
-        foreach ($user->data as $data) {
-            $dataCollection[$data->key] = $data->value;
-        }
-        unset($user->data);
-
-        return array_merge($user->toArray(), $dataCollection);
-    }
-  /**
-   * @param $dataArray
-   * @param $user
-   * @throws \Exception
-   */
-    public function insertUserData($dataArray, $user)
-    {
-        try {
-            if (array_key_exists('data', $dataArray)) {
-                foreach ($dataArray['data'] as $key => $value) {
-                    $key = str_replace("&nbsp;", '', trim($key));
-                    $value = str_replace("&nbsp;", '', trim($value));
-                    UserData::updateOrCreate(
-                        [
-                        'user_id' => $user->id,
-                        'key'     => $key],
-                        ['value' => $value]
-                    );
-                }
-            }
-        } catch (\Exception $e) {
-            print_r($e->getMessage());
-            $httpStatus = getExceptionType($e);
-            throw new \Exception(__('general.failed', ['message' => $e->getMessage()]), $httpStatus);
-        }
     }
 }
