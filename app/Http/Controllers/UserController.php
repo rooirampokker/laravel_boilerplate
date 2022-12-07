@@ -6,13 +6,15 @@ use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserData;
+
 use App\Http\Resources\UserCollection;
 use Validator;
 
 class UserController extends Controller
 {
-    private $user;
+    private Model $user;
     private $userRepository;
+
 
     public function __construct(UserRepositoryInterface $userRepository)
     {
@@ -57,7 +59,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $response = $this->userRepository->login($request);
-        
+
         if ($response) {
             return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
         } else {
@@ -71,30 +73,13 @@ class UserController extends Controller
    */
     public function store(Request $request)
     {
-        try {
-            $this->authorize('create', $this->user);
+        $response = $this->userRepository->store($request);
 
-            $errors = $this->validateInput($request, 'create');
-            if ($errors) {
-                throw new \Exception($errors);
-            }
-
-            $input             = $request->all();
-            $input['password'] = bcrypt($input['password']);
-            $user              = User::create($input);
-
-          //adds additional data supplied during registration - adds entry to the user_data table;
-            $this->insertUserData($input, $user);
-            $success['token'] = $user->createToken('LotteriesCouncil')->accessToken;
-            $success['id']    = $user->id;
-            $success['email'] = $user->email;
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-
-            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        if ($response) {
+            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
-
-        return response()->json(['success' => $success], httpStatusCode('SUCCESS'));
     }
 
   /**
@@ -178,36 +163,6 @@ class UserController extends Controller
         }
 
         return response()->json(['success' => __('general.record.restore.success', ['id' => $id])], httpStatusCode('SUCCESS'));
-    }
-  /**
-   * @param $request
-   * @param $validationType
-   * @return mixed
-   */
-    public function validateInput($request, $validationType)
-    {
-      //use this array to validate creation of new users
-        $validateCreate = [
-        'email'      => 'required|email',
-        'password'   => 'required',
-        'c_password' => 'required|same:password',
-        ];
-      //use this array to validate updates
-        $validateUpdate = [
-        'email' => 'email'
-        ];
-        $validateThis   = ($validationType == 'create') ? $validateCreate : $validateUpdate;
-        $validated      = Validator::make($request->all(), $validateThis);
-        $errorMessages  = false;
-
-        if ($validated->fails()) {
-            $errors = $validated->errors();
-            foreach ($errors->all() as $error) {
-                $errorMessages .= $error;
-            }
-        }
-
-        return $errorMessages;
     }
   /**
    * @param $user

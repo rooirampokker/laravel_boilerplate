@@ -3,11 +3,14 @@
 namespace App\Repository\Eloquent;
 
 use App\Repository\EloquentRepositoryInterface;
+
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
-    protected $model;
+    protected Model $model;
+    protected Request $request;
 
     public function __construct(Model $model)
     {
@@ -43,11 +46,27 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @param array $data
-     * @return mixed|void
+     * @param $request
+     * @return mixed
+     * @throws \Exception
      */
-    public function store(array $data)
+    public function store($request): mixed
     {
+        try {
+            $data = $request->all();
+
+            foreach ($data as $key => $value) {
+                //complex data types should be saved in the model-specific repository
+                if (!is_array($value))
+                    $this->model->$key = $value;
+            }
+            $this->model->save();
+
+            return $this->model;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
     }
 
     /**

@@ -28,10 +28,10 @@ interface EloquentRepositoryInterface
     /**
      * Store a new model
      *
-     * @param array $data
+     * @param Request $request
      * @return mixed
      */
-    public function store(array $data);
+    public function store(Request $request);
 
     /**
      * Update an existing model
