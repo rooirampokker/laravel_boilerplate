@@ -19,17 +19,21 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
     /**
      * update user data from request
      *
-     * @return void
+     * @param $request
+     * @return mixed
+     * @throws \Exception
      */
+
     public function store($request): mixed
     {
+        $response = false;
         try {
             $request = $request->all();
             if (array_key_exists('data', $request)) {
                 foreach ($request['data'] as $key => $value) {
                     $key = str_replace("&nbsp;", '', trim($key));
                     $value = str_replace("&nbsp;", '', trim($value));
-                    UserData::updateOrCreate(
+                    $response = UserData::updateOrCreate(
                         [
                             'user_id' => $request['user_id'],
                             'key'     => $key],
@@ -37,6 +41,8 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
                     );
                 }
             }
+
+            return $response;
         } catch (\Exception $e) {
             print_r($e->getMessage());
             $httpStatus = getExceptionType($e);

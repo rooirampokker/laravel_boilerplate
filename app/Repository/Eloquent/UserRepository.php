@@ -73,15 +73,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = User::with('data')->findOrFail($id);
-            $updated        = $this->userControllerService->collapseUserDataIntoParent($userCollection);
-
-            return $userCollection;
+            $updated        = eavParser($userCollection);
         } catch (\Exception $e) {
             $httpStatus = getExceptionType($e);
-
             return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
         }
 
-        return response()->json(['success' => [$updated]], httpStatusCode('SUCCESS'));
+        return $updated;
     }
 }

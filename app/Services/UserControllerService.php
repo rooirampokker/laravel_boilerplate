@@ -37,19 +37,4 @@ class UserControllerService
             throw new \Exception($errors);
         }
     }
-
-    /**
-     * @param $user
-     * @return array
-     */
-    public function collapseUserDataIntoParent($user)
-    {
-        $dataCollection = [];
-        foreach ($user->data as $data) {
-            $dataCollection[$data->key] = $data->value;
-        }
-        unset($user->data);
-
-        return array_merge($user->toArray(), $dataCollection);
-    }
 }
