@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\UserRepositoryInterface;
+use App\Repository\Eloquent\UserRepository;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserCollection;
@@ -13,7 +13,7 @@ class UserController extends Controller
     private UserRepository $userRepository;
 
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
@@ -118,22 +118,15 @@ class UserController extends Controller
      * @param $id
      * @return mixed
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        try {
-            $user = User::find($id);
-            if ($user) {
-                $this->authorize('destroy', $user);
-                $user->delete();
-            } else {
-                throw new \Exception(__('general.record.not_found', ['id' => $id]));
-            }
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
-        }
+        $response = $this->userRepository->delete($id);
 
-        return response()->json(['success' => __('general.record.destroy.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        if ($response) {
+            return response()->json(['success' => __('general.record.destroy.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+        }
     }
 
     /**
@@ -142,18 +135,12 @@ class UserController extends Controller
      */
     public function restore($id)
     {
-        try {
-            $user = User::withTrashed()->find($id);
-            if (!$user) {
-                  throw new \Exception(__('general.record.not_found', ['id' => $id]));
-            }
-            $this->authorize('restore', $user);
-            $user->restore();
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
-        }
+        $response = $this->userRepository->restore($id);
 
-        return response()->json(['success' => __('general.record.restore.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        if ($response) {
+            return response()->json(['success' => __('general.record.restore.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+        }
     }
 }

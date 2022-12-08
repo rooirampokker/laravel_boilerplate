@@ -12,6 +12,6 @@ Route::group([
     Route::patch('{id}', 'UserController@restore')->name('user.restore');
     Route::put('{id}', 'UserController@update')->name('user.update');
     Route::get('{id}', 'UserController@show')->name('user.show');
-    Route::delete('{id}', 'UserController@destroy')->name('user.destroy');
+    Route::delete('{id}', 'UserController@delete')->name('user.delete');
 
 });

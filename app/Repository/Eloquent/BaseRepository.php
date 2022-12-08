@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Models\User;
 use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -80,9 +81,43 @@ class BaseRepository implements EloquentRepositoryInterface
 
     /**
      * @param $id
-     * @return mixed|void
+     * @return mixed
      */
     public function delete($id)
     {
+        $success = true;
+        try {
+            $collection = $this->model::find($id);
+            if ($collection) {
+                $success = $collection->delete();
+            } else {
+                throw new \Exception(__('general.record.not_found', ['id' => $id]));
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
+
+        return $success;
+    }
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function restore($id)
+    {
+        $success = false;
+        try {
+            $user = User::withTrashed()->find($id);
+            if (!$user) {
+                throw new \Exception(__('general.record.not_found', ['id' => $id]));
+            }
+            $success = $user->restore();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
+
+        return $success;
     }
 }
