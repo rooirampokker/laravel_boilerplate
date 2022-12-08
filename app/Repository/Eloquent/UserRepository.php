@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Log;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    private $userControllerService;
+    private UserControllerService $userControllerService;
+    private UserDataRepository $userDataRepository;
 
     public function __construct(User $model)
     {
         $this->model = $model;
         $this->userControllerService = new UserControllerService();
-        $this->UserDataRepository = new UserDataRepository(new UserData());
+        $this->userDataRepository = new UserDataRepository(new UserData());
     }
 
     /**
@@ -55,20 +56,43 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function store($request): mixed
     {
-        $this->userControllerService->validateInput($request, 'store');
-        //password confirmation not required for storing - only validation
-        $request->request->remove('c_password');
-        $response = parent::store($request);
-
-        //user has additional data - add
-        if ($request->has('data')) {
+        try {
+            $this->userControllerService->validateInput($request, 'store');
+            //password confirmation not required for storing - only validation
+            $request->request->remove('c_password');
+            $response = parent::store($request);
+            //store additional data, if any
             $request->request->add(['user_id' => $response->id]);
-            $this->UserDataRepository->store($request);
+            $this->userDataRepository->store($request);
+        } catch (\Exception $e) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
         }
 
         return $response;
     }
 
+    public function index() {
+        try {
+            $userCollection = (User::with('data')->get());
+            $users          = [];
+            //iterates over all users, collapses user->data into user and return data
+            foreach ($userCollection as $user) {
+                array_push($users, eavParser($user));
+            }
+        } catch (\Exception $e) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
+
+        return $users;
+    }
+    /**
+     * Fetches a single User with associated data, if any
+     *
+     * @param $id
+     * @return array|\Illuminate\Http\JsonResponse|mixed|void
+     */
     public function show($id)
     {
         try {

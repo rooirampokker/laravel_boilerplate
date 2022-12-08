@@ -5,6 +5,7 @@ namespace App\Repository\Eloquent;
 use App\Models\UserData;
 use App\Services\UserDataControllerService;
 use App\Repository\UserDataRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
@@ -41,12 +42,11 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
                     );
                 }
             }
-
-            return $response;
-        } catch (\Exception $e) {
-            print_r($e->getMessage());
-            $httpStatus = getExceptionType($e);
-            throw new \Exception(__('general.failed', ['message' => $e->getMessage()]), $httpStatus);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
         }
+
+        return $response;
     }
 }
