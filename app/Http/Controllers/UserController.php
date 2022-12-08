@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\UserData;
 use App\Http\Resources\UserCollection;
 use Validator;
 
 class UserController extends Controller
 {
-    private Model $user;
-    private $userRepository;
+    private UserRepository $userRepository;
 
 
     public function __construct(UserRepositoryInterface $userRepository)

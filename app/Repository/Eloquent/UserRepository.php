@@ -97,12 +97,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = User::with('data')->findOrFail($id);
-            $updated        = eavParser($userCollection);
+            $user           = eavParser($userCollection);
         } catch (\Exception $e) {
             $httpStatus = getExceptionType($e);
             return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
         }
 
-        return $updated;
+        return $user;
     }
 }
