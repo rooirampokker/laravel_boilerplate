@@ -21,7 +21,6 @@ class UserTest extends TestCase
     $password,
     $user,
     $superAdmin,
-    $user,
     $superAdminRole;
 
   /**

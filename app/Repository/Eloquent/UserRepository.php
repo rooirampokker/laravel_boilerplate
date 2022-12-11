@@ -7,6 +7,7 @@ use App\Models\UserData;
 use App\Services\UserControllerService;
 use App\Repository\Eloquent\UserDataRepository;
 use App\Repository\UserRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -64,14 +65,49 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             //store additional data, if any
             $request->request->add(['user_id' => $response->id]);
             $this->userDataRepository->store($request);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
         }
 
         return $response;
     }
+    /**
+     * @param $request
+     * @param $id
+     * @return mixed
+     */
+    public function update($request, $id): mixed
+    {
+        $success = false;
+        try {
+            $this->userControllerService->validateInput($request, 'update');
+            $input = $request->all();
+            if (count($input)) {
+                $user = User::find($id);
+                if ($user) {
+                    if ($user->fill($input)->save()) {
+                        $success = $this->userDataRepository->update($request, $id);
+                    } else {
+                        throw new \Exception(__('general.record.not_saved', ['id' => $id]));
+                    }
+                } else {
+                    throw new \Exception(__('general.record.not_found', ['id' => $id]));
+                }
+            } else {
+                throw new \Exception(__('general.input_error'));
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
 
+        return $success;
+    }
+
+    /**
+     * @return array
+     */
     public function index() {
         try {
             $userCollection = (User::with('data')->get());
@@ -80,7 +116,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             foreach ($userCollection as $user) {
                 array_push($users, eavParser($user));
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
         }
@@ -98,9 +134,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = User::with('data')->findOrFail($id);
             $user           = eavParser($userCollection);
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-            return response()->json(['failed' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
         }
 
         return $user;

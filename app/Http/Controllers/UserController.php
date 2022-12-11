@@ -81,34 +81,10 @@ class UserController extends Controller
    */
     public function update(Request $request, $id)
     {
-        try {
-            $errors = $this->validateInput($request, 'update');
+        $response = $this->userRepository->update($request, $id);
 
-            if ($errors) {
-                return response()->json(['failed' => __('general.failed', ['message' => $errors])], httpStatusCode('NOT_IMPLEMENTED'));
-            }
-            $userCollection = User::with('data')->find($id);
-            $this->authorize('update', $userCollection);
-
-            $input = $request->all();
-            if (count($input)) {
-                $user = User::find($id);
-                if ($user) {
-                    if ($user->fill($input)->save()) {
-                        $this->insertUserData($input, $user);
-                    } else {
-                        throw new \Exception(__('general.record.not_saved', ['id' => $id]));
-                    }
-                } else {
-                    throw new \Exception(__('general.record.not_found', ['id' => $id]));
-                }
-            } else {
-                throw new \Exception(__('general.input_error'));
-            }
-        } catch (\Exception $e) {
-            $httpStatus = getExceptionType($e);
-
-            return response()->json(['failure' => __('general.failed', ['message' => $e->getMessage()])], $httpStatus);
+        if (!$response) {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
 
         return response()->json(['success' => __('general.record.update.success', ['id' => $id])], httpStatusCode('SUCCESS'));
