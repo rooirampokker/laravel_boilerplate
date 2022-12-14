@@ -9,10 +9,13 @@ echo "compressing installation for deployment..."
 cd ~/project
 tar zcf - ./* | ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} "cat > project.tar.gz"
 
+echo "untar compressed project..."
 ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} << EOF
 mv project.tar.gz ${STAGING_WEB_ROOT}
 cd ${STAGING_WEB_ROOT}
-tar -xvzf project.tar.gz;
+tar -xvzf project.tar.gz
 rm project.tar.gz
+php artisan migrate
+
 
 EOF
