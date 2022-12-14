@@ -23,7 +23,16 @@ jobs:
             - v1-dependencies-{{ checksum "composer.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - run:
+          name: "Install sqlite"
+          command: sudo apt-get install php8.1-sqlite3
 
+      - run:
+          name: "Create database and run migration"
+          command: |
+            touch database/database.sqlite
+            php artisan migrate --env=testing
+            
       - run:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
@@ -37,16 +46,6 @@ jobs:
       - run:
           name: "Generate App key"
           command: php artisan key:generate
-
-      - run:
-          name: "Install sqlite"
-          command: sudo apt-get install php8.1-sqlite3
-
-      - run:
-          name: "Create database and run migration"
-          command: |
-            touch database/database.sqlite
-            php artisan migrate --env=testing
 
       - run:
           name: "Generate Passport encryption keys"
