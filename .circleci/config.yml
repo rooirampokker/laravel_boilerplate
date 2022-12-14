@@ -18,11 +18,11 @@ jobs:
           name: "Prepare Environment"
           command: |
             sudo apt update
-            sudo apt install libsqlite3-dev
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_sqlite
-            sudo docker-php-ext-enable pdo_sqlite
-            sudo docker-php-ext-install mysqli pdo_mysql
+            # sudo apt install libsqlite3-dev
+            # sudo docker-php-ext-install zip
+            # sudo docker-php-ext-install pdo_sqlite
+            # sudo docker-php-ext-enable pdo_sqlite
+            # sudo docker-php-ext-install mysqli pdo_mysql
 
       # Download and cache dependencies
       - restore_cache:
