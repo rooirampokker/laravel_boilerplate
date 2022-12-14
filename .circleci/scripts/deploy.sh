@@ -6,10 +6,10 @@ if [[ -z "$CIRCLECI" ]]; then
 fi
 
 echo "compressing installation for deployment..."
-cd ~/project
-tar zcf - ./* | sshpass -p ${STAGING_SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} "cat > project.tar.gz"
+cd ~/public_html/laravel-boilerplate
+tar zcf - ./* | ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} "cat > project.tar.gz"
 
-sshpass -p ${STAGING_SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} << EOF
+# sshpass -p ${STAGING_SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} << EOF
 
 
 mv project.tar.gz ${STAGING_WEB_ROOT}
