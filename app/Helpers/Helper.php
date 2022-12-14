@@ -18,12 +18,11 @@ if (!function_exists('getExceptionType')) {
     }
 }
 
-/*
- * syntactic sugar lookup array - maps http response codes up to a more descriptive label.
- */
 if (!function_exists('httpStatusCode')) {
     /**
-     * @param  $statusLabel
+     * Syntactic sugar lookup array - maps http response codes up to a more descriptive label.
+     *
+     * @param $statusLabel
      * @return mixed
      */
     function httpStatusCode($statusLabel)
@@ -40,5 +39,25 @@ if (!function_exists('httpStatusCode')) {
         ];
 
         return $statusMapping[strtoupper($statusLabel)];
+    }
+}
+
+/**
+ * Entity-Attribute-Value parser.
+ * Assumes the injected collection has a data relationship defined with key and value attributes
+ *
+ * @param $collection
+ * @return array
+ */
+if (!function_exists('eavParser'))
+{
+    function eavParser($collection): array
+    {
+        $dataCollection = [];
+        foreach ($collection->data as $data) {
+            $dataCollection['data'][$data->key] = $data->value;
+        }
+
+        return array_merge($collection->toArray(), $dataCollection);
     }
 }

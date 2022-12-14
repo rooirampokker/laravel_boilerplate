@@ -7,7 +7,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "askedio/laravel-soft-cascade": "^9.0",
-        "aws/aws-sdk-php": "^3.166",
+        "aws/aws-sdk-php": "^3.249",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",

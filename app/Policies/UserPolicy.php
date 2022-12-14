@@ -31,7 +31,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        // users can view their own profiles
+      // users can view their own profiles
         return $user->id == $model->id;
     }
 

@@ -26,11 +26,12 @@ class RolesAndPermissionsSeeder extends Seeder
     app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
     // create permissions
-    Permission::create(['guard_name' => 'api', 'name' => 'create users']);
-    Permission::create(['guard_name' => 'api', 'name' => 'list users']);
-    Permission::create(['guard_name' => 'api', 'name' => 'update users']);
-    Permission::create(['guard_name' => 'api', 'name' => 'delete users']);
-    Permission::create(['guard_name' => 'api', 'name' => 'restore users']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-store']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-index']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-update']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-delete']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-restore']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-show']);
 
 
     // create roles and assign existing permissions
