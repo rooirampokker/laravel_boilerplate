@@ -13,9 +13,9 @@ echo "untar compressed project..."
 ssh -o StrictHostKeyChecking=no ${STAGING_SSH_USERNAME}@${STAGING_SSH_URL} << EOF
 mv project.tar.gz ${STAGING_WEB_ROOT}
 cd ${STAGING_WEB_ROOT}
-tar -xvzf project.tar.gz
-rm project.tar.gz
-php artisan migrate
-
+tar -xzf project.tar.gz
+#rm project.tar.gz
+#cp .env.example .env
+#php artisan migrate
 
 EOF
