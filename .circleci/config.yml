@@ -40,7 +40,7 @@ jobs:
 
       - run:
           name: "Install sqlite"
-          command: sudo apt-get install php7.4-sqlite3
+          command: sudo apt-get install php8.1-sqlite3
 
       - run:
           name: "Create database and run migration"
