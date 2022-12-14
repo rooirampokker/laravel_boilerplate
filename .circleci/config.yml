@@ -23,6 +23,7 @@ jobs:
             # sudo docker-php-ext-install pdo_sqlite
             # sudo docker-php-ext-enable pdo_sqlite
             # sudo docker-php-ext-install mysqli pdo_mysql
+            sudo docker-php-ext-install mysqli pdo pdo_mysql
 
       # Download and cache dependencies
       - restore_cache:
