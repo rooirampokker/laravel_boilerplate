@@ -51,7 +51,11 @@ jobs:
       - run:
           name: "Generate Passport encryption keys"
           command: php artisan passport:install
-
+          
+      - run:
+          name: "deploy to staging"
+          command: |
+            ".circleci/scripts/deploy.sh"
       # run tests with phpunit
       # - run:
       #     name: "Run Tests"
