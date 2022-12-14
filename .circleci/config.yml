@@ -222,4 +222,4 @@ workflows:
       - build:
           filters:
             branches:
-              only: staging
+              only: master
