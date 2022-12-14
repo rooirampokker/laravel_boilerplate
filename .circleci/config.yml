@@ -28,14 +28,14 @@ jobs:
           command: sudo apt-get install php8.1-sqlite3
 
       - run:
+          name: "Install Dependencies"
+          command: composer install -n --prefer-dist
+          
+      - run:
           name: "Create database and run migration"
           command: |
             touch database/database.sqlite
             php artisan migrate --env=testing
-            
-      - run:
-          name: "Install Dependencies"
-          command: composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
