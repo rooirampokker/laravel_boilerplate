@@ -6,7 +6,7 @@ if [[ -z "$CIRCLECI" ]]; then
 fi
 
 echo "compressing installation for deployment..."
-tar zcf - project | ssh -o StrictHostKeyChecking=no ${PROD_SSH_USERNAME}@${PROD_SSH_URL} "cat > project.tar.gz"
+tar zcf - ./project | ssh -o StrictHostKeyChecking=no ${PROD_SSH_USERNAME}@${PROD_SSH_URL} "cat > project.tar.gz" 
 
 echo "untar compressed project..."
 ssh -o StrictHostKeyChecking=no albrecht.uk.com@ssh.gb.stackcp.com << EOF
