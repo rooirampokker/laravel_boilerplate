@@ -14,7 +14,7 @@ jobs:
       - run:
           name: "Create Environment file and generate app key"
           command: |
-            mv .env.staging .env
+            mv .env.testing .env
 
       # Download and cache dependencies
       - restore_cache:
@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Run migration"
           command: |
-            php artisan migrate --env=testing
+            php artisan migrate
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
@@ -51,7 +51,7 @@ jobs:
       - run:
           name: "Generate Passport encryption keys"
           command: php artisan passport:install
-          
+
       - run:
           name: "deploy to staging"
           command: |
