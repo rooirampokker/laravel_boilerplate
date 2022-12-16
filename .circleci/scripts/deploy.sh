@@ -14,7 +14,16 @@ mv project.tar.gz ${PROD_WEB_ROOT}
 cd ${PROD_WEB_ROOT}
 tar -xzf project.tar.gz --strip-components=3 -C ./
 rm project.tar.gz
+
+echo "update .env with variables"
 mv .env.production .env
-php artisan migrate
+
+replaceVars="$(grep -o '$.*' .env)"
+while IFS= read -r line; do
+    echo "$line"
+  sed -i -e "s/$line/\${$line}/g" .env
+done <<< "$replaceVars"
+
+#php artisan migrate
 
 EOF

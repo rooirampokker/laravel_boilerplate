@@ -34,7 +34,7 @@ jobs:
           command: composer install -n --prefer-dist
 
       - run:
-          name: Run migration"
+          name: Run migration
           command: |
             php artisan migrate
 
