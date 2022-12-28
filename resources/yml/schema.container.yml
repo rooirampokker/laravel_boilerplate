@@ -1,0 +1,14 @@
+components:
+  schemas:
+    SCHEMAS_INJECTED_HERE
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: APP_URL/login
+          tokenUrl: APP_URL/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations

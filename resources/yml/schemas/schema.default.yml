@@ -1,0 +1,30 @@
+#default content
+    defaultError:
+      type: object
+      properties:
+        message:
+          type: boolean
+          default: false
+        errors:
+          type: object
+          properties:
+            id:
+              type: array
+              items:
+                type: string
+
+    defaultSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
