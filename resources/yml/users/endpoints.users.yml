@@ -1,0 +1,192 @@
+/user/login:
+  post:
+    summary: user/login
+    description: Logs user in and returns user details and session data.
+    tags:
+      - Users
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: "#/components/schemas/userLoginRequest"
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload, containing an email address, uuid and basic onformation for the given user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userLoginSuccess"
+/users:
+  post:
+    summary: users
+    description: Creates a new user
+    security:
+      - OAuth2:
+          - read
+          - write
+    tags:
+      - Users
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/userCreateRequest"
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payloadof the newly created user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userCreateSuccess"
+
+  get:
+    summary: users
+    description: Returns a list of all non-deleted user
+    security:
+      - OAuth2:
+          - read
+    tags:
+      - Users
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload of all non-deleted users
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userIndexSuccess"
+/users/trashed:
+  get:
+    summary: users/trashed
+    description: Returns a list of all deleted users, if any
+    security:
+      - OAuth2:
+          - read
+    tags:
+      - Users
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payloadof deleted user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userIndexSuccess"
+/users/all:
+  get:
+    summary: users/all
+    description: Returns a list of all users, including trashed records
+    security:
+      - OAuth2:
+          - read
+    tags:
+      - Users
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload of all user records
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userIndexSuccess"
+/users/{user_uuid}:
+  delete:
+    summary: users/{user_uuid}
+    description: Deletes an existing user
+    security:
+      - OAuth2:
+          - read
+          - write
+    tags:
+      - Users
+    parameters:
+      - name: user_uuid
+        in: path
+        description: The encrypted user uuid
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload of the deleted user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/defaultSuccess"
+
+  patch:
+    summary: /users/{user_uuid}
+    description: Restores a soft-deleted user
+    security:
+      - OAuth2:
+          - read
+          - write
+    tags:
+      - Users
+    parameters:
+      - name: user_uuid
+        in: path
+        description: The encrypted user uuid
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload of the deleted user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRestoreSuccess"
+
+  put:
+    summary: /users/{user_uuid}
+    description: Updates an existing user
+    security:
+      - OAuth2:
+          - write
+    tags:
+      - Users
+    parameters:
+      - name: user_uuid
+        in: path
+        description: The encrypted user uuid
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/userCreateRequest"
+
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payload of the deleted user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userCreateSuccess"
+
+  get:
+    summary: /users/{user_uuid}
+    description: Returns a single user
+    security:
+      - OAuth2:
+          - read
+    tags:
+      - Users
+    parameters:
+      - name: user_uuid
+        in: path
+        description: The encrypted user uuid
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':    # status code
+        description: A JSON object with a data payloadof the specified user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userCreateSuccess"
+

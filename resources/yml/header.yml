@@ -1,0 +1,10 @@
+openapi: 3.0.0
+info:
+  title: Laravel Boilerplate API
+  description: Laravel Boilerplate API
+  version: "1.0.0"
+servers:
+  - url: APP_URL
+    description: Development environment
+paths:
+  ENDPOINTS_INJECTED_HERE
