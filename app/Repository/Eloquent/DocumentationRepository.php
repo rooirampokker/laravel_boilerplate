@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Log;
 
 class DocumentationRepository extends BaseRepository implements DocumentationRepositoryInterface
 {
-    private DocumentationControllerService $documentationControllerService;
-    private DocumentationRepository $documentationRepository;
+    private DocumentationControllerService $service;
+    //private DocumentationRepository $documentationRepository;
 
     public function __construct()
     {
-        $this->documentationControllerService = new DocumentationControllerService();
+        $this->service = new DocumentationControllerService();
     }
 
 
@@ -21,13 +21,16 @@ class DocumentationRepository extends BaseRepository implements DocumentationRep
      * @return array
      */
     public function index() {
-        try {
+            try {
+                $docStructure = $this->service->prepareDocStructure();
+                $combinedDoc  = $this->service->combineDocElements($docStructure);
 
+                return $this->service->doTokenReplacement($combinedDoc);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
         }
 
-        return true;
+        return false;
     }
 }

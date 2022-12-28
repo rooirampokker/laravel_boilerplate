@@ -21,7 +21,7 @@ class DocumentationController extends Controller
         $response = $this->documentationRepository->index();
 
         if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+            return $response;
         } else {
             return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
