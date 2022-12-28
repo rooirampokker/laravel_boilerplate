@@ -5,7 +5,7 @@
 - Positive/Negative feature tests for users (login, updating, creation, deletion, roles)
 - Soft-deletes with soft-cascading on deletes
 - API response messages fetched from locales
-<!--- API documentation at https://laravel-boilerplate.readme.io/reference -->
+- API documentation at https://laravel-boilerplate.readme.io/reference
 - Packages to:
     - Create seeds from existing database (https://github.com/orangehill/iseed)
     - Create models from existing database tables (https://github.com/krlove/eloquent-model-generator)
