@@ -18,10 +18,10 @@ rm project.tar.gz
 echo "update .env with variables..."
 mv .env.production .env
 
-export PROD_DB_USER=${PROD_DB_USER} | echo $PROD_DB_USER
-export PROD_DB_PASSWORD=${PROD_DB_PASSWORD} | echo $PROD_DB_PASSWORD
-export PROD_DB_HOST=${PROD_DB_HOST} | echo $PROD_DB_HOST
-export PROD_DB_SCHEMA=${PROD_DB_SCHEMA} | echo $PROD_DB_SCHEMA
+export PROD_DB_USER=${PROD_DB_USER}
+export PROD_DB_PASSWORD=${PROD_DB_PASSWORD}
+export PROD_DB_HOST=${PROD_DB_HOST}
+export PROD_DB_SCHEMA=${PROD_DB_SCHEMA}
 
 php artisan key:generate
 php artisan migrate
