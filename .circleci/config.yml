@@ -57,9 +57,9 @@ jobs:
           command: |
             ".circleci/scripts/deploy.sh"
        # run tests with phpunit
-       - run:
-           name: "Run Tests"
-           command: phpunit
+      - run:
+          name: "Run Tests"
+          command: phpunit
 #      - slack/notify:
 #          event: fail
 #          custom: |
