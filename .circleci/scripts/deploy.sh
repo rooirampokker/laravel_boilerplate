@@ -17,13 +17,13 @@ rm project.tar.gz
 
 echo "update .env with variables"
 mv .env.production .env
+export PROD_DB_USER=${PROD_DB_USER}
+export PROD_DB_PASSWORD=${PROD_DB_PASSWORD}
+export PROD_DB_HOST=${PROD_DB_HOST}
+export PROD_DB_SCHEMA=${PROD_DB_SCHEMA}
 
-replaceVars="$(grep -o '$.*' .env)"
-while IFS= read -r line; do
-    echo "$line"
-  sed -i -e "s/$line/\${$line}/g" .env
-done <<< "$replaceVars"
+php artisan key:generate
 
-#php artisan migrate
+php artisan migrate
 
 EOF
