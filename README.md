@@ -1,3 +1,4 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/rooirampokker/laravel_boilerplate/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rooirampokker/laravel_boilerplate/tree/master)
 ## Includes:
 - Passport set up and configured (https://laravel.com/docs/9.x/passport)
 - Permissions and roles set up and configured (https://spatie.be/docs/laravel-permission/v3/basic-usage/basic-usage)
