@@ -24,6 +24,6 @@ export PROD_DB_HOST=${PROD_DB_HOST}
 export PROD_DB_SCHEMA=${PROD_DB_SCHEMA}
 
 php artisan key:generate
-php artisan migrate
+php artisan migrate --force
 
 EOF
