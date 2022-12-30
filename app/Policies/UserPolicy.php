@@ -19,7 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->hasPermissionTo('list users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-index')) {
             return true;
         }
     }
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->hasPermissionTo('create users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-store')) {
             return true;
         }
     }
@@ -76,7 +76,7 @@ class UserPolicy
      */
     public function destroy(User $user, User $model)
     {
-        if ($user->hasPermissionTo('delete users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-delete')) {
             return true;
         }
 
@@ -93,7 +93,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        if ($user->hasPermissionTo('restore users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-restore')) {
             return true;
         }
     }
