@@ -8,7 +8,9 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class UserPolicy
 {
     use HandlesAuthorization;
-
+    public function __construct() {
+        $this->model = 'user';
+    }
     /**
      * Determine whether the user can view any models.
      *
@@ -17,7 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->hasPermissionTo('list users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-index')) {
             return true;
         }
     }
@@ -43,7 +45,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->hasPermissionTo('create users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-store')) {
             return true;
         }
     }
@@ -55,15 +57,14 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $user) : bool
     {
-
-        if ($user->hasPermissionTo('update users', 'api')) {
+        $routeId = request()->route()->parameters['id'];
+        if (!empty($routeId) && $routeId == $user->id) {
             return true;
         }
 
-        //users should be able to update their own profiles
-        return $user->id == $model->id;
+        return $user->hasPermissionTo($this->model.'-update');
     }
 
     /**
@@ -75,7 +76,7 @@ class UserPolicy
      */
     public function destroy(User $user, User $model)
     {
-        if ($user->hasPermissionTo('delete users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-delete')) {
             return true;
         }
 
@@ -92,7 +93,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        if ($user->hasPermissionTo('restore users', 'api')) {
+        if ($user->hasPermissionTo($this->model.'-restore')) {
             return true;
         }
     }
