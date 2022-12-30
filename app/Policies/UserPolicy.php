@@ -8,7 +8,9 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class UserPolicy
 {
     use HandlesAuthorization;
-
+    public function __construct() {
+        $this->model = 'user';
+    }
     /**
      * Determine whether the user can view any models.
      *
@@ -55,15 +57,14 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $user) : bool
     {
-
-        if ($user->hasPermissionTo('update users', 'api')) {
+        $routeId = request()->route()->parameters['id'];
+        if (!empty($routeId) && $routeId == $user->id) {
             return true;
         }
 
-        //users should be able to update their own profiles
-        return $user->id == $model->id;
+        return $user->hasPermissionTo($this->model.'-update');
     }
 
     /**
