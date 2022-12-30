@@ -79,9 +79,10 @@ class UserTest extends TestCase
 
       $response->assertJsonStructure([
           'success' => [
-              'token',
+              'email',
+              'created_at',
+              'updated_at',
               'id',
-              'email'
           ]]);
   }
     /**
@@ -98,8 +99,7 @@ class UserTest extends TestCase
     public function testSuperAdminCanRestoreUser() {
         //DELETE FIRST, THEN RESTORE
         $deleteResponse  = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/user/2');
-        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->putJson('api/user/2/restore');
-
+        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/user/2');
         $restoreResponse->assertStatus(200);
     }
 
@@ -113,7 +113,7 @@ class UserTest extends TestCase
             'c_password' => $this->password
         ]);
 
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
     /**
      * USER CAN'T DELETE NEW USER
@@ -121,7 +121,7 @@ class UserTest extends TestCase
     public function testUserCantDeleteUser() {
         $response = $this->actingAs($this->user, 'api')->deleteJson('api/user/2');
 
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
     /**
      * user CAN'T RESTORE A DELETED USER
@@ -129,10 +129,10 @@ class UserTest extends TestCase
     public function testUserCantRestoreUser() {
         //DELETE FIRST, THEN RESTORE
         $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/user/2');
-        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/user/2/restore');
+        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/user/2');
 
-        $deleteResponse->assertStatus(403);
-        $restoreResponse->assertStatus(403);
+        $deleteResponse->assertStatus(401);
+        $restoreResponse->assertStatus(401);
     }
     /**
      * USER CAN'T UPDATE SOMEONE ELSE'S PROFILE
@@ -145,7 +145,7 @@ class UserTest extends TestCase
         ]);
 
         //return failure - user can't change super-admin profile
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
     /**
      * USER CAN UPDATE OWN PROFILE
@@ -156,6 +156,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($this->user, 'api')->putJson('api/user/'.$this->user->id, [
             'email' => $newEmail,
         ]);
+
         //return success - user may update their own profile
         $response->assertStatus(200);
     }
