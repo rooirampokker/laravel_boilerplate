@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   browser-tools: circleci/browser-tools@1.1
-  phpunit: stockfiller/phpunit@1.1.0 
 jobs:
   build:
     docker:
@@ -55,7 +54,7 @@ jobs:
 
       - run:
           name: "Run Tests"
-          command: phpunit
+          command: ./vendor/bin/phpunit
 
       - run:
           name: "deploy to staging"
