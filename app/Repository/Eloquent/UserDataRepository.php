@@ -77,6 +77,8 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
                     }
                      return $response;
                 });
+            } else { //no data to update
+                $response = true;
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
