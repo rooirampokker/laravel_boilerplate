@@ -56,10 +56,10 @@ jobs:
           name: "deploy to staging"
           command: |
             ".circleci/scripts/deploy.sh"
-      # run tests with phpunit
-      # - run:
-      #     name: "Run Tests"
-      #     command: php artisan test
+       # run tests with phpunit
+      - run:
+          name: "Run Tests"
+          command: phpunit
 #      - slack/notify:
 #          event: fail
 #          custom: |
