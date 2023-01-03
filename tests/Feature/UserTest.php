@@ -44,7 +44,7 @@ class UserTest extends TestCase
   }
 
     protected function login($email, $password) {
-      $response = $this->postJson('/api/user/login', [
+      $response = $this->postJson('/api/users/login', [
           'email' => $email,
           'password' => $password
       ]);
@@ -71,7 +71,7 @@ class UserTest extends TestCase
      * SUPER ADMIN CAN CREATE NEW USER
      */
     public function testSuperAdminCanCreateUser() {
-      $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/user', [
+      $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users', [
           'email' => $this->faker->email(),
           'password' => $this->password,
           'c_password' => $this->password
@@ -89,17 +89,52 @@ class UserTest extends TestCase
      * SUPER ADMIN CAN DELETE NEW USER
      */
     public function testSuperAdminCanDeleteUser() {
-        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/user/2');
+        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+        $deletedUser = $this->actingAs($this->superAdmin, 'api')->getJson('api/users/'.$this->user->id);
 
         $response->assertStatus(200);
+        $deletedUser->assertStatus(404);
+    }
+    /**
+     * DELETED RECORDS ARE NOT INCLUDED IN INDEX
+     */
+    public function testIndexDoesNotReturnDeletedUsers() {
+        $response1 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
+        $totalRecords = count($response1['success']);
+
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+        $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
+
+        $this->assertCount( $totalRecords-1, $response2['success']);
+    }
+    /**
+     * ALL RECORDS, INCLUDING DELETED ARE NOT RETURNED WITH INDEXALL
+     */
+    public function testIndexAllReturnsDeletedUsers() {
+        $response1 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
+        $totalRecords = count($response1['success']);
+
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+        $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/all');
+
+        $this->assertCount( $totalRecords, $response2['success']);
+    }
+    /**
+     * ONLY DELETED RECORDS ARE INCLUDED IN INDEXTRASHED
+     */
+    public function testIndexTrashedDoesReturnDeletedUsers() {
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+        $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/trashed');
+
+        $this->assertCount(1, $response2['success']);
     }
     /**
      * SUPER ADMIN CAN RESTORE A DELETED USER
      */
     public function testSuperAdminCanRestoreUser() {
         //DELETE FIRST, THEN RESTORE
-        $deleteResponse  = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/user/2');
-        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/user/2');
+        $deleteResponse  = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/2');
+        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/2');
         $restoreResponse->assertStatus(200);
     }
 
@@ -107,7 +142,7 @@ class UserTest extends TestCase
      * USER CAN'T CREATE NEW USER
      */
     public function testUserCantCreateUser() {
-        $response = $this->actingAs($this->user, 'api')->postJson('api/user', [
+        $response = $this->actingAs($this->user, 'api')->postJson('api/users', [
             'email' => $this->faker->email(),
             'password' => $this->password,
             'c_password' => $this->password
@@ -119,7 +154,7 @@ class UserTest extends TestCase
      * USER CAN'T DELETE NEW USER
      */
     public function testUserCantDeleteUser() {
-        $response = $this->actingAs($this->user, 'api')->deleteJson('api/user/2');
+        $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
 
         $response->assertStatus(401);
     }
@@ -128,8 +163,8 @@ class UserTest extends TestCase
      */
     public function testUserCantRestoreUser() {
         //DELETE FIRST, THEN RESTORE
-        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/user/2');
-        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/user/2');
+        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
+        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/2');
 
         $deleteResponse->assertStatus(401);
         $restoreResponse->assertStatus(401);
@@ -140,7 +175,7 @@ class UserTest extends TestCase
     public function testUserCantUpdateOtherProfile() {
         $oldEmail = $this->superAdmin->email;
         $newEmail = $this->faker->email();
-        $response = $this->actingAs($this->user, 'api')->putJson('api/user/'.$this->superAdmin->id, [
+        $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->superAdmin->id, [
             'email' => $newEmail,
         ]);
 
@@ -153,7 +188,7 @@ class UserTest extends TestCase
     public function testUserCanUpdateOwnProfile() {
         $oldEmail = $this->user->email;
         $newEmail = $this->faker->email();
-        $response = $this->actingAs($this->user, 'api')->putJson('api/user/'.$this->user->id, [
+        $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->user->id, [
             'email' => $newEmail,
         ]);
 
