@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Http\Middleware\App;
+use Illuminate\Support\Str;
 
 class Authorize
 {
@@ -16,7 +17,7 @@ class Authorize
     public function handle(Request $request, Closure $next)
     {
         $controller = $request->route()->action["uses"];
-        $model = $this->getModelName($request);
+        $model = getModelNameFromRoute($request);
         $controllerAndMethod = preg_split("/[@]/", $controller);
 
         if (empty($controllerAndMethod)) {
@@ -29,13 +30,5 @@ class Authorize
         }
 
         return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-    }
-
-    private function getModelName($request) {
-        $routePrefix = $request->route()->getPrefix(); //to be used as model
-        $controllerAndMethod = explode("/", $routePrefix);
-        $model = ucfirst(end($controllerAndMethod));
-
-        return "App\Models\\".$model;
     }
 }

@@ -2,16 +2,17 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'prefix' => 'user'
+    'prefix' => 'users'
 ], function() {
-    Route::get('/', 'UserController@index')->name('user.index');
-    Route::get('trashed', 'UserController@indexTrashed')->name('user.index.trashed');
-    Route::post('/', 'UserController@store')->name('user.store');
+    Route::get('/', 'UserController@index')->name('users.index');
+    Route::get('/all', 'UserController@indexAll')->name('users.indexAll');
+    Route::get('trashed', 'UserController@indexTrashed')->name('users.index.trashed');
+    Route::post('/', 'UserController@store')->name('users.store');
     //Route::post('login', 'UserController@login');
-    Route::get('logout', 'UserController@logout')->name('user.logout');
-    Route::patch('{id}', 'UserController@restore')->name('user.restore');
-    Route::put('{id}', 'UserController@update')->name('user.update');
-    Route::get('{id}', 'UserController@show')->name('user.show');
-    Route::delete('{id}', 'UserController@delete')->name('user.delete');
+    Route::get('logout', 'UserController@logout')->name('users.logout');
+    Route::patch('{id}', 'UserController@restore')->name('users.restore');
+    Route::put('{id}', 'UserController@update')->name('users.update');
+    Route::get('{id}', 'UserController@show')->name('users.show');
+    Route::delete('{id}', 'UserController@delete')->name('users.delete');
 
 });

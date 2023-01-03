@@ -111,6 +111,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function index() {
         try {
             $userCollection = (User::with('data')->get());
+
             $users          = [];
             //iterates over all users, collapses user->data into user and return data
             foreach ($userCollection as $user) {

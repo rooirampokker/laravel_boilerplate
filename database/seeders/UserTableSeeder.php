@@ -13,15 +13,13 @@ class UserTableSeeder extends Seeder
    */
   public function run()
   {
-    \DB::table('user_data')->delete();
-    \DB::table('users')->delete();
-
+     $password = bcrypt('1234');
     \DB::table('users')->insert(array (
       0 =>
         array (
           'id' => 1,
           'email' => 'user_1@gmail.com',
-          'password' => bcrypt('1234'),
+          'password' => $password,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
           'deleted_at' => NULL,
@@ -29,8 +27,8 @@ class UserTableSeeder extends Seeder
       1 =>
         array (
           'id' => 2,
-          'email' => 'user_2@bravedigital.co.za',
-          'password' => bcrypt('1234'),
+          'email' => 'user_2@gmail.com',
+          'password' => $password,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
           'deleted_at' => NULL,

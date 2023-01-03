@@ -29,12 +29,30 @@ class BaseRepository implements EloquentRepositoryInterface
             throw $exception;
         }
     }
-
+    /**
+     * Fetches all records, including soft-deleted
+     * @return mixed|void
+     */
+    public function indexAll()
+    {
+        try {
+            return $this->model::withTrashed()->get();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
+    }
     /**
      * @return mixed|void
      */
     public function indexTrashed()
     {
+        try {
+            return $this->model::onlyTrashed()->get();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
-/user/login:
+/users/login:
     post:
-      summary: user/login
+      summary: users/login
       description: Logs user in and returns user details and session data.
       tags:
         - Users
@@ -88,9 +88,9 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userIndexSuccess"
-  /users/{user_uuid}:
+  /users/{user_id}:
     delete:
-      summary: users/{user_uuid}
+      summary: users/{user_id}
       description: Deletes an existing user
       security:
         - OAuth2:
@@ -99,9 +99,9 @@
       tags:
         - Users
       parameters:
-        - name: user_uuid
+        - name: user_id
           in: path
-          description: The encrypted user uuid
+          description: The user id
           required: true
           schema:
             type: string
@@ -114,7 +114,7 @@
                 $ref: "#/components/schemas/defaultSuccess"
 
     patch:
-      summary: /users/{user_uuid}
+      summary: /users/{user_id}
       description: Restores a soft-deleted user
       security:
         - OAuth2:
@@ -123,9 +123,9 @@
       tags:
         - Users
       parameters:
-        - name: user_uuid
+        - name: user_id
           in: path
-          description: The encrypted user uuid
+          description: The encrypted user id
           required: true
           schema:
             type: string
@@ -138,7 +138,7 @@
                 $ref: "#/components/schemas/userRestoreSuccess"
 
     put:
-      summary: /users/{user_uuid}
+      summary: /users/{user_id}
       description: Updates an existing user
       security:
         - OAuth2:
@@ -146,7 +146,7 @@
       tags:
         - Users
       parameters:
-        - name: user_uuid
+        - name: user_id
           in: path
           description: The encrypted user uuid
           required: true
@@ -168,7 +168,7 @@
                 $ref: "#/components/schemas/userCreateSuccess"
 
     get:
-      summary: /users/{user_uuid}
+      summary: /users/{user_id}
       description: Returns a single user
       security:
         - OAuth2:
@@ -176,9 +176,9 @@
       tags:
         - Users
       parameters:
-        - name: user_uuid
+        - name: user_id
           in: path
-          description: The encrypted user uuid
+          description: The user id
           required: true
           schema:
             type: string

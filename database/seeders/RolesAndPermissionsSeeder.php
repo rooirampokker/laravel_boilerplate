@@ -16,18 +16,14 @@ class RolesAndPermissionsSeeder extends Seeder
    */
   public function run()
   {
-    \DB::table('model_has_roles')->delete();
-    \DB::table('model_has_permissions')->delete();
-    \DB::table('role_has_permissions')->delete();
-    \DB::table('roles')->delete();
-    \DB::table('permissions')->delete();
-
     // Reset cached roles and permissions
     app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
     // create permissions
     Permission::create(['guard_name' => 'api', 'name' => 'user-store']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-index']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-indexAll']);
+    Permission::create(['guard_name' => 'api', 'name' => 'user-indexTrashed']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-update']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-delete']);
     Permission::create(['guard_name' => 'api', 'name' => 'user-restore']);

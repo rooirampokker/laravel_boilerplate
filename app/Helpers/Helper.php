@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 if (!function_exists('getExceptionType')) {
     /**
      * @param  \Exception $e
@@ -59,5 +61,23 @@ if (!function_exists('eavParser'))
         }
 
         return array_merge($collection->toArray(), $dataCollection);
+    }
+}
+
+/**
+ * Extracts the model name from the route prefix (last path element)
+ * Uppercases and singularizes and returns it
+ * @param $request
+ * @return string
+ */
+if (!function_exists('getModelNameFromRoute'))
+{
+    function getModelNameFromRoute($request): string
+    {
+        $routePrefix = $request->route()->getPrefix(); //to be used as model
+        $controllerAndMethod = explode("/", $routePrefix);
+        $model = ucfirst(end($controllerAndMethod));
+        $model = Str::singular($model);
+        return "App\Models\\" . $model;
     }
 }

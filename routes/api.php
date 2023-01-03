@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
   //Open routes...
-  Route::match(array('GET', 'POST'), 'user/login', 'UserController@login')->name('user/login');
+  Route::match(array('GET', 'POST'), 'users/login', 'UserController@login')->name('users/login');
   Route::get('documentation', 'DocumentationController@index')->name('documentation');
   Route::group(['prefix' => 'password'], function () {
       Route::post('create', 'PasswordResetController@create');

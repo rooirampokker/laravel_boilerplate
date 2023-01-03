@@ -17,6 +17,7 @@ class UserController extends Controller
     }
 
     /**
+     * returns all active/non-deleted users
      * @return mixed
      */
     public function index()
@@ -29,7 +30,34 @@ class UserController extends Controller
             return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
     }
+    /**
+     * returns all active/non-deleted users
+     * @return mixed
+     */
+    public function indexAll()
+    {
+        $response = $this->userRepository->indexAll();
 
+        if ($response) {
+            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+        }
+    }
+    /**
+     * returns all active/non-deleted users
+     * @return mixed
+     */
+    public function indexTrashed()
+    {
+        $response = $this->userRepository->indexTrashed();
+
+        if ($response) {
+            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+        } else {
+            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+        }
+    }
     /**
      * @param $id
      * @return mixed
