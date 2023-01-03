@@ -58,7 +58,7 @@ jobs:
       - run:
           name: "removes .env to ensure it doesn't override the one already on server"
           command: |
-            mv .env.testing .env
+            mv .env .env.testing
       - run:
           name: "deploy to staging"
           command: |
