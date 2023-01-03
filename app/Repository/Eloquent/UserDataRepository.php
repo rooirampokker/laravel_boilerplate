@@ -8,7 +8,6 @@ use App\Repository\UserDataRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
     private UserDataControllerService $userDataControllerService;
@@ -69,7 +68,7 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
             $request = $request->all();
             if (array_key_exists('data', $request)) {
                 $response = DB::transaction(function () use ($request, $user_id) {
-                    foreach($request['data'] as $key => $value) {
+                    foreach ($request['data'] as $key => $value) {
                             $response = UserData::where([
                                 ['user_id', '=', $user_id],
                                 ['key', '=', $key]

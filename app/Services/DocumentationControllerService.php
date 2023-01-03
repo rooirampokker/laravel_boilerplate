@@ -8,7 +8,8 @@ class DocumentationControllerService
 {
     private string $docPath;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->docPath = resource_path('yml/');
     }
 
@@ -16,11 +17,12 @@ class DocumentationControllerService
      * Fetches YML header and 'footer', combines it and returns as basic YML structure
      * @return string
      */
-    public function prepareDocStructure() {
+    public function prepareDocStructure()
+    {
         $header          = File::get($this->docPath . 'header.yml');
         $containerSchema = File::get($this->docPath . 'schema.container.yml');
 
-        return $header.$containerSchema;
+        return $header . $containerSchema;
     }
 
     /**
@@ -28,7 +30,8 @@ class DocumentationControllerService
      * @param $docStructure
      * @return array
      */
-    function combineDocElements($docStructure) {
+    function combineDocElements($docStructure)
+    {
         $endpoints = File::glob($this->docPath . '/*/' . 'endpoints.*.yml');
         $schemas   = File::glob($this->docPath . '/schemas/schema.*.yml');
         $consolidatedSchemas = $consolidatedEndpoints = '';
@@ -54,7 +57,8 @@ class DocumentationControllerService
      * @param $combinedDoc
      * @return array|string|string[]
      */
-    function doTokenReplacement($combinedDoc) {
+    function doTokenReplacement($combinedDoc)
+    {
         $apiDoc = str_replace(
             "ENDPOINTS_INJECTED_HERE",
             $combinedDoc["endpoints"],

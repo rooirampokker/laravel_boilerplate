@@ -20,12 +20,13 @@ class DocumentationRepository extends BaseRepository implements DocumentationRep
     /**
      * @return array
      */
-    public function index() {
-            try {
-                $docStructure = $this->service->prepareDocStructure();
-                $combinedDoc  = $this->service->combineDocElements($docStructure);
+    public function index()
+    {
+        try {
+            $docStructure = $this->service->prepareDocStructure();
+            $combinedDoc  = $this->service->combineDocElements($docStructure);
 
-                return $this->service->doTokenReplacement($combinedDoc);
+            return $this->service->doTokenReplacement($combinedDoc);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
