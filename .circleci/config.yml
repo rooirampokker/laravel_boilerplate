@@ -11,11 +11,6 @@ jobs:
       - browser-tools/install-browser-tools
       - checkout
 
-#      - run:
-#          name: "Create Environment file and generate app key"
-#          command: |
-#            mv .env.testing .env
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -33,17 +28,16 @@ jobs:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
 
+      - run:
+          name: "Create Environment file"
+          command: |
+            mv .env.testing .env
+
 #      - run:
 #          name: Run migration
 #          command: |
 #            php artisan migrate
 
-      - save_cache:
-          key: v1-dependencies-{{ checksum "composer.json" }}
-          paths:
-            - ./vendor
-
-#      # prepare the database
 #      - run:
 #          name: "Generate App key"
 #          command: php artisan key:generate
@@ -51,6 +45,11 @@ jobs:
 #      - run:
 #          name: "Generate Passport encryption keys"
 #          command: php artisan passport:install
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
 
       - run:
           name: "Run Tests"
