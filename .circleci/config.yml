@@ -25,13 +25,13 @@ jobs:
             touch database/database.sqlite
 
       - run:
-          name: "Install Dependencies"
-          command: composer install -n --prefer-dist
-
-      - run:
           name: "Create Environment file"
           command: |
             mv .env.testing .env
+            
+      - run:
+          name: "Install Dependencies"
+          command: composer install -n --prefer-dist
 
 #      - run:
 #          name: Run migration
