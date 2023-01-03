@@ -31,6 +31,19 @@
         - password
         - c_password
 
+    userUpdateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+          example:
+            first_name: "john"
+            last_name: "doe"
+            phone: 1234567890
+
     userCreateSuccess:
       type: object
       properties:
@@ -40,7 +53,7 @@
         code:
           type: integer
           default: 200
-        message:
+        message: 
           type: string
         data:
           type: array

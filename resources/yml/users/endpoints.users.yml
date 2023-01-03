@@ -125,7 +125,7 @@
       parameters:
         - name: user_id
           in: path
-          description: The encrypted user id
+          description: The user id
           required: true
           schema:
             type: string
@@ -148,7 +148,7 @@
       parameters:
         - name: user_id
           in: path
-          description: The encrypted user uuid
+          description: The user id
           required: true
           schema:
             type: string
@@ -157,7 +157,8 @@
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/userCreateRequest"
+              $ref: "#/components/schemas/userUpdateRequest"
+
 
       responses:
         '200':    # status code
