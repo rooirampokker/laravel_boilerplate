@@ -63,7 +63,6 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
         $passwordReset = PasswordReset::where('token', $token)->first();
         if (!$passwordReset) {
             return false;
-
         }
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
@@ -106,5 +105,4 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
         }
         return false;
     }
-
 }

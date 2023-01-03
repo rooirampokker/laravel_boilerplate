@@ -26,5 +26,4 @@ class DocumentationController extends Controller
             return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
         }
     }
-
 }

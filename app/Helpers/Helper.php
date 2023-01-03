@@ -51,8 +51,7 @@ if (!function_exists('httpStatusCode')) {
  * @param $collection
  * @return array
  */
-if (!function_exists('eavParser'))
-{
+if (!function_exists('eavParser')) {
     function eavParser($collection): array
     {
         $dataCollection = [];
@@ -70,8 +69,7 @@ if (!function_exists('eavParser'))
  * @param $request
  * @return string
  */
-if (!function_exists('getModelNameFromRoute'))
-{
+if (!function_exists('getModelNameFromRoute')) {
     function getModelNameFromRoute($request): string
     {
         $routePrefix = $request->route()->getPrefix(); //to be used as model

@@ -8,7 +8,9 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class UserPolicy
 {
     use HandlesAuthorization;
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->model = 'user';
     }
     /**
@@ -19,7 +21,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->hasPermissionTo($this->model.'-index')) {
+        if ($user->hasPermissionTo($this->model . '-index')) {
             return true;
         }
     }
@@ -45,7 +47,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->hasPermissionTo($this->model.'-store')) {
+        if ($user->hasPermissionTo($this->model . '-store')) {
             return true;
         }
     }
@@ -57,14 +59,14 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function update(User $user) : bool
+    public function update(User $user): bool
     {
         $routeId = request()->route()->parameters['id'];
         if (!empty($routeId) && $routeId == $user->id) {
             return true;
         }
 
-        return $user->hasPermissionTo($this->model.'-update');
+        return $user->hasPermissionTo($this->model . '-update');
     }
 
     /**
@@ -76,7 +78,7 @@ class UserPolicy
      */
     public function destroy(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model.'-delete')) {
+        if ($user->hasPermissionTo($this->model . '-delete')) {
             return true;
         }
 
@@ -93,7 +95,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model.'-restore')) {
+        if ($user->hasPermissionTo($this->model . '-restore')) {
             return true;
         }
     }

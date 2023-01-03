@@ -107,7 +107,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     /**
      * @return array
      */
-    public function index() {
+    public function index()
+    {
         try {
             $userCollection = (User::with('data')->get());
 
