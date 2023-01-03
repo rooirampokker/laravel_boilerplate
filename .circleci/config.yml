@@ -28,7 +28,7 @@ jobs:
           name: "Create Environment file"
           command: |
             mv .env.testing .env
-            
+
       - run:
           name: "Install Dependencies"
           command: composer install -n --prefer-dist
@@ -55,6 +55,10 @@ jobs:
           name: "Run Tests"
           command: ./vendor/bin/phpunit
 
+      - run:
+          name: "removes .env to ensure it doesn't override the one already on server"
+          command: |
+            mv .env.testing .env
       - run:
           name: "deploy to staging"
           command: |
