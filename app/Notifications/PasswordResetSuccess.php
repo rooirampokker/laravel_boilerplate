@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\App;
 
 class PasswordResetSuccess extends Notification
 {
@@ -18,7 +19,7 @@ class PasswordResetSuccess extends Notification
      */
     public function __construct()
     {
-        //
+        $this->locale = App::currentLocale();
     }
 
     /**
@@ -41,8 +42,7 @@ class PasswordResetSuccess extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->line("Your password reset has been successful.")
-            ->line("Thank you for using our application!");
+            ->markdown("emails.$this->locale.password_reset_success");
     }
 
     /**
