@@ -3,15 +3,18 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\App;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+
 
 class PasswordResetRequest extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $token;
+    private $token;
+    public $locale;
     /**
      * Create a new notification instance.
      *
@@ -20,6 +23,7 @@ class PasswordResetRequest extends Notification implements ShouldQueue
     public function __construct($token)
     {
         $this->token = $token;
+        $this->locale = App::currentLocale();
     }
     /**
      * Get the notification's delivery channels.
@@ -41,9 +45,7 @@ class PasswordResetRequest extends Notification implements ShouldQueue
     {
         $url = url('reset_password?token=' . $this->token);
         return (new MailMessage())
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', url($url))
-            ->line('If you did not request a password reset, no further action is required.');
+            ->markdown("emails.$this->locale.password_reset_request", ['url' => $url]);
     }
     /**
      * Get the array representation of the notification.

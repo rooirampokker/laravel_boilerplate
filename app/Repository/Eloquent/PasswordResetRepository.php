@@ -2,6 +2,8 @@
 
 namespace App\Repository\Eloquent;
 
+use Validator;
+
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\PasswordResetRequest;
@@ -34,7 +36,7 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
             );
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['failed' => __('validation.reset_token.invalid_email')], $this->recordNotFoundStatus);
+                return response()->json(['failed' => __('validation.reset_token.invalid_email')], httpStatusCode('NOT_FOUND'));
             }
 
             $passwordReset = PasswordReset::updateOrCreate(
