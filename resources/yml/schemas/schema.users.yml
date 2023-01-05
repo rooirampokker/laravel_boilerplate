@@ -53,7 +53,7 @@
         code:
           type: integer
           default: 200
-        message: 
+        message:
           type: string
         data:
           type: array
@@ -67,106 +67,157 @@
       type: object
       properties:
         success:
-          type: boolean
-        code:
-          type: integer
-          format: int32
-          default: 200
-        message:
-          type: string
-        data:
           type: object
           properties:
-            user:
-              type: object
-              properties:
-                uuid:
-                  type: string
-                email:
-                  type: string
-                user_data:
-                  type: array
-                  items:
-                    type: string
-            auth:
-              type: object
-              properties:
-                accessToken:
-                  type: string
-                token:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    user_id:
-                      type: integer
-                    client_id:
-                      type: integer
-                    name:
-                      type: string
-                    scopes:
-                      type: array
-                      items:
-                        type: string
-                    revoked:
-                      type: boolean
-                      default: false
-                    created_at:
-                      type: string
-                      default: "2022-07-07 09:54:43"
-                    updated_at:
-                      type: string
-                      default: "2022-07-07 09:54:43"
-                    expires_at:
-                      type: string
-                      default: "2022-07-08 09:54:43"
+            id:
+              type: integer
+            email:
+              type: string
+            email_verified_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            created_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            updated_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            deleted_at:
+              type: string
+              default: "2022-07-08 09:54:43"
+            token:
+              type: string
 
     userRestoreSuccess:
       type: object
       properties:
         success:
-          type: boolean
-          default: true
-        code:
-          type: integer
-          default: 200
-        message:
-          type: string
-        data:
           type: object
           properties:
-            uuid:
+            email:
               type: string
+            created_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            updated_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            id:
+              type: integer
 
     userIndexSuccess:
       type: object
       properties:
         success:
-          type: boolean
-          default: true
-        code:
-          type: integer
-          default: 200
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            users:
-              type: array
-              items:
-                type: object
-                properties:
-                  uuid:
-                    type: string
-                  email:
-                    type: string
-                  user_data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        ...:
-                          type: string
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              email_verified_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              deleted_at:
+                type: string
+                default: "2022-07-08 09:54:43"
+            example:
+              - id: 1
+                email: user_1@gmail.com
+                email_verified_at: "2022-07-07 09:54:43"
+                created_at: "2022-07-07 09:54:43"
+                updated_at: "2022-07-07 09:54:43"
+                deleted_at: null
+              - id: 2
+                email: user_2@gmail.com
+                email_verified_at: "2023-08-07 09:54:43"
+                created_at: "2022-08-07 09:54:43"
+                updated_at: "2022-08-07 09:54:43"
+                deleted_at: null
+
+    userIndexTrashedSuccess:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              email_verified_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              deleted_at:
+                type: string
+                default: "2022-07-08 09:54:43"
+            example:
+              - id: 1
+                email: user_1@gmail.com
+                email_verified_at: "2022-07-07 09:54:43"
+                created_at: "2022-07-07 09:54:43"
+                updated_at: "2022-07-07 09:54:43"
+                deleted_at: "2022-07-07 09:54:43"
+              - id: 2
+                email: user_2@gmail.com
+                email_verified_at: "2023-08-07 09:54:43"
+                created_at: "2022-08-07 09:54:43"
+                updated_at: "2022-08-07 09:54:43"
+                deleted_at: "2022-08-07 09:54:43"
+
+    userIndexAllSuccess:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              email_verified_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              deleted_at:
+                type: string
+                default: "2022-07-08 09:54:43"
+            example:
+              - id: 1
+                email: user_1@gmail.com
+                email_verified_at: "2022-07-07 09:54:43"
+                created_at: "2022-07-07 09:54:43"
+                updated_at: "2022-07-07 09:54:43"
+                deleted_at: null
+              - id: 2
+                email: user_2@gmail.com
+                email_verified_at: "2023-08-07 09:54:43"
+                created_at: "2022-08-07 09:54:43"
+                updated_at: "2022-08-07 09:54:43"
+                deleted_at: "2022-08-07 09:54:43"
+
 
 
