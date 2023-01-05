@@ -1,4 +1,5 @@
-/users/login:
+
+  /users/login:
     post:
       summary: users/login
       description: Logs user in and returns user details and session data.
