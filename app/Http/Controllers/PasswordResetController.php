@@ -51,7 +51,7 @@ class PasswordResetController extends Controller
         $response = $this->passwordResetRepository->reset($request);
 
         if (!$response) {
-            return response()->json(['error' => __('validation.reset_token.invalid')], httpStatusCode(BAD_REQUEST));
+            return response()->json(['error' => __('validation.reset_token.invalid')], httpStatusCode('BAD_REQUEST'));
         }
         return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
     }
