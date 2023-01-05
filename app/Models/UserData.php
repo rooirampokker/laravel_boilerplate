@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UserData extends Model
 {
     use SoftDeletes;
+    use UUID;
 
     /**
      * The table associated with the model.
