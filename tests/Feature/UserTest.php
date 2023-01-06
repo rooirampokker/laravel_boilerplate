@@ -133,8 +133,8 @@ class UserTest extends TestCase
      */
     public function testSuperAdminCanRestoreUser() {
         //DELETE FIRST, THEN RESTORE
-        $deleteResponse  = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/2');
-        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/2');
+        $deleteResponse  = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/'.$this->user->id);
         $restoreResponse->assertStatus(200);
     }
 

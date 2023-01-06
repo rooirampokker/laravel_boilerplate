@@ -14,8 +14,8 @@ class CreateUserDataTable extends Migration
     public function up()
     {
         Schema::create('user_data', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('user_id')->unsigned()->index('FK_users_user_data');
+            $table->uuid('id')->id()->primary();
+            $table->uuid('user_id')->id()->index('FK_users_user_data');
             $table->string('key', 255);
             $table->string('value', 255);
             $table->timestamp('created_at')->useCurrent();
