@@ -51,7 +51,11 @@ class UserTest extends TestCase
           'password' => $this->password,
           'c_password' => $this->password
       ]);
-
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('validation.reset_token.invalid_email')
+        ]);
       $response->assertJsonStructure([
           'success' => [
               'email',

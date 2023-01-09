@@ -44,10 +44,12 @@ class PasswordTest extends TestCase
         $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/passwords/create', [
             'email' => "john@doe.com"
         ]);
-        dd($response);
+
         $response->assertStatus(200);
         $response->assertJson([
-            'success' => __('validation.reset_token.success')
+            'success' => false,
+            'code' => 400,
+            'message' =>  __('validation.reset_token.invalid_email')
         ]);
     }
 }

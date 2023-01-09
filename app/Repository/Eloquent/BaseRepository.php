@@ -6,9 +6,11 @@ use App\Models\User;
 use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Traits\RepositoryResponseTrait;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
+    use RepositoryResponseTrait;
     protected Model $model;
     protected Request $request;
 
@@ -23,10 +25,12 @@ class BaseRepository implements EloquentRepositoryInterface
     public function index()
     {
         try {
-            return $this->model::all();
+
+            return $this->ok(__('general.index.success', $this->model::all()));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+
+            return $this->exception($exception);
         }
     }
     /**
@@ -36,10 +40,12 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexAll()
     {
         try {
-            return $this->model::withTrashed()->get();
+
+            return $this->ok(__('general.index.success'), $this->model::withTrashed()->get()->toArray());
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+
+            return $this->exception($exception);
         }
     }
     /**
@@ -48,10 +54,12 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexTrashed()
     {
         try {
-            return $this->model::onlyTrashed()->get();
+
+            return $this->ok(__('general.index.success'), $this->model::onlyTrashed()->get()->toArray());
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+
+            return $this->exception($exception);
         }
     }
 
@@ -81,10 +89,11 @@ class BaseRepository implements EloquentRepositoryInterface
             }
             $this->model->save();
 
-            return $this->model;
+            return $this->ok(__('users.update.success'), $this->model);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+
+            return $this->exception($exception);
         }
     }
 
@@ -103,20 +112,21 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function delete($id)
     {
-        $success = true;
         try {
             $collection = $this->model::find($id);
             if ($collection) {
-                $success = $collection->delete();
+                $collection->delete();
+
+                return $this->ok(__('general.record.destroy.success', ['id' => $id]));
             } else {
-                throw new \Exception(__('general.record.not_found', ['id' => $id]));
+
+                return $this->notFound(__('general.record.not_found', ['id' => $id]));
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $success;
+            return $this->exception($exception);
+        }
     }
     /**
      * @param $id
@@ -124,18 +134,21 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function restore($id)
     {
-        $success = false;
         try {
             $user = User::withTrashed()->find($id);
-            if (!$user) {
-                throw new \Exception(__('general.record.not_found', ['id' => $id]));
+            if ($user) {
+                $user->restore();
+
+                return $this->ok(__('general.record.restore.success', ['id' => $id]));
+            } else {
+
+                return $this->notFound(__('general.record.not_found', ['id' => $id]));
             }
-            $success = $user->restore();
+
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $success;
+            return $this->exception($exception);
+        }
     }
 }

@@ -29,7 +29,8 @@ return [
     'user_registration' => 'User Registration',
     'login' => [
         'success' => 'User logged in successfully',
-        'failed' => 'Failed to log in user'
+        'failed' => 'Failed to log in user',
+        'invalid' => 'User credentials were invalid'
     ],
     'logout' => [
         'success' => 'User logged out successfully',

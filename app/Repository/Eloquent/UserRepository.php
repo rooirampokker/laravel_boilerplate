@@ -9,9 +9,11 @@ use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Traits\RepositoryResponseTrait;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
+    use RepositoryResponseTrait;
     private UserControllerService $userControllerService;
     private UserDataRepository $userDataRepository;
 
@@ -27,7 +29,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function login($request)
     {
-        $success = false;
         $request = $request->all();
         try {
             if (
@@ -39,14 +40,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             ) {
                 $user = Auth::user();
                 $success = $user->toArray();
-                $success['token'] = $user->createToken('LaravelBoilerplate')->accessToken;
+                $success['token'] = $user->createToken(config('app.name'))->accessToken;
+
+                return $success;
+            } else {
+                return $this->unauthorised(__('users.login.invalid'));
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+            return $this->exception($exception);
         }
-
-        return $success;
     }
 
     /**
@@ -66,10 +69,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $this->userDataRepository->store($request);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+
+            $this->exception($exception);
         }
 
-        return $response;
+        return $this->ok(__('validation.password_updated'), [$response]);
     }
     /**
      * @param $request
@@ -110,19 +114,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function index()
     {
         try {
-            $userCollection = (User::with('data')->get());
 
+            $userCollection = (User::with('data')->get());
             $users          = [];
+
             //iterates over all users, collapses user->data into user and return data
             foreach ($userCollection as $user) {
                 array_push($users, eavParser($user));
             }
+
+            return $this->ok(__('users.index.success'), $users);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $users;
+            return $this->exception($exception);
+        }
     }
     /**
      * Fetches a single User with associated data, if any
@@ -133,13 +139,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function show($id)
     {
         try {
-            $userCollection = User::with('data')->findOrFail($id);
-            $user           = eavParser($userCollection);
+            $userCollection = User::with('data')->find($id);
+            if ($userCollection) {
+                $user = eavParser($userCollection);
+
+                return $this->ok(__('users.update.success'), $user);
+            } else {
+
+                return $this->notFound(__('users.show.failed'));
+            }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $user;
+            return $this->exception($exception);
+        }
     }
 }
