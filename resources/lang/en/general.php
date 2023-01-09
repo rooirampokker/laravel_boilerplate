@@ -20,5 +20,7 @@ return [
         'restore' => [
             'success' => 'Record :id was successfully restored',
         ],
+
+        'missing_lang' => 'Configure message in locale',
     ],
 ];

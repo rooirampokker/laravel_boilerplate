@@ -139,6 +139,8 @@ return [
         'success'       => 'Password reset link has been emailed',
         'invalid'       => 'This password reset token is invalid.'
     ],
+
+    'password_updated' => 'User password was successfully updated',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

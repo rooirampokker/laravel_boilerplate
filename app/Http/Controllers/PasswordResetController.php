@@ -22,10 +22,7 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->create($request);
 
-        if (!$response) {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
-        return response()->json(['success' => __('validation.reset_token.success')], httpStatusCode('SUCCESS'));
+        return response()->json($response);
     }
 
     /**
@@ -36,10 +33,7 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->find($token);
 
-        if (!$response) {
-            return response()->json(['error' => __('validation.reset_token.invalid')], httpStatusCode('401'));
-        }
-        return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+        return response()->json($response);
     }
 
     /**
@@ -50,9 +44,6 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->reset($request);
 
-        if (!$response) {
-            return response()->json(['error' => __('validation.reset_token.invalid')], httpStatusCode('BAD_REQUEST'));
-        }
-        return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
+        return response()->json($response);
     }
 }
