@@ -51,19 +51,20 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
             return $this->exception($exception);
         }
     }
+
     /**
      * update user data from request
      * NOTE: this will not add new key-value pairs - only update existing keys
      *
      * @param $request
+     * @param $user_id
      * @return mixed
-     * @throws \Exception
      */
 
     public function update($request, $user_id): mixed
     {
-        $response = false;
         try {
+            $response = false;
             $request = $request->all();
             if (array_key_exists('data', $request)) {
                 $response = DB::transaction(function () use ($request, $user_id) {
@@ -73,16 +74,16 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
                                 ['key', '=', $key]
                             ])->update(['value' => $value]);
                     }
-                     return $response;
+
+                    return $response;
                 });
-            } else { //no data to update
-                //return $this->
             }
+            
+            return $this->ok(__('users.update.data_only.success'), $response);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $response;
+            return $this->exception($exception);
+        }
     }
 }
