@@ -5,10 +5,11 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Http\Middleware\App;
-use Illuminate\Support\Str;
+use App\Traits\RepositoryResponseTrait;
 
 class Authorize
 {
+    use RepositoryResponseTrait;
     /**
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
@@ -21,7 +22,8 @@ class Authorize
         $controllerAndMethod = preg_split("/[@]/", $controller);
 
         if (empty($controllerAndMethod)) {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+            $response = $this->unauthorised(__('auth.unauthorized'));
+            return response()->json($response, $response['code']);
         }
         $user = $request->user();
 
@@ -29,6 +31,7 @@ class Authorize
             return $next($request);
         }
 
-        return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
+        $response = $this->unauthorised(__('auth.unauthorized'));
+        return response()->json($response, $response['code']);
     }
 }
