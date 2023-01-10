@@ -4,43 +4,18 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use Tests\TestCase;
-
-use App\Models\User;
-use Laravel\Passport\Passport;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 
 class UserTest extends TestCase
 {
   use RefreshDatabase, WithFaker;
-
-  protected $email,
-    $password,
-    $user,
-    $superAdmin,
-    $superAdminRole;
 
   /**
    *
    */
     public function setUp() :void {
     parent::setUp();
-
-    $this->password = '1234';
-    $this->artisan("passport:install");
-    $this->artisan('db:seed');
-
-    $this->superAdmin = User::factory()->create();
-    $this->superAdminRole = Role::findByName('super-admin', 'api');
-
-    $this->superAdmin->assignRole($this->superAdminRole);
-
-    $this->user = User::factory()->create();
-    $userRole   = Role::findByName('user', 'api');
-    $this->user->assignRole($userRole);
+    $this->seedDatabase();
   }
 
     protected function login($email, $password) {
@@ -70,20 +45,15 @@ class UserTest extends TestCase
     /**
      * SUPER ADMIN CAN CREATE NEW USER
      */
-    public function testSuperAdminCanCreateUser() {
-      $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users', [
-          'email' => $this->faker->email(),
-          'password' => $this->password,
-          'c_password' => $this->password
-      ]);
+    public function testSuperAdminCanCreateUserWithAdditionalData() {
+        $response = $this->createUserWithAdditionalData();
 
-      $response->assertJsonStructure([
-          'success' => [
-              'email',
-              'created_at',
-              'updated_at',
-              'id',
-          ]]);
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.store.success'),
+            'data' => []
+        ]);
   }
     /**
      * SUPER ADMIN CAN DELETE NEW USER
@@ -100,24 +70,24 @@ class UserTest extends TestCase
      */
     public function testIndexDoesNotReturnDeletedUsers() {
         $response1 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
-        $totalRecords = count($response1['success']);
+        $totalRecords = count($response1['data']);
 
         $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
         $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
 
-        $this->assertCount( $totalRecords-1, $response2['success']);
+        $this->assertCount( $totalRecords-1, $response2['data']);
     }
     /**
      * ALL RECORDS, INCLUDING DELETED ARE NOT RETURNED WITH INDEXALL
      */
     public function testIndexAllReturnsDeletedUsers() {
         $response1 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
-        $totalRecords = count($response1['success']);
+        $totalRecords = count($response1['data']);
 
         $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
         $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/all');
 
-        $this->assertCount( $totalRecords, $response2['success']);
+        $this->assertCount( $totalRecords, $response2['data']);
     }
     /**
      * ONLY DELETED RECORDS ARE INCLUDED IN INDEXTRASHED
@@ -126,7 +96,7 @@ class UserTest extends TestCase
         $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
         $response2 = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/trashed');
 
-        $this->assertCount(1, $response2['success']);
+        $this->assertCount(1, $response2['data']);
     }
     /**
      * SUPER ADMIN CAN RESTORE A DELETED USER
@@ -159,7 +129,7 @@ class UserTest extends TestCase
         $response->assertStatus(401);
     }
     /**
-     * user CAN'T RESTORE A DELETED USER
+     * USER CAN'T RESTORE A DELETED USER
      */
     public function testUserCantRestoreUser() {
         //DELETE FIRST, THEN RESTORE
@@ -189,10 +159,55 @@ class UserTest extends TestCase
         $oldEmail = $this->user->email;
         $newEmail = $this->faker->email();
         $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->user->id, [
-            'email' => $newEmail,
+            'email' => $newEmail
         ]);
 
         //return success - user may update their own profile
         $response->assertStatus(200);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.update.success', ['id' => $this->user->id])
+        ]);
+    }
+    /**
+ * USER CAN UPDATE ADDITIONAL USER DATA
+ */
+    public function testUserCanUpdateAdditionalData() {
+        $email = $this->faker->email();
+        $user = $this->createUserWithAdditionalData($email);
+
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data']['id'], [
+            'data' => [
+                'first_name' => $this->faker->firstName()
+            ]
+        ]);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.update.success', ['id' => $user['data']['id']])
+        ]);
+    }
+    /**
+     * USER ATTEMPTS TO EDIT NON-EXISTENT ADDITIONAL USER DATA
+     */
+    public function testUserCantUpdateUserWithRandomData() {
+        $email = $this->faker->email();
+        $user = $this->createUserWithAdditionalData($email);
+
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data']['id'], [
+            'email' => $this->faker->email(),
+            'data' => [
+                'random_input' => $this->faker->firstName()
+            ]
+        ]);
+
+        $response->assertJson([
+            'success' => false,
+            'code' => 422,
+            'message' =>  __('users.update.failed', ['id' => $user['data']['id']])
+        ]);
     }
 }

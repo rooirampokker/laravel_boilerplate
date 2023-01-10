@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquent;
 
 use Validator;
+
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\PasswordResetRequest;
@@ -11,9 +12,12 @@ use App\Repository\PasswordResetRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Traits\RepositoryResponseTrait;
 
 class PasswordResetRepository extends BaseRepository implements PasswordResetRepositoryInterface
 {
+    use RepositoryResponseTrait;
+
     public function __construct(PasswordReset $model)
     {
         $this->model = $model;
@@ -35,7 +39,7 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
             );
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['failed' => __('validation.reset_token.invalid_email')], httpStatusCode('NOT_FOUND'));
+                return $this->badRequest(__('validation.reset_token.invalid_email'));
             }
 
             $passwordReset = PasswordReset::updateOrCreate(
@@ -50,9 +54,10 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return false;
+            return $this->exception($exception);
         }
-        return true;
+
+        return $this->ok(__('validation.reset_token.success'));
     }
 
     /**
@@ -63,14 +68,14 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
     {
         $passwordReset = PasswordReset::where('token', $token)->first();
         if (!$passwordReset) {
-            return false;
+            return $this->invalid(__('validation.reset_tokens.invalid'));
         }
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
-            return false;
+            return $this->invalid(__('validation.reset_tokens.invalid'));
         }
 
-        return $passwordReset;
+        return $this->ok(__('validation.reset_tokens.success'));
     }
 
     /**
@@ -101,9 +106,10 @@ class PasswordResetRepository extends BaseRepository implements PasswordResetRep
                 $passwordReset->delete();
                 $user->notify(new PasswordResetSuccess($passwordReset));
 
-                return response()->json($user);
+                return $this->ok(__('validation.password_updated'), [$user]);
             }
         }
-        return false;
+
+        return $this->invalid(__('validation.reset_token.invalid'));
     }
 }

@@ -6,9 +6,9 @@ use App\Models\User;
 use App\Models\UserData;
 use App\Services\UserControllerService;
 use App\Repository\UserRepositoryInterface;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -23,11 +23,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return false|void
+     * @param $request
+     * @return array
      */
     public function login($request)
     {
-        $success = false;
         $request = $request->all();
         try {
             if (
@@ -39,38 +39,49 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             ) {
                 $user = Auth::user();
                 $success = $user->toArray();
-                $success['token'] = $user->createToken('LaravelBoilerplate')->accessToken;
+                $success['token'] = $user->createToken(config('app.name'))->accessToken;
+
+                return $this->ok(__('users.login.success'), $success);
+            } else {
+                return $this->unauthorised(__('users.login.invalid'));
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
+            return $this->exception($exception);
         }
-
-        return $success;
     }
 
     /**
-     * @param Request $request
+     * @param $request
      * @return mixed
-     * @throws \Exception
      */
     public function store($request): mixed
     {
         try {
+            DB::beginTransaction();
+
             $this->userControllerService->validateInput($request, 'store');
-            //password confirmation not required for storing - only validation
-            $request->request->remove('c_password');
-            $response = parent::store($request);
-            //store additional data, if any
-            $request->request->add(['user_id' => $response->id]);
-            $this->userDataRepository->store($request);
+            //adds the use_id to the response - required for user-data storing
+            if ($this->model->fill($request->all())->save()) {
+                if (array_key_exists('data', $request->all())) {
+                    $request->request->add(['user_id' => $this->model->id]);
+                    $this->userDataRepository->store($request);
+                }
+
+                DB::commit();
+                return $this->ok(__('users.store.success'), $this->model);
+            }
+
+            DB::rollBack();
+            return $this->invalid(__('users.store.failed'));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $response;
+            DB::rollBack();
+            return $this->exception($exception);
+        }
     }
+
     /**
      * @param $request
      * @param $id
@@ -78,68 +89,77 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function update($request, $id): mixed
     {
-        $success = false;
         try {
+            DB::beginTransaction();
+
             $this->userControllerService->validateInput($request, 'update');
+
+            $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
+            $request->request->remove('data');
             $input = $request->all();
-            if (count($input)) {
-                $user = User::find($id);
-                if ($user) {
-                    if ($user->fill($input)->save()) {
-                        $success = $this->userDataRepository->update($request, $id);
-                    } else {
-                        throw new \Exception(__('general.record.not_saved', ['id' => $id]));
-                    }
-                } else {
-                    throw new \Exception(__('general.record.not_found', ['id' => $id]));
+            $user  = User::findOrFail($id);
+            $user->fill($input)->save();
+
+            if ($userDataUpdateResponse) {
+                if (count($input) == $this->userControllerService->fillableInputCount($input, $user)) {
+                    DB::commit();
+                    return $this->ok(__('users.update.success', ['id' => $id]));
                 }
-            } else {
-                throw new \Exception(__('general.input_error'));
             }
+
+            DB::rollBack();
+            return $this->invalid(__('users.update.failed',  ['id' => $id]));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $success;
+            DB::rollBack();
+            return $this->exception($exception);
+        }
     }
 
     /**
-     * @return array
+     * @return array|mixed
      */
     public function index()
     {
         try {
             $userCollection = (User::with('data')->get());
-
             $users          = [];
             //iterates over all users, collapses user->data into user and return data
             foreach ($userCollection as $user) {
                 array_push($users, eavParser($user));
             }
+
+            return $this->ok(__('users.index.success'), $users);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $users;
+            return $this->exception($exception);
+        }
     }
+
     /**
      * Fetches a single User with associated data, if any
      *
      * @param $id
-     * @return array|\Illuminate\Http\JsonResponse|mixed|void
+     * @return array|mixed|void
      */
     public function show($id)
     {
         try {
-            $userCollection = User::with('data')->findOrFail($id);
-            $user           = eavParser($userCollection);
+            $userCollection = User::with('data')->find($id);
+            if ($userCollection) {
+                $user = eavParser($userCollection);
+
+                return $this->ok(__('users.update.success'), $user);
+            } else {
+
+                return $this->notFound(__('users.show.failed'));
+            }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $user;
+            return $this->exception($exception);
+        }
     }
 }

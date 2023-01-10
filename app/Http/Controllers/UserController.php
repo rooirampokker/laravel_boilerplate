@@ -18,59 +18,45 @@ class UserController extends Controller
 
     /**
      * returns all active/non-deleted users
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $response = $this->userRepository->index();
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
+
     /**
      * returns all active/non-deleted users
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function indexAll()
     {
         $response = $this->userRepository->indexAll();
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
     /**
      * returns all active/non-deleted users
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function indexTrashed()
     {
         $response = $this->userRepository->indexTrashed();
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
     /**
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $response = $this->userRepository->show($id);
 
-        if ($response) {
-            return response()->json(['success' => [$response]], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
+
     }
 
     /**
@@ -80,11 +66,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->login($request);
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -96,11 +78,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->store($request);
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -112,11 +90,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->update($request, $id);
 
-        if (!$response) {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
-
-        return response()->json(['success' => __('general.record.update.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -127,11 +101,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->delete($id);
 
-        if ($response) {
-            return response()->json(['success' => __('general.record.destroy.success', ['id' => $id])], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -142,10 +112,6 @@ class UserController extends Controller
     {
         $response = $this->userRepository->restore($id);
 
-        if ($response) {
-            return response()->json(['success' => __('general.record.restore.success', ['id' => $id])], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
 }
