@@ -90,30 +90,29 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function update($request, $id): mixed
     {
         try {
+            DB::beginTransaction();
+
             $this->userControllerService->validateInput($request, 'update');
+
+            $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
+            $request->request->remove('data');
             $input = $request->all();
-            if (count($input)) {
-                $user = User::find($id);
-                if ($user) {
-                    $user->fill($input)->save();
-                    $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
-                    if($userDataUpdateResponse && $user->wasChanged()) {
+            $user  = User::findOrFail($id);
+            $user->fill($input)->save();
 
-                        return $this->ok(__('users.update.with_data.success', ['id' => $id]));
-                    } elseif($user->wasChanged()) {
-
-                        return $this->ok(__('users.update.success', ['id' => $id]));
-                    } elseif ($userDataUpdateResponse) {
-
-                        return $this->ok(__('users.update.only_data.success', ['id' => $id]));
-                    }
+            if ($userDataUpdateResponse) {
+                if (count($input) == $this->userControllerService->fillableInputCount($input, $user)) {
+                    DB::commit();
+                    return $this->ok(__('users.update.success', ['id' => $id]));
                 }
             }
 
+            DB::rollBack();
             return $this->invalid(__('users.update.failed',  ['id' => $id]));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
+            DB::rollBack();
             return $this->exception($exception);
         }
     }

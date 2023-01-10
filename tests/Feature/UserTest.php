@@ -45,22 +45,15 @@ class UserTest extends TestCase
     /**
      * SUPER ADMIN CAN CREATE NEW USER
      */
-    public function testSuperAdminCanCreateUser() {
-      $newUserEmail = $this->faker->email();
-      $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users', [
-          'email' => $newUserEmail,
-          'password' => $this->password,
-          'c_password' => $this->password
-      ]);
+    public function testSuperAdminCanCreateUserWithAdditionalData() {
+        $response = $this->createUserWithAdditionalData();
+
         $response->assertJson([
             'success' => true,
             'code' => 200,
             'message' =>  __('users.store.success'),
-            'data' => [
-                'email' => $newUserEmail
-            ]
+            'data' => []
         ]);
-
   }
     /**
      * SUPER ADMIN CAN DELETE NEW USER
@@ -136,7 +129,7 @@ class UserTest extends TestCase
         $response->assertStatus(401);
     }
     /**
-     * user CAN'T RESTORE A DELETED USER
+     * USER CAN'T RESTORE A DELETED USER
      */
     public function testUserCantRestoreUser() {
         //DELETE FIRST, THEN RESTORE
@@ -166,10 +159,55 @@ class UserTest extends TestCase
         $oldEmail = $this->user->email;
         $newEmail = $this->faker->email();
         $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->user->id, [
-            'email' => $newEmail,
+            'email' => $newEmail
         ]);
 
         //return success - user may update their own profile
         $response->assertStatus(200);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.update.success', ['id' => $this->user->id])
+        ]);
+    }
+    /**
+ * USER CAN UPDATE ADDITIONAL USER DATA
+ */
+    public function testUserCanUpdateAdditionalData() {
+        $email = $this->faker->email();
+        $user = $this->createUserWithAdditionalData($email);
+
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data']['id'], [
+            'data' => [
+                'first_name' => $this->faker->firstName()
+            ]
+        ]);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.update.success', ['id' => $user['data']['id']])
+        ]);
+    }
+    /**
+     * USER ATTEMPTS TO EDIT NON-EXISTENT ADDITIONAL USER DATA
+     */
+    public function testUserCantUpdateUserWithRandomData() {
+        $email = $this->faker->email();
+        $user = $this->createUserWithAdditionalData($email);
+
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data']['id'], [
+            'email' => $this->faker->email(),
+            'data' => [
+                'random_input' => $this->faker->firstName()
+            ]
+        ]);
+
+        $response->assertJson([
+            'success' => false,
+            'code' => 422,
+            'message' =>  __('users.update.failed', ['id' => $user['data']['id']])
+        ]);
     }
 }

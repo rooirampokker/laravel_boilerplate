@@ -64,26 +64,22 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
     public function update($request, $user_id): mixed
     {
         try {
-            $response = false;
+            $response = true;
             $request = $request->all();
             if (array_key_exists('data', $request)) {
-                $response = DB::transaction(function () use ($request, $user_id) {
-                    foreach ($request['data'] as $key => $value) {
-                            $response = UserData::where([
-                                ['user_id', '=', $user_id],
-                                ['key', '=', $key]
-                            ])->update(['value' => $value]);
-                    }
-
-                    return $response;
-                });
+                foreach ($request['data'] as $key => $value) {
+                    $response = UserData::where([
+                        ['user_id', '=', $user_id],
+                        ['key', '=', $key]
+                    ])->update(['value' => $value]);
+                }
             }
-            
-            return $this->ok(__('users.update.data_only.success'), $response);
+            //this does not return json - only boolean to check if any field was updated or not
+            return $response;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 }
