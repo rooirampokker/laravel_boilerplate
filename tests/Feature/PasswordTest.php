@@ -32,7 +32,9 @@ class PasswordTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success' => __('validation.reset_token.success')
+            'success' => true,
+            'code' => 200,
+            'message' => __('validation.reset_token.success')
         ]);
     }
     /**
