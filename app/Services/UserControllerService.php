@@ -12,7 +12,7 @@ class UserControllerService
      * @return void
      * @throws \Exception
      */
-    public function validateInput($request, $validationType)
+    public function validateInput(&$request, $validationType)
     {
         //use this array to validate creation of new users
         $validateCreate = [
@@ -27,7 +27,8 @@ class UserControllerService
         $validateThis   = ($validationType == 'store') ? $validateCreate : $validateUpdate;
         $validated      = Validator::make($request->all(), $validateThis);
         $errorMessages  = false;
-
+        //password confirmation not required for storing - only validation
+        $request->request->remove('c_password');
         if ($validated->fails()) {
             $errors = $validated->errors();
             foreach ($errors->all() as $error) {

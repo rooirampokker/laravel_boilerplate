@@ -2,7 +2,6 @@
 
 namespace App\Repository\Eloquent;
 
-use App\Models\User;
 use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +10,7 @@ use App\Traits\RepositoryResponseTrait;
 class BaseRepository implements EloquentRepositoryInterface
 {
     use RepositoryResponseTrait;
+
     protected Model $model;
     protected Request $request;
 
@@ -20,7 +20,7 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @return mixed|void
+     * @return array|mixed
      */
     public function index()
     {
@@ -33,9 +33,11 @@ class BaseRepository implements EloquentRepositoryInterface
             return $this->exception($exception);
         }
     }
+
     /**
      * Fetches all records, including soft-deleted
-     * @return mixed|void
+     *
+     * @return array|mixed
      */
     public function indexAll()
     {
@@ -48,8 +50,9 @@ class BaseRepository implements EloquentRepositoryInterface
             return $this->exception($exception);
         }
     }
+
     /**
-     * @return mixed|void
+     * @return array|mixed
      */
     public function indexTrashed()
     {
@@ -74,7 +77,6 @@ class BaseRepository implements EloquentRepositoryInterface
     /**
      * @param $request
      * @return mixed
-     * @throws \Exception
      */
     public function store($request): mixed
     {
@@ -89,7 +91,7 @@ class BaseRepository implements EloquentRepositoryInterface
             }
             $this->model->save();
 
-            return $this->ok(__('users.update.success'), $this->model);
+            return $this->ok(__('general.record.create'), $this->model);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -108,7 +110,7 @@ class BaseRepository implements EloquentRepositoryInterface
 
     /**
      * @param $id
-     * @return mixed
+     * @return array|mixed
      */
     public function delete($id)
     {
@@ -128,16 +130,17 @@ class BaseRepository implements EloquentRepositoryInterface
             return $this->exception($exception);
         }
     }
+
     /**
      * @param $id
-     * @return mixed
+     * @return array
      */
     public function restore($id)
     {
         try {
-            $user = User::withTrashed()->find($id);
-            if ($user) {
-                $user->restore();
+            $model = $this->model::withTrashed()->find($id);
+            if ($model) {
+                $model->restore();
 
                 return $this->ok(__('general.record.restore.success', ['id' => $id]));
             } else {

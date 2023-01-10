@@ -45,7 +45,7 @@ class PasswordTest extends TestCase
             'email' => "john@doe.com"
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(400);
         $response->assertJson([
             'success' => false,
             'code' => 400,

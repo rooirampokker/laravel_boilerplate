@@ -7,15 +7,27 @@ return [
     ],
     'store' => [
         'success' => 'User stored',
-        'failed' => 'Unable to store user'
+        'failed' => 'Unable to store user',
+        'with_data' => [
+            'success' => 'User and User Data was successfully stored',
+        ],
+        'only_data' => [
+            'success' => 'Additional user data was successfully stored',
+        ]
     ],
     'show' => [
         'success' => 'User retrieved',
         'failed' => 'Unable to retrieve the user',
     ],
     'update' => [
-        'success' => 'User updated',
-        'failed' => 'Unable to update user'
+        'success' => 'User :id updated',
+        'failed' => 'Unable to update user :id',
+        'with_data' => [
+            'success' => 'User and User Data was successfully updated for :id',
+        ],
+        'only_data' => [
+            'success' => 'Additional data was successfully updated for user :id',
+        ]
     ],
     'delete' => [
         'success' => 'User deleted',

@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->index();
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexAll();
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
     /**
      * returns all active/non-deleted users
@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexTrashed();
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
     /**
      * @param $id
@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->show($id);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
 
     }
 
@@ -66,7 +66,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->login($request);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -78,11 +78,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->store($request);
 
-        if ($response) {
-            return response()->json(['success' => $response], httpStatusCode('SUCCESS'));
-        } else {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -94,11 +90,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->update($request, $id);
 
-        if (!$response) {
-            return response()->json(['error' => __('auth.unauthorized')], httpStatusCode('UNAUTHORISED'));
-        }
-
-        return response()->json(['success' => __('general.record.update.success', ['id' => $id])], httpStatusCode('SUCCESS'));
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -109,7 +101,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->delete($id);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -120,6 +112,6 @@ class UserController extends Controller
     {
         $response = $this->userRepository->restore($id);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 }

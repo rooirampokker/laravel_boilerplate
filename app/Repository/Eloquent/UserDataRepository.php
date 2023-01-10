@@ -8,6 +8,7 @@ use App\Repository\UserDataRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
+
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
     private UserDataControllerService $userDataControllerService;
@@ -29,28 +30,26 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
 
     public function store($request): mixed
     {
-        $response = false;
         try {
             $request = $request->all();
 
-            if (array_key_exists('data', $request)) {
-                foreach ($request['data'] as $key => $value) {
-                    $key = str_replace("&nbsp;", '', trim($key));
-                    $value = str_replace("&nbsp;", '', trim($value));
-                    $response = UserData::updateOrCreate(
-                        [
-                            'user_id' => $request['user_id'],
-                            'key'     => $key],
-                        ['value' => $value]
-                    );
-                }
+            foreach ($request['data'] as $key => $value) {
+                $key = str_replace("&nbsp;", '', trim($key));
+                $value = str_replace("&nbsp;", '', trim($value));
+                UserData::updateOrCreate(
+                    [
+                        'user_id' => $request['user_id'],
+                        'key'     => $key],
+                    ['value' => $value]
+                );
             }
+
+            return $this->ok(__('user.store.only_data.success'));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
-            throw $exception;
-        }
 
-        return $response;
+            return $this->exception($exception);
+        }
     }
     /**
      * update user data from request
@@ -77,7 +76,7 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
                      return $response;
                 });
             } else { //no data to update
-                $response = true;
+                //return $this->
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());

@@ -22,7 +22,7 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->create($request);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -33,7 +33,7 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->find($token);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 
     /**
@@ -44,6 +44,6 @@ class PasswordResetController extends Controller
     {
         $response = $this->passwordResetRepository->reset($request);
 
-        return response()->json($response);
+        return response()->json($response, $response['code']);
     }
 }
