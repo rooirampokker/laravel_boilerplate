@@ -4,15 +4,19 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Spatie\Permission\Models\Role;
+use App\Services\PolicyService;
 
 class UserPolicy
 {
     use HandlesAuthorization;
+    private string $model;
+    private PolicyService $policyService;
 
     public function __construct()
     {
         $this->model = 'user';
+        $this->policyService = new PolicyService();
+
     }
     /**
      * Determine whether the user can view all non-deleted models.
@@ -22,10 +26,7 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        $role = Role::findByName($user->getRoleNames()[0]);
-        if ($role->hasPermissionTo($this->model . '-index')) {
-            return true;
-        }
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-index');
     }
     /**
      * Determine whether the user can view all (including deleted) models.
@@ -35,7 +36,7 @@ class UserPolicy
      */
     public function indexAll(User $user)
     {
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-indexAll');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-indexAll');
     }
     /**
      * Determine whether the user can view all (including deleted) models.
@@ -45,7 +46,7 @@ class UserPolicy
      */
     public function indexTrashed(User $user)
     {
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-indexTrashed');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-indexTrashed');
     }
     /**
      * Determine whether the user can view the model.
@@ -61,7 +62,7 @@ class UserPolicy
             return true;
         }
 
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-show');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-show');
     }
 
     /**
@@ -72,7 +73,7 @@ class UserPolicy
      */
     public function store(User $user)
     {
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-store');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-store');
     }
 
     /**
@@ -89,7 +90,7 @@ class UserPolicy
             return true;
         }
 
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-update');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-update');
     }
 
     /**
@@ -101,7 +102,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-delete');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-delete');
 
         //should users be able to delete their own profiles?
         //return $user->id == $model->user_id;
@@ -116,22 +117,6 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return $this->canUserWithRolesAccessPermission($user, $this->model . '-restore');
-    }
-
-    /**
-     * Cycles over user roles and returns true if any of them has sufficient permission
-     * @param User $user
-     * @return bool
-     */
-    protected function canUserWithRolesAccessPermission(User $user, $permission) {
-        foreach($user->getRoleNames() as $roleName) {
-            $role = Role::findByName($roleName);
-            if ($role->hasPermissionTo($permission)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-restore');
     }
 }
