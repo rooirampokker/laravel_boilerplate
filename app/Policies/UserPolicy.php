@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
 class UserPolicy
 {
@@ -14,18 +15,38 @@ class UserPolicy
         $this->model = 'user';
     }
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view all non-deleted models.
      *
      * @param  \App\Models\User $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function index(User $user)
     {
-        if ($user->hasPermissionTo($this->model . '-index')) {
+        $role = Role::findByName($user->getRoleNames()[0]);
+        if ($role->hasPermissionTo($this->model . '-index')) {
             return true;
         }
     }
-
+    /**
+     * Determine whether the user can view all (including deleted) models.
+     *
+     * @param  \App\Models\User $user
+     * @return mixed
+     */
+    public function indexAll(User $user)
+    {
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-indexAll');
+    }
+    /**
+     * Determine whether the user can view all (including deleted) models.
+     *
+     * @param  \App\Models\User $user
+     * @return mixed
+     */
+    public function indexTrashed(User $user)
+    {
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-indexTrashed');
+    }
     /**
      * Determine whether the user can view the model.
      *
@@ -33,10 +54,14 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function show(User $user, User $model)
     {
       // users can view their own profiles
-        return $user->id == $model->id;
+        if ($user->id == $model->id) {
+            return true;
+        }
+
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-show');
     }
 
     /**
@@ -45,11 +70,9 @@ class UserPolicy
      * @param  \App\Models\User $user
      * @return mixed
      */
-    public function create(User $user)
+    public function store(User $user)
     {
-        if ($user->hasPermissionTo($this->model . '-store')) {
-            return true;
-        }
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-store');
     }
 
     /**
@@ -66,7 +89,7 @@ class UserPolicy
             return true;
         }
 
-        return $user->hasPermissionTo($this->model . '-update');
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-update');
     }
 
     /**
@@ -76,11 +99,9 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function destroy(User $user, User $model)
+    public function delete(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model . '-delete')) {
-            return true;
-        }
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-delete');
 
         //should users be able to delete their own profiles?
         //return $user->id == $model->user_id;
@@ -95,20 +116,22 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model . '-restore')) {
-            return true;
-        }
+        return $this->canUserWithRolesAccessPermission($user, $this->model . '-restore');
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User $user
-     * @param  \App\Models\User $model
-     * @return mixed
+     * Cycles over user roles and returns true if any of them has sufficient permission
+     * @param User $user
+     * @return bool
      */
-    public function forceDelete(User $user, User $model)
-    {
+    protected function canUserWithRolesAccessPermission(User $user, $permission) {
+        foreach($user->getRoleNames() as $roleName) {
+            $role = Role::findByName($roleName);
+            if ($role->hasPermissionTo($permission)) {
+                return true;
+            }
+        }
+
         return false;
     }
 }
