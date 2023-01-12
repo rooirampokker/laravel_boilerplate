@@ -1,8 +1,10 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/rooirampokker/laravel_boilerplate/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rooirampokker/laravel_boilerplate/tree/master)
 ## Includes:
 - Passport set up and configured (https://laravel.com/docs/9.x/passport)
-- Permissions and roles set up and configured (https://spatie.be/docs/laravel-permission/v3/basic-usage/basic-usage)
-- Positive/Negative feature tests for users (login, updating, creation, deletion, roles)
+- Permissions and roles set up and configured (https://spatie.be/docs/laravel-permission/v5/basic-usage/basic-usage)
+  - Users can have multiple roles with different permissions
+  - Permissions check passes if any of the assigned roles is authorised to perform the required action
+- Positive/Negative feature tests for users and password resets
 - Soft-deletes with soft-cascading on deletes
 - API response messages fetched from locales
 - Provision for localization of emails 

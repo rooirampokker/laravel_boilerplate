@@ -36,7 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // create roles and assign existing permissions - employees are currently locked down with no permissions
         $role2 = Role::create(['guard_name' => 'api', 'name' => 'user']);
-
+        $role2->givePermissionTo(Permission::where('name', 'user-indexAll')->get());
         // assign basic permissions
         //SUPER ADMIN - all permissions are implicitly granted in App/Providers/AuthServiceProvider.php, so this is kinda redundant
         $user = \App\Models\User::first();

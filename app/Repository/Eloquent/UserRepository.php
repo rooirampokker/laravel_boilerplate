@@ -123,7 +123,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function index()
     {
         try {
-            $userCollection = (User::with('data')->get());
+            $userCollection = (User::with('data', 'roles')->get());
             $users          = [];
             //iterates over all users, collapses user->data into user and return data
             foreach ($userCollection as $user) {
@@ -147,7 +147,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function show($id)
     {
         try {
-            $userCollection = User::with('data')->find($id);
+            $userCollection = User::with('data', 'roles')->find($id);
             if ($userCollection) {
                 $user = eavParser($userCollection);
 
@@ -161,5 +161,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             return $this->exception($exception);
         }
+    }
+
+    public function addRole($id) {
+
+    }
+
+    public function removeRole($id) {
+
     }
 }

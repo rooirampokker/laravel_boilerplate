@@ -4,28 +4,50 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Services\PolicyService;
 
 class UserPolicy
 {
     use HandlesAuthorization;
+    private string $model;
+    private PolicyService $policyService;
 
     public function __construct()
     {
         $this->model = 'user';
+        $this->policyService = new PolicyService();
+
     }
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view all non-deleted models.
      *
      * @param  \App\Models\User $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function index(User $user)
     {
-        if ($user->hasPermissionTo($this->model . '-index')) {
-            return true;
-        }
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-index');
     }
-
+    /**
+     * Determine whether the user can view all (including deleted) models.
+     *
+     * @param  \App\Models\User $user
+     * @return mixed
+     */
+    public function indexAll(User $user)
+    {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-indexAll');
+    }
+    /**
+     * Determine whether the user can view all (including deleted) models.
+     *
+     * @param  \App\Models\User $user
+     * @return mixed
+     */
+    public function indexTrashed(User $user)
+    {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-indexTrashed');
+    }
     /**
      * Determine whether the user can view the model.
      *
@@ -33,10 +55,15 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function show(User $user, User $model)
     {
       // users can view their own profiles
-        return $user->id == $model->id;
+        $routeUuid = request()->route()->parameters['id'];
+        if ($user->id == $routeUuid) {
+            return true;
+        }
+
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-show');
     }
 
     /**
@@ -45,11 +72,9 @@ class UserPolicy
      * @param  \App\Models\User $user
      * @return mixed
      */
-    public function create(User $user)
+    public function store(User $user)
     {
-        if ($user->hasPermissionTo($this->model . '-store')) {
-            return true;
-        }
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-store');
     }
 
     /**
@@ -66,7 +91,7 @@ class UserPolicy
             return true;
         }
 
-        return $user->hasPermissionTo($this->model . '-update');
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-update');
     }
 
     /**
@@ -76,11 +101,9 @@ class UserPolicy
      * @param  \App\Models\User $model
      * @return mixed
      */
-    public function destroy(User $user, User $model)
+    public function delete(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model . '-delete')) {
-            return true;
-        }
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-delete');
 
         //should users be able to delete their own profiles?
         //return $user->id == $model->user_id;
@@ -95,20 +118,6 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        if ($user->hasPermissionTo($this->model . '-restore')) {
-            return true;
-        }
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User $user
-     * @param  \App\Models\User $model
-     * @return mixed
-     */
-    public function forceDelete(User $user, User $model)
-    {
-        return false;
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-restore');
     }
 }
