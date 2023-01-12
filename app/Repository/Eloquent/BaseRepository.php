@@ -65,7 +65,7 @@ class BaseRepository implements EloquentRepositoryInterface
 
     /**
      * @param $id
-     * @return false|mixed
+     * @return mixed
      */
     public function show($id)
     {
@@ -74,7 +74,7 @@ class BaseRepository implements EloquentRepositoryInterface
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return false;
+            return new $this->model;
         }
     }
 

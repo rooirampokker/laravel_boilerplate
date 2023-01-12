@@ -126,7 +126,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function index()
     {
         try {
-            $userCollection = (User::with('data', 'roles')->get());
+            $userCollection = $this->model::with('data', 'roles')->get();
 
             return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
@@ -141,7 +141,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function indexAll()
     {
         try {
-            $userCollection = (User::withTrashed()->with('data', 'roles')->get());
+            $userCollection = $this->model::withTrashed()->with('data', 'roles')->get();
 
             return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
@@ -156,7 +156,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function indexTrashed()
     {
         try {
-            $userCollection = (User::onlyTrashed()->with('data', 'roles')->get());
+            $userCollection = $this->model::onlyTrashed()->with('data', 'roles')->get();
 
             return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
@@ -174,14 +174,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function show($id)
     {
         try {
-            $userCollection = User::with('data', 'roles')->find($id);
-            if ($userCollection) {
-                $user = eavParser($userCollection);
+            $userCollection = $this->model::with('data', 'roles')->find($id);
 
-                return $this->ok(__('users.update.success'), $user);
+            if ($userCollection) {
+                return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
             } else {
 
-                return $this->notFound(__('users.show.failed'));
+                return $this->model;
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());

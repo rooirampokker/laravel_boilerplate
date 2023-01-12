@@ -70,10 +70,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $response = $this->userRepository->show($id);
+        $userCollection = $this->userRepository->show($id);
 
-        return response()->json($response, $response['code']);
+        if ($userCollection->count()) {
+            return response()->json($this->ok(__('users.show.success'), $userCollection));
+        }
 
+        return response()->json($this->error(__('users.show.failed')));
     }
 
     /**

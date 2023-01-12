@@ -15,9 +15,9 @@ class UserDataControllerService
         $this->userData = [];
     }
 
-    public function hydrateUserWithAdditionalData($userCollection, $additionalDataKey) {
+    public function hydrateUserWithAdditionalData($userCollection) {
         foreach ($userCollection as $user) {
-            array_push($this->userData, eavParser($user, $additionalDataKey));
+            array_push($this->userData, eavParser($user, 'data'));
         }
         return User::hydrate($this->userData);
     }
