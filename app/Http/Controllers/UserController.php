@@ -24,8 +24,13 @@ class UserController extends Controller
     public function index()
     {
         $response = $this->userRepository->index();
-        $userCollection = UserResource::collection($response);
-        return response()->json($this->ok(__('users.index.success'), $userCollection));
+        if ($response) {
+            $userCollection = UserResource::collection($response);
+
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        return response()->json($this->error(__('users.index.failed')));
     }
 
     /**
@@ -35,9 +40,13 @@ class UserController extends Controller
     public function indexAll()
     {
         $response = $this->userRepository->indexAll();
+        if ($response) {
+            $userCollection = UserResource::collection($response);
 
-        $userCollection = UserResource::collection($response);
-        return response()->json($this->ok(__('users.index.success'), $userCollection));
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        return response()->json($this->error(__('users.index.failed')));
     }
     /**
      * returns all active/non-deleted users
@@ -47,7 +56,13 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexTrashed();
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+            $userCollection = UserResource::collection($response);
+
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        return response()->json($this->error(__('users.index.failed')));
     }
     /**
      * @param $id

@@ -20,57 +20,62 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @return array|mixed
+     * @return false|\Illuminate\Database\Eloquent\Collection|Model[]|mixed
      */
     public function index()
     {
         try {
-            return $this->ok(__('general.index.success', $this->model::all()));
+            return $this->model::all();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
      * Fetches all records, including soft-deleted
      *
-     * @return array|mixed
+     * @return false|mixed
      */
     public function indexAll()
     {
         try {
             return $this->model::withTrashed()->get();
-            //return $this->ok(__('general.index.success'), $this->model::withTrashed()->get()->toArray());
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
-     * @return array|mixed
+     * @return false|mixed
      */
     public function indexTrashed()
     {
         try {
-
-            return $this->ok(__('general.index.success'), $this->model::onlyTrashed()->get()->toArray());
+            return $this->model::onlyTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
      * @param $id
-     * @return mixed|void
+     * @return false|mixed
      */
     public function show($id)
     {
+        try {
+            return $this->model::find($id);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
     }
 
     /**
@@ -94,7 +99,7 @@ class BaseRepository implements EloquentRepositoryInterface
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
@@ -126,7 +131,7 @@ class BaseRepository implements EloquentRepositoryInterface
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
@@ -150,7 +155,7 @@ class BaseRepository implements EloquentRepositoryInterface
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 }

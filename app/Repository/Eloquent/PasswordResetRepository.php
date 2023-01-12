@@ -12,11 +12,11 @@ use App\Repository\PasswordResetRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Traits\RepositoryResponseTrait;
+use App\Traits\ResponseTrait;
 
 class PasswordResetRepository extends BaseRepository implements PasswordResetRepositoryInterface
 {
-    use RepositoryResponseTrait;
+    use ResponseTrait;
 
     public function __construct(PasswordReset $model)
     {

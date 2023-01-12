@@ -5,6 +5,7 @@ namespace App\Repository\Eloquent;
 use App\Models\User;
 use App\Models\UserData;
 use App\Services\UserControllerService;
+use App\Services\UserDataControllerService;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -14,11 +15,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     private UserControllerService $userControllerService;
     private UserDataRepository $userDataRepository;
+    private UserDataControllerService $userDataControllerService;
 
     public function __construct(User $model)
     {
         $this->model = $model;
         $this->userControllerService = new UserControllerService();
+        $this->userDataControllerService = new UserDataControllerService();
         $this->userDataRepository = new UserDataRepository(new UserData());
     }
 
@@ -124,15 +127,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = (User::with('data', 'roles')->get());
-            $userData          = [];
-            //iterates over all users, collapses user->data into user and return data
 
-            foreach ($userCollection as $user) {
-                array_push($userData, eavParser($user, 'data'));
-            }
-            return User::hydrate($userData);
-
-
+            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -146,15 +142,23 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = (User::withTrashed()->with('data', 'roles')->get());
-            $userData          = [];
-            //iterates over all users, collapses user->data into user and return data
 
-            foreach ($userCollection as $user) {
-                array_push($userData, eavParser($user, 'data'));
-            }
-            return User::hydrate($userData);
+            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
 
+            return false;
+        }
+    }
+    /**
+     * @return array|mixed
+     */
+    public function indexTrashed()
+    {
+        try {
+            $userCollection = (User::onlyTrashed()->with('data', 'roles')->get());
 
+            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
