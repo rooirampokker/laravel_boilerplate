@@ -114,4 +114,25 @@ class UserController extends Controller
 
         return response()->json($response, $response['code']);
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function addRole($id)
+    {
+        $response = $this->userRepository->removeRole($id);
+
+        return response()->json($response, $response['code']);
+    }
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function removeRole($id)
+    {
+        $response = $this->userRepository->removeRole($id);
+
+        return response()->json($response, $response['code']);
+    }
 }

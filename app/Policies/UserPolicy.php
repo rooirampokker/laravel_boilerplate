@@ -58,7 +58,8 @@ class UserPolicy
     public function show(User $user, User $model)
     {
       // users can view their own profiles
-        if ($user->id == $model->id) {
+        $routeUuid = request()->route()->parameters['id'];
+        if ($user->id == $routeUuid) {
             return true;
         }
 
