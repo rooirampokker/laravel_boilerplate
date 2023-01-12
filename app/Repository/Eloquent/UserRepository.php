@@ -124,17 +124,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = (User::with('data', 'roles')->get());
-            $users          = [];
+            $userData          = [];
             //iterates over all users, collapses user->data into user and return data
-            foreach ($userCollection as $user) {
-                array_push($users, eavParser($user));
-            }
 
-            return $this->ok(__('users.index.success'), $users);
+            foreach ($userCollection as $user) {
+                array_push($userData, eavParser($user, 'data'));
+            }
+            return User::hydrate($userData);
+
+
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 

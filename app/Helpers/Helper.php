@@ -10,11 +10,11 @@ use Illuminate\Support\Str;
  * @return array
  */
 if (!function_exists('eavParser')) {
-    function eavParser($collection): array
+    function eavParser($collection, $key): array
     {
         $dataCollection = [];
-        foreach ($collection->data as $data) {
-            $dataCollection['data'][$data->key] = $data->value;
+        foreach ($collection->$key as $data) {
+            $dataCollection[$key][$data->key] = $data->value;
         }
 
         return array_merge($collection->toArray(), $dataCollection);

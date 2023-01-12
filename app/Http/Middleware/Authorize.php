@@ -5,11 +5,11 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Http\Middleware\App;
-use App\Traits\RepositoryResponseTrait;
+use App\Traits\ResponseTrait;
 
 class Authorize
 {
-    use RepositoryResponseTrait;
+    use ResponseTrait;
     /**
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next

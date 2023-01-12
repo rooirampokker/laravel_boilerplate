@@ -5,11 +5,11 @@ namespace App\Repository\Eloquent;
 use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use App\Traits\RepositoryResponseTrait;
+use App\Traits\ResponseTrait;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
-    use RepositoryResponseTrait;
+    use ResponseTrait;
 
     protected Model $model;
     protected Request $request;
@@ -25,7 +25,6 @@ class BaseRepository implements EloquentRepositoryInterface
     public function index()
     {
         try {
-
             return $this->ok(__('general.index.success', $this->model::all()));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -42,8 +41,8 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexAll()
     {
         try {
-
-            return $this->ok(__('general.index.success'), $this->model::withTrashed()->get()->toArray());
+            return $this->model::withTrashed()->get();
+            //return $this->ok(__('general.index.success'), $this->model::withTrashed()->get()->toArray());
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 

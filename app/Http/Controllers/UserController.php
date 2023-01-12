@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Repository\Eloquent\UserRepository;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserCollection;
 use Validator;
 
 class UserController extends Controller
@@ -23,8 +24,8 @@ class UserController extends Controller
     public function index()
     {
         $response = $this->userRepository->index();
-
-        return response()->json($response, $response['code']);
+        $userCollection = UserResource::collection($response);
+        return response()->json($this->ok(__('users.update.success'), $userCollection));
     }
 
     /**
@@ -35,7 +36,8 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexAll();
 
-        return response()->json($response, $response['code']);
+        $userCollection = UserResource::collection($response);
+        return response()->json($this->ok(__('users.update.success'), $userCollection));
     }
     /**
      * returns all active/non-deleted users
@@ -76,9 +78,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $response = $this->userRepository->store($request);
+        $rawResponse = $this->userRepository->store($request);
+        if ($rawResponse['code'] == 200) {
+            $response = new UserResource($rawResponse['data']);
+        }
 
-        return response()->json($response, $response['code']);
+        return response()->json($response, $rawResponse['code']);
     }
 
     /**

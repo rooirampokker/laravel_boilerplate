@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Symfony\Component\HttpFoundation\Response;
 
-trait RepositoryResponseTrait
+trait ResponseTrait
 {
     /**
      * @param $message
