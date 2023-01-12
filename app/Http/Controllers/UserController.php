@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $response = $this->userRepository->index();
         $userCollection = UserResource::collection($response);
-        return response()->json($this->ok(__('users.update.success'), $userCollection));
+        return response()->json($this->ok(__('users.index.success'), $userCollection));
     }
 
     /**
@@ -37,7 +37,7 @@ class UserController extends Controller
         $response = $this->userRepository->indexAll();
 
         $userCollection = UserResource::collection($response);
-        return response()->json($this->ok(__('users.update.success'), $userCollection));
+        return response()->json($this->ok(__('users.index.success'), $userCollection));
     }
     /**
      * returns all active/non-deleted users

@@ -139,7 +139,28 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return false;
         }
     }
+    /**
+     * @return array|mixed
+     */
+    public function indexAll()
+    {
+        try {
+            $userCollection = (User::withTrashed()->with('data', 'roles')->get());
+            $userData          = [];
+            //iterates over all users, collapses user->data into user and return data
 
+            foreach ($userCollection as $user) {
+                array_push($userData, eavParser($user, 'data'));
+            }
+            return User::hydrate($userData);
+
+
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
+    }
     /**
      * Fetches a single User with associated data, if any
      *
