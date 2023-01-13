@@ -25,6 +25,7 @@ class BaseRepository implements EloquentRepositoryInterface
     public function index()
     {
         try {
+
             return $this->model::all();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
