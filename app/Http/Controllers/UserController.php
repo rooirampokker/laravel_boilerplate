@@ -159,11 +159,19 @@ class UserController extends Controller
      * @param $id
      * @return mixed
      */
-    public function addRole($id)
+    public function addRole(Request $request, $id)
     {
-        $response = $this->userRepository->removeRole($id);
+        $response = $this->userRepository->addRole($request, $id);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+
+            $userCollection = UserResource::collection([$response]);
+
+            return response()->json($this->ok(__('users.roles.create.success'), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.roles.create.show.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
      * @param $id
@@ -171,7 +179,7 @@ class UserController extends Controller
      */
     public function removeRole($id)
     {
-        $response = $this->userRepository->removeRole($id);
+        $response = $this->userRepository->removeRole($request, $id);
 
         return response()->json($response, $response['code']);
     }

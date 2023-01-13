@@ -24,10 +24,10 @@ class RoleController extends Controller
         if ($response) {
             $roleCollection = RoleResource::collection($response);
 
-            return response()->json($this->ok(__('users.index.success'), $roleCollection));
+            return response()->json($this->ok(__('roles.index.success'), $roleCollection));
         }
 
-        $responseMessage = $this->error(__('users.index.failed'));
+        $responseMessage = $this->error(__('roles.index.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }

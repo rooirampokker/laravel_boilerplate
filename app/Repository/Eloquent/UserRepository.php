@@ -4,12 +4,14 @@ namespace App\Repository\Eloquent;
 
 use App\Models\User;
 use App\Models\UserData;
+use App\Models\Role;
 use App\Services\UserControllerService;
 use App\Services\UserDataControllerService;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -186,11 +188,25 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
-    public function addRole($id)
+    public function addRole($request, $id)
     {
+        try {
+            $params = $request->all();
+            $user = $this->model::find($id);
+            $userCollection = $user->assignRole(Role::whereIn('id', $params['roles'])->get());
+            if ($userCollection) {
+                return $userCollection;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
     }
 
-    public function removeRole($id)
+    public function removeRole($request, $id)
     {
     }
 }
