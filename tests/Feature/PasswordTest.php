@@ -6,15 +6,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-
 class PasswordTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      *
      */
-    public function setUp() :void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->seedDatabase();
     }
@@ -22,7 +23,8 @@ class PasswordTest extends TestCase
     /**
      * Successful password Token Creation request
      */
-    public function testPasswordCreateTokenSuccess() {
+    public function testPasswordCreateTokenSuccess()
+    {
         //Notification::fake();
 
         $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/passwords/create', [
@@ -39,7 +41,8 @@ class PasswordTest extends TestCase
     /**
      * Successful password Token Creation request
      */
-    public function testPasswordCreateTokenInvalidEmail() {
+    public function testPasswordCreateTokenInvalidEmail()
+    {
         //Notification::fake();
 
         $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/passwords/create', [

@@ -30,12 +30,12 @@ return [
         ]
     ],
     'delete' => [
-        'success' => 'User deleted',
-        'failed' => 'Unable to delete the user'
+        'success' => 'User :id deleted',
+        'failed' => 'Unable to delete the user :id'
     ],
     'restore' => [
-        'success' => 'user restored',
-        'failed' => 'Failed to restore user'
+        'success' => 'user :id restored',
+        'failed' => 'Failed to restore user :id'
     ],
     'not_found' => 'User not found',
     'user_registration' => 'User Registration',

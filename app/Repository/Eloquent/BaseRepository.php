@@ -5,11 +5,11 @@ namespace App\Repository\Eloquent;
 use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use App\Traits\RepositoryResponseTrait;
+use App\Traits\ResponseTrait;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
-    use RepositoryResponseTrait;
+    use ResponseTrait;
 
     protected Model $model;
     protected Request $request;
@@ -20,58 +20,62 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @return array|mixed
+     * @return false|\Illuminate\Database\Eloquent\Collection|Model[]|mixed
      */
     public function index()
     {
         try {
-
-            return $this->ok(__('general.index.success', $this->model::all()));
+            return $this->model::all();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
      * Fetches all records, including soft-deleted
      *
-     * @return array|mixed
+     * @return false|mixed
      */
     public function indexAll()
     {
         try {
-
-            return $this->ok(__('general.index.success'), $this->model::withTrashed()->get()->toArray());
+            return $this->model::withTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
-     * @return array|mixed
+     * @return false|mixed
      */
     public function indexTrashed()
     {
         try {
-
-            return $this->ok(__('general.index.success'), $this->model::onlyTrashed()->get()->toArray());
+            return $this->model::onlyTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
     /**
      * @param $id
-     * @return mixed|void
+     * @return mixed
      */
     public function show($id)
     {
+        try {
+            return $this->model::find($id);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return new $this->model();
+        }
     }
 
     /**
@@ -91,11 +95,11 @@ class BaseRepository implements EloquentRepositoryInterface
             }
             $this->model->save();
 
-            return $this->ok(__('general.record.create'), $this->model);
+            return $this->model;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
@@ -119,15 +123,14 @@ class BaseRepository implements EloquentRepositoryInterface
             if ($collection) {
                 $collection->delete();
 
-                return $this->ok(__('general.record.destroy.success', ['id' => $id]));
-            } else {
-
-                return $this->notFound(__('general.record.not_found', ['id' => $id]));
+                return true;
             }
+
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 
@@ -142,16 +145,14 @@ class BaseRepository implements EloquentRepositoryInterface
             if ($model) {
                 $model->restore();
 
-                return $this->ok(__('general.record.restore.success', ['id' => $id]));
-            } else {
-
-                return $this->notFound(__('general.record.not_found', ['id' => $id]));
+                return true;
             }
 
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 }

@@ -9,6 +9,7 @@ use App\Services\PolicyService;
 class UserPolicy
 {
     use HandlesAuthorization;
+
     private string $model;
     private PolicyService $policyService;
 
@@ -16,7 +17,6 @@ class UserPolicy
     {
         $this->model = 'user';
         $this->policyService = new PolicyService();
-
     }
     /**
      * Determine whether the user can view all non-deleted models.

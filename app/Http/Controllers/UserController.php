@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Repository\Eloquent\UserRepository;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserCollection;
 use Validator;
 
 class UserController extends Controller
@@ -23,8 +23,14 @@ class UserController extends Controller
     public function index()
     {
         $response = $this->userRepository->index();
+        if ($response) {
+            $userCollection = UserResource::collection($response);
 
-        return response()->json($response, $response['code']);
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -34,8 +40,14 @@ class UserController extends Controller
     public function indexAll()
     {
         $response = $this->userRepository->indexAll();
+        if ($response) {
+            $userCollection = UserResource::collection($response);
 
-        return response()->json($response, $response['code']);
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
      * returns all active/non-deleted users
@@ -45,7 +57,14 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexTrashed();
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+            $userCollection = UserResource::collection($response);
+
+            return response()->json($this->ok(__('users.index.success'), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
      * @param $id
@@ -54,9 +73,14 @@ class UserController extends Controller
     public function show($id)
     {
         $response = $this->userRepository->show($id);
+        if ($response) {
+            $userCollection = UserResource::collection($response);
 
-        return response()->json($response, $response['code']);
+            return response()->json($this->ok(__('users.show.success'), $userCollection));
+        }
 
+        $responseMessage = $this->error(__('users.show.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -78,7 +102,13 @@ class UserController extends Controller
     {
         $response = $this->userRepository->store($request);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+            $userCollection = UserResource::collection($response);
+            return response()->json($this->ok(__('users.store.success'), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.store.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -101,7 +131,12 @@ class UserController extends Controller
     {
         $response = $this->userRepository->delete($id);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+            return response()->json($this->ok(__('users.delete.success', ['id' => $id])));
+        }
+
+        $responseMessage = $this->error(__('users.delete.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -112,7 +147,12 @@ class UserController extends Controller
     {
         $response = $this->userRepository->restore($id);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+            return response()->json($this->ok(__('users.restore.success', ['id' => $id])));
+        }
+
+        $responseMessage = $this->error(__('users.restore.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
