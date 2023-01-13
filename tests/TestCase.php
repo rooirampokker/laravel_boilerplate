@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+
     protected string $newUserFirstName;
     protected string $newUserLastName;
 
@@ -25,7 +26,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return void
      */
-    protected function seedDatabase() {
+    protected function seedDatabase()
+    {
         $this->password         = '1234';
         $this->newUserFirstName = $this->faker->firstName();
         $this->newUserLastName  = $this->faker->lastName();
@@ -43,7 +45,8 @@ abstract class TestCase extends BaseTestCase
         $this->user->assignRole($userRole);
     }
 
-    protected function createUserWithAdditionalData($email = null) {
+    protected function createUserWithAdditionalData($email = null)
+    {
         $email = $email ? $email : $this->faker->email();
         $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users', [
             'email' => $email,

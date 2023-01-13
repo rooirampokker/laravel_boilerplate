@@ -25,7 +25,6 @@ class BaseRepository implements EloquentRepositoryInterface
     public function index()
     {
         try {
-
             return $this->model::all();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -42,7 +41,6 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexAll()
     {
         try {
-
             return $this->model::withTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -57,7 +55,6 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexTrashed()
     {
         try {
-
             return $this->model::onlyTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -73,12 +70,11 @@ class BaseRepository implements EloquentRepositoryInterface
     public function show($id)
     {
         try {
-
             return $this->model::find($id);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return new $this->model;
+            return new $this->model();
         }
     }
 

@@ -44,7 +44,8 @@ class UserControllerService
      * @param $model
      * @return int[]|string[]
      */
-    public function fillableInputCount($input, $model) {
+    public function fillableInputCount($input, $model)
+    {
         return count(array_intersect(array_keys($input), $model->getFillable()));
     }
 }

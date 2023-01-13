@@ -132,7 +132,6 @@ class UserController extends Controller
         $response = $this->userRepository->delete($id);
 
         if ($response) {
-
             return response()->json($this->ok(__('users.delete.success', ['id' => $id])));
         }
 
@@ -149,7 +148,6 @@ class UserController extends Controller
         $response = $this->userRepository->restore($id);
 
         if ($response) {
-
             return response()->json($this->ok(__('users.restore.success', ['id' => $id])));
         }
 

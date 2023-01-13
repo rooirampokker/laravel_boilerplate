@@ -3,7 +3,6 @@
 namespace App\Repository\Eloquent;
 
 use Validator;
-
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\PasswordResetRequest;

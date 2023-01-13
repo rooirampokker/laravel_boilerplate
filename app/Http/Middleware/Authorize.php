@@ -10,6 +10,7 @@ use App\Traits\ResponseTrait;
 class Authorize
 {
     use ResponseTrait;
+
     /**
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next

@@ -110,7 +110,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             }
 
             DB::rollBack();
-            return $this->invalid(__('users.update.failed',  ['id' => $id]));
+            return $this->invalid(__('users.update.failed', ['id' => $id]));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -177,7 +177,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             if ($userCollection) {
                 return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
             } else {
-
                 return false;
             }
         } catch (\Exception $exception) {
@@ -187,11 +186,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
-    public function addRole($id) {
-
+    public function addRole($id)
+    {
     }
 
-    public function removeRole($id) {
-
+    public function removeRole($id)
+    {
     }
 }

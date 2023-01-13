@@ -8,28 +8,32 @@ use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
   /**
    *
    */
-    public function setUp() :void {
-    parent::setUp();
-    $this->seedDatabase();
-  }
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seedDatabase();
+    }
 
-    protected function login($email, $password) {
-      $response = $this->postJson('/api/users/login', [
+    protected function login($email, $password)
+    {
+        $response = $this->postJson('/api/users/login', [
           'email' => $email,
           'password' => $password
-      ]);
+        ]);
 
-      return $response;
-  }
+        return $response;
+    }
     /**
      * LOGIN SUCCESS
      */
-    public function testSuccessfulLogin() {
+    public function testSuccessfulLogin()
+    {
         $response = $this->login($this->superAdmin->email, $this->password);
 
         $response->assertStatus(200);
@@ -37,7 +41,8 @@ class UserTest extends TestCase
     /**
      * LOGIN FAILURE
      */
-    public function testFailedLogin() {
+    public function testFailedLogin()
+    {
         $response = $this->login('user_does_not_exist@email.com', $this->password);
 
         $response->assertStatus(401);
@@ -45,7 +50,8 @@ class UserTest extends TestCase
     /**
      * SUPER ADMIN CAN CREATE NEW USER
      */
-    public function testSuperAdminCanCreateUserWithAdditionalData() {
+    public function testSuperAdminCanCreateUserWithAdditionalData()
+    {
         $response = $this->createUserWithAdditionalData();
 
         $response->assertJson([
@@ -54,13 +60,14 @@ class UserTest extends TestCase
             'message' =>  __('users.store.success'),
             'data' => []
         ]);
-  }
+    }
     /**
      * SUPER ADMIN CAN DELETE NEW USER
      */
-    public function testSuperAdminCanDeleteUser() {
-        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
-        $deletedUser = $this->actingAs($this->superAdmin, 'api')->getJson('api/users/'.$this->user->id);
+    public function testSuperAdminCanDeleteUser()
+    {
+        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $deletedUser = $this->actingAs($this->superAdmin, 'api')->getJson('api/users/' . $this->user->id);
 
         $response->assertStatus(200);
         $deletedUser->assertStatus(500);
@@ -68,8 +75,9 @@ class UserTest extends TestCase
     /**
      * DELETED RECORDS ARE NOT INCLUDED IN INDEX
      */
-    public function testIndexDoesNotReturnDeletedUsers() {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+    public function testIndexDoesNotReturnDeletedUsers()
+    {
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
         $response    = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
         $userIdArray = array_column($response['data'], 'id');
 
@@ -79,8 +87,9 @@ class UserTest extends TestCase
     /**
      * ALL RECORDS, INCLUDING DELETED ARE NOT RETURNED WITH INDEXALL
      */
-    public function testIndexAllReturnsDeletedUsers() {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+    public function testIndexAllReturnsDeletedUsers()
+    {
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
 
         $response    = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/all');
         $userIdArray = array_column($response['data'], 'id');
@@ -91,8 +100,9 @@ class UserTest extends TestCase
     /**
      * ONLY DELETED RECORDS ARE INCLUDED IN INDEXTRASHED
      */
-    public function testIndexTrashedDoesReturnDeletedUsers() {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
+    public function testIndexTrashedDoesReturnDeletedUsers()
+    {
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
         $response = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/trashed');
         $userIdArray = array_column($response['data'], 'id');
 
@@ -103,17 +113,19 @@ class UserTest extends TestCase
     /**
      * SUPER ADMIN CAN RESTORE A DELETED USER
      */
-    public function testSuperAdminCanRestoreUser() {
+    public function testSuperAdminCanRestoreUser()
+    {
         //DELETE FIRST, THEN RESTORE
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/'.$this->user->id);
-        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/'.$this->user->id);
+        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/' . $this->user->id);
         $restoreResponse->assertStatus(200);
     }
 
     /**
      * USER CAN'T CREATE NEW USER
      */
-    public function testUserCantCreateUser() {
+    public function testUserCantCreateUser()
+    {
         $response = $this->actingAs($this->user, 'api')->postJson('api/users', [
             'email' => $this->faker->email(),
             'password' => $this->password,
@@ -125,7 +137,8 @@ class UserTest extends TestCase
     /**
      * USER CAN'T DELETE NEW USER
      */
-    public function testUserCantDeleteUser() {
+    public function testUserCantDeleteUser()
+    {
         $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
 
         $response->assertStatus(401);
@@ -133,7 +146,8 @@ class UserTest extends TestCase
     /**
      * USER CAN'T RESTORE A DELETED USER
      */
-    public function testUserCantRestoreUser() {
+    public function testUserCantRestoreUser()
+    {
         //DELETE FIRST, THEN RESTORE
         $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
         $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/2');
@@ -144,10 +158,11 @@ class UserTest extends TestCase
     /**
      * USER CAN'T UPDATE SOMEONE ELSE'S PROFILE
      */
-    public function testUserCantUpdateOtherProfile() {
+    public function testUserCantUpdateOtherProfile()
+    {
         $oldEmail = $this->superAdmin->email;
         $newEmail = $this->faker->email();
-        $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->superAdmin->id, [
+        $response = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->superAdmin->id, [
             'email' => $newEmail,
         ]);
 
@@ -157,10 +172,11 @@ class UserTest extends TestCase
     /**
      * USER CAN UPDATE OWN PROFILE
      */
-    public function testUserCanUpdateOwnProfile() {
+    public function testUserCanUpdateOwnProfile()
+    {
         $oldEmail = $this->user->email;
         $newEmail = $this->faker->email();
-        $response = $this->actingAs($this->user, 'api')->putJson('api/users/'.$this->user->id, [
+        $response = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->user->id, [
             'email' => $newEmail
         ]);
 
@@ -176,11 +192,12 @@ class UserTest extends TestCase
     /**
  * USER CAN UPDATE ADDITIONAL USER DATA
  */
-    public function testUserCanUpdateAdditionalData() {
+    public function testUserCanUpdateAdditionalData()
+    {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
 
-        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data'][0]['id'], [
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
             'data' => [
                 'first_name' => $this->faker->firstName()
             ]
@@ -195,11 +212,12 @@ class UserTest extends TestCase
     /**
      * USER ATTEMPTS TO EDIT NON-EXISTENT ADDITIONAL USER DATA
      */
-    public function testUserCantUpdateUserWithRandomData() {
+    public function testUserCantUpdateUserWithRandomData()
+    {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
 
-        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/'.$user['data'][0]['id'], [
+        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
             'email' => $this->faker->email(),
             'data' => [
                 'random_input' => $this->faker->firstName()

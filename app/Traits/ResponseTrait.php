@@ -139,7 +139,7 @@ trait ResponseTrait
      * @param String $message
      * @return array|String
      */
-    public static function getMessage(String $message): array|String
+    public static function getMessage(string $message): array|string
     {
         if (empty($message)) {
             return __('general.missing_lang');

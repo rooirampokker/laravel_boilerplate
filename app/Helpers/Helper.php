@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
  * @param $collection
  * @return array
  */
+
 if (!function_exists('eavParser')) {
     function eavParser($collection, $key): array
     {

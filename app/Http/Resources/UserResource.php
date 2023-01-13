@@ -27,7 +27,6 @@ class UserResource extends JsonResource
         ];
 
         if (count($this->roles) && is_array($this->roles)) {
-
             $user['roles'] = RoleResource::collection(Role::hydrate($this->roles));
         }
 
