@@ -70,9 +70,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                     $request->request->add(['user_id' => $this->model->id]);
                     $this->userDataRepository->store($request);
                 }
-
                 DB::commit();
-                return $this->ok(__('users.store.success'), $this->model);
+                return $this->userDataControllerService->hydrateUserWithAdditionalData([$this->model], 'data');
             }
 
             DB::rollBack();
@@ -81,7 +80,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             Log::error($exception->getMessage(), $exception->getTrace());
 
             DB::rollBack();
-            return $this->exception($exception);
+            return false;
         }
     }
 
@@ -175,17 +174,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $userCollection = $this->model::with('data', 'roles')->find($id);
-
             if ($userCollection) {
                 return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
             } else {
 
-                return $this->model;
+                return false;
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
-            return $this->exception($exception);
+            return false;
         }
     }
 

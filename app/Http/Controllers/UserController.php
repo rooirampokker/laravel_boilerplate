@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Repository\Eloquent\UserRepository;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -30,7 +29,8 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.index.success'), $userCollection));
         }
 
-        return response()->json($this->error(__('users.index.failed')));
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -46,7 +46,8 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.index.success'), $userCollection));
         }
 
-        return response()->json($this->error(__('users.index.failed')));
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
      * returns all active/non-deleted users
@@ -62,7 +63,8 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.index.success'), $userCollection));
         }
 
-        return response()->json($this->error(__('users.index.failed')));
+        $responseMessage = $this->error(__('users.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
      * @param $id
@@ -70,13 +72,15 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $userCollection = $this->userRepository->show($id);
+        $response = $this->userRepository->show($id);
+        if ($response) {
+            $userCollection = UserResource::collection($response);
 
-        if ($userCollection->count()) {
             return response()->json($this->ok(__('users.show.success'), $userCollection));
         }
 
-        return response()->json($this->error(__('users.show.failed')));
+        $responseMessage = $this->error(__('users.show.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -96,12 +100,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $rawResponse = $this->userRepository->store($request);
-        if ($rawResponse['code'] == 200) {
-            $response = new UserResource($rawResponse['data']);
+        $response = $this->userRepository->store($request);
+
+        if ($response) {
+            $userCollection = UserResource::collection($response);
+            return response()->json($this->ok(__('users.store.success'), $userCollection));
         }
 
-        return response()->json($response, $rawResponse['code']);
+        $responseMessage = $this->error(__('users.store.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -124,7 +131,13 @@ class UserController extends Controller
     {
         $response = $this->userRepository->delete($id);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+
+            return response()->json($this->ok(__('users.delete.success', ['id' => $id])));
+        }
+
+        $responseMessage = $this->error(__('users.delete.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -135,7 +148,13 @@ class UserController extends Controller
     {
         $response = $this->userRepository->restore($id);
 
-        return response()->json($response, $response['code']);
+        if ($response) {
+
+            return response()->json($this->ok(__('users.restore.success', ['id' => $id])));
+        }
+
+        $responseMessage = $this->error(__('users.restore.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**

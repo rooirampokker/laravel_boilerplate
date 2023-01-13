@@ -25,6 +25,7 @@ class BaseRepository implements EloquentRepositoryInterface
     public function index()
     {
         try {
+
             return $this->model::all();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -41,6 +42,7 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexAll()
     {
         try {
+
             return $this->model::withTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -55,6 +57,7 @@ class BaseRepository implements EloquentRepositoryInterface
     public function indexTrashed()
     {
         try {
+
             return $this->model::onlyTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -70,6 +73,7 @@ class BaseRepository implements EloquentRepositoryInterface
     public function show($id)
     {
         try {
+
             return $this->model::find($id);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -95,7 +99,7 @@ class BaseRepository implements EloquentRepositoryInterface
             }
             $this->model->save();
 
-            return $this->ok(__('general.record.create'), $this->model);
+            return $this->model;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -123,11 +127,10 @@ class BaseRepository implements EloquentRepositoryInterface
             if ($collection) {
                 $collection->delete();
 
-                return $this->ok(__('general.record.destroy.success', ['id' => $id]));
-            } else {
-
-                return $this->notFound(__('general.record.not_found', ['id' => $id]));
+                return true;
             }
+
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -146,12 +149,10 @@ class BaseRepository implements EloquentRepositoryInterface
             if ($model) {
                 $model->restore();
 
-                return $this->ok(__('general.record.restore.success', ['id' => $id]));
-            } else {
-
-                return $this->notFound(__('general.record.not_found', ['id' => $id]));
+                return true;
             }
 
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
