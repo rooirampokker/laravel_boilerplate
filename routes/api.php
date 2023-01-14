@@ -23,6 +23,7 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     ], function () {
         require 'users.php';
         require 'user-data.php';
+        require 'roles.php';
   });
 
 

@@ -19,6 +19,7 @@ class UserControllerService
             'email'      => 'required|email',
             'password'   => 'required',
             'c_password' => 'required|same:password',
+            'roles'       => 'required',
         ];
         //use this array to validate updates
         $validateUpdate = [

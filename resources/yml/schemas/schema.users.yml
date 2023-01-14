@@ -19,6 +19,10 @@
           type: string
         c_password:
           type: string
+        roles:
+          type: array
+          items:
+            type: integer
         data:
           type: object
           additionalProperties: true
@@ -30,6 +34,7 @@
         - email
         - password
         - c_password
+        - roles
 
     userUpdateRequest:
       type: object
@@ -60,33 +65,75 @@
           items:
             type: object
             properties:
-              uuid:
+              id:
+                type: integer
+              email:
                 type: string
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              deleted_at:
+                type: string
+                default: "2022-07-08 09:54:43"
+              data:
+                type: object
+                additionalProperties: true
+                example:
+                  first_name: "john"
+                  last_name: "doe"
+                  phone: 1234567890
+              roles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+
 
     userLoginSuccess:
       type: object
       properties:
         success:
-          type: object
-          properties:
-            id:
-              type: integer
-            email:
-              type: string
-            email_verified_at:
-              type: string
-              default: "2022-07-07 09:54:43"
-            created_at:
-              type: string
-              default: "2022-07-07 09:54:43"
-            updated_at:
-              type: string
-              default: "2022-07-07 09:54:43"
-            deleted_at:
-              type: string
-              default: "2022-07-08 09:54:43"
-            token:
-              type: string
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              email_verified_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              deleted_at:
+                type: string
+                default: "2022-07-08 09:54:43"
+              token:
+                type: string
 
     userRestoreSuccess:
       type: object
@@ -109,6 +156,14 @@
       type: object
       properties:
         success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
           type: array
           items:
             type: object
@@ -117,9 +172,6 @@
                 type: integer
               email:
                 type: string
-              email_verified_at:
-                type: string
-                default: "2022-07-07 09:54:43"
               created_at:
                 type: string
                 default: "2022-07-07 09:54:43"
@@ -129,24 +181,48 @@
               deleted_at:
                 type: string
                 default: "2022-07-08 09:54:43"
-            example:
-              - id: 1
-                email: user_1@gmail.com
-                email_verified_at: "2022-07-07 09:54:43"
-                created_at: "2022-07-07 09:54:43"
-                updated_at: "2022-07-07 09:54:43"
-                deleted_at: null
-              - id: 2
-                email: user_2@gmail.com
-                email_verified_at: "2023-08-07 09:54:43"
-                created_at: "2022-08-07 09:54:43"
-                updated_at: "2022-08-07 09:54:43"
-                deleted_at: null
+              data:
+                type: object
+                additionalProperties: true
+                example:
+                  first_name: "john"
+                  last_name: "doe"
+                  phone: 1234567890
+              roles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                example:
+                - id: 1
+                  email: "super-admin"
+                  created_at: "2022-07-07 09:54:43"
+                  updated_at: "2022-07-07 09:54:43"
+                - id: 2
+                  email: "manager"
+                  created_at: "2022-08-07 09:54:43"
+                  updated_at: "2022-08-07 09:54:43"
 
     userIndexTrashedSuccess:
       type: object
       properties:
         success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
           type: array
           items:
             type: object
@@ -155,9 +231,6 @@
                 type: integer
               email:
                 type: string
-              email_verified_at:
-                type: string
-                default: "2022-07-07 09:54:43"
               created_at:
                 type: string
                 default: "2022-07-07 09:54:43"
@@ -167,24 +240,48 @@
               deleted_at:
                 type: string
                 default: "2022-07-08 09:54:43"
-            example:
-              - id: 1
-                email: user_1@gmail.com
-                email_verified_at: "2022-07-07 09:54:43"
-                created_at: "2022-07-07 09:54:43"
-                updated_at: "2022-07-07 09:54:43"
-                deleted_at: "2022-07-07 09:54:43"
-              - id: 2
-                email: user_2@gmail.com
-                email_verified_at: "2023-08-07 09:54:43"
-                created_at: "2022-08-07 09:54:43"
-                updated_at: "2022-08-07 09:54:43"
-                deleted_at: "2022-08-07 09:54:43"
+              data:
+                type: object
+                additionalProperties: true
+                example:
+                  first_name: "john"
+                  last_name: "doe"
+                  phone: 1234567890
+              roles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                example:
+                  - id: 1
+                    email: super-admin
+                    created_at: "2022-07-07 09:54:43"
+                    updated_at: "2022-07-07 09:54:43"
+                  - id: 2
+                    email: manager
+                    created_at: "2022-08-07 09:54:43"
+                    updated_at: "2022-08-07 09:54:43"
 
     userIndexAllSuccess:
       type: object
       properties:
         success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
           type: array
           items:
             type: object
@@ -193,9 +290,6 @@
                 type: integer
               email:
                 type: string
-              email_verified_at:
-                type: string
-                default: "2022-07-07 09:54:43"
               created_at:
                 type: string
                 default: "2022-07-07 09:54:43"
@@ -205,19 +299,35 @@
               deleted_at:
                 type: string
                 default: "2022-07-08 09:54:43"
-            example:
-              - id: 1
-                email: user_1@gmail.com
-                email_verified_at: "2022-07-07 09:54:43"
-                created_at: "2022-07-07 09:54:43"
-                updated_at: "2022-07-07 09:54:43"
-                deleted_at: null
-              - id: 2
-                email: user_2@gmail.com
-                email_verified_at: "2023-08-07 09:54:43"
-                created_at: "2022-08-07 09:54:43"
-                updated_at: "2022-08-07 09:54:43"
-                deleted_at: "2022-08-07 09:54:43"
+              data:
+                type: object
+                additionalProperties: true
+                example:
+                  first_name: "john"
+                  last_name: "doe"
+                  phone: 1234567890
+              roles:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                example:
+                  - id: 1
+                    email: "super-admin"
+                    created_at: "2022-07-07 09:54:43"
+                    updated_at: "2022-07-07 09:54:43"
+                  - id: 2
+                    email: "manager"
+                    created_at: "2022-08-07 09:54:43"
+                    updated_at: "2022-08-07 09:54:43"
 
 
 

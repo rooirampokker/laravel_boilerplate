@@ -15,4 +15,11 @@ Route::group([
     Route::get('{id}', 'UserController@show')->name('users.show');
     Route::delete('{id}', 'UserController@delete')->name('users.delete');
 
+    Route::group([
+        'prefix' => '/{user_id}/roles'
+    ], function() {
+        Route::post('', 'UserController@addRole')->name('users.addRole');
+        Route::post('', 'UserController@syncRole')->name('users.syncRole');
+        Route::delete('/{role_id}', 'UserController@removeRole')->name('users.removeRole');
+    });
 });
