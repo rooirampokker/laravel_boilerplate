@@ -169,7 +169,7 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
         }
 
-        $responseMessage = $this->error(__('users.roles.sync.failed'), ['user_id' => $id, 'role_id' => $roles]);
+        $responseMessage = $this->error(__('users.roles.sync.failed', ['user_id' => $id, 'role_id' => $roles]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
@@ -187,7 +187,7 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
         }
 
-        $responseMessage = $this->error(__('users.roles.create.failed'), ['user_id' => $id, 'role_id' => $roles]);
+        $responseMessage = $this->error(__('users.roles.create.failed',  ['user_id' => $id, 'role_id' => $roles]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 

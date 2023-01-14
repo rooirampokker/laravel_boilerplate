@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Role;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -111,6 +112,7 @@ class UserTest extends TestCase
         $this->assertCount(1, $response['data']);
     }
     /**
+     * DELETE/PATCH ..api/users/:user_id
      * SUPER ADMIN CAN RESTORE A DELETED USER
      */
     public function testSuperAdminCanRestoreUser()
@@ -122,6 +124,7 @@ class UserTest extends TestCase
     }
 
     /**
+     * POST ..api/users
      * USER CAN'T CREATE NEW USER
      */
     public function testUserCantCreateUser()
@@ -135,27 +138,30 @@ class UserTest extends TestCase
         $response->assertStatus(401);
     }
     /**
-     * USER CAN'T DELETE NEW USER
+     * DELETE ..api/users/:user_id
+     * USER CAN'T DELETE ANOTHER USER
      */
     public function testUserCantDeleteUser()
     {
-        $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
+        $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->superAdmin->id);
 
         $response->assertStatus(401);
     }
     /**
+     * DELETE ..api/users/:user_id
      * USER CAN'T RESTORE A DELETED USER
      */
     public function testUserCantRestoreUser()
     {
         //DELETE FIRST, THEN RESTORE
-        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/2');
-        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/2');
+        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->superAdmin->id);
+        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->superAdmin->id);
 
         $deleteResponse->assertStatus(401);
         $restoreResponse->assertStatus(401);
     }
     /**
+     * PUT ..api/users/:user_id
      * USER CAN'T UPDATE SOMEONE ELSE'S PROFILE
      */
     public function testUserCantUpdateOtherProfile()
@@ -170,6 +176,7 @@ class UserTest extends TestCase
         $response->assertStatus(401);
     }
     /**
+     * PUT ..api/users/:user_id
      * USER CAN UPDATE OWN PROFILE
      */
     public function testUserCanUpdateOwnProfile()
@@ -190,8 +197,9 @@ class UserTest extends TestCase
         ]);
     }
     /**
- * USER CAN UPDATE ADDITIONAL USER DATA
- */
+     * PUT ..api/users/:user_id
+     * USER CAN UPDATE ADDITIONAL USER DATA
+     */
     public function testUserCanUpdateAdditionalData()
     {
         $email = $this->faker->email();
@@ -210,6 +218,7 @@ class UserTest extends TestCase
         ]);
     }
     /**
+     * PUT ..api/users/:user_id
      * USER ATTEMPTS TO EDIT NON-EXISTENT ADDITIONAL USER DATA
      */
     public function testUserCantUpdateUserWithRandomData()
@@ -231,19 +240,23 @@ class UserTest extends TestCase
         ]);
     }
     /**
+     * POST ..api/users/:user_id/roles
      * ASSIGN MULTIPLE ROLES
      */
     public function testUserCanBeAssignedRoles()
     {
+        $role1 = Role::create(['name' => 'test_role_1']);
+        $role2 = Role::create(['name' => 'test_role_2']);
+        $roleRequestArray = [$role1->id,$role2->id];
         $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users/' . $this->user->id . '/roles', [
             'email' => $this->faker->email(),
-            'roles' => [1,2]
+            'roles' => [$role1->id,$role2->id]
         ]);
 
         $response->assertJson([
             'success' => true,
             'code' => 200,
-            'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => '1,2'])
+            'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
         ]);
     }
 }
