@@ -8,8 +8,6 @@ Route::group([
     Route::get('/all', 'UserController@indexAll')->name('users.indexAll');
     Route::get('trashed', 'UserController@indexTrashed')->name('users.index.trashed');
     Route::post('/', 'UserController@store')->name('users.store');
-    Route::post('/{id}/roles', 'UserController@addRole')->name('users.addRole');
-    Route::delete('/{id}/roles', 'UserController@removeRole')->name('users.removeRole');
     //Route::post('login', 'UserController@login');
     Route::get('logout', 'UserController@logout')->name('users.logout');
     Route::patch('{id}', 'UserController@restore')->name('users.restore');
@@ -17,4 +15,11 @@ Route::group([
     Route::get('{id}', 'UserController@show')->name('users.show');
     Route::delete('{id}', 'UserController@delete')->name('users.delete');
 
+    Route::group([
+        'prefix' => '/{user_id}/roles'
+    ], function() {
+        Route::post('', 'UserController@addRole')->name('users.addRole');
+        Route::post('', 'UserController@syncRole')->name('users.syncRole');
+        Route::delete('/{role_id}', 'UserController@removeRole')->name('users.removeRole');
+    });
 });

@@ -26,8 +26,8 @@ class UserResource extends JsonResource
             'roles' => [],
         ];
 
-        //roles returns as collection when assigning new roles, but as array otherwise
         if (count($this->roles)) {
+            //roles returns as collection when assigning new roles, but as array otherwise
             $roles = is_array($this->roles) ? Role::hydrate($this->roles) : $this->roles;
             $user['roles'] = RoleResource::collection($roles);
         }

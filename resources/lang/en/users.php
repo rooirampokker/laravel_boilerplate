@@ -51,5 +51,19 @@ return [
     'permissions' => [
         'success' => 'User has permission',
         'failed' => 'User does not have permission'
+    ],
+    'roles' => [
+        'create' => [
+            'success' => "User :user_id was successfully assigned to role(s) :role_id",
+            'failed' => "Failed to assign :user_id to role(s) :role_id"
+        ],
+        'remove' => [
+            'success' => "User :user_id was successfully removed from role(s) :role_id",
+            'failed' => "Failed to remove :user_id from role(s) :role_id"
+        ],
+        'sync' => [
+            'success' => "User :user_id was successfully synced to role(s) :role_id",
+            'failed' => "Failed to sync role(s) :role_id to user :user_id"
+        ]
     ]
 ];

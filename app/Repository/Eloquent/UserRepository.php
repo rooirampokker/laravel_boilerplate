@@ -64,14 +64,17 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             DB::beginTransaction();
-
+            $requestParams = $request->all();
             $this->userControllerService->validateInput($request, 'store');
             //adds the use_id to the response - required for user-data storing
             if ($this->model->fill($request->all())->save()) {
-                if (array_key_exists('data', $request->all())) {
+                if (array_key_exists('data', $requestParams)) {
                     $request->request->add(['user_id' => $this->model->id]);
                     $this->userDataRepository->store($request);
+                    $this->model->assignRole($requestParams['roles']);
+
                 }
+
                 DB::commit();
                 return $this->userDataControllerService->hydrateUserWithAdditionalData([$this->model], 'data');
             }
@@ -188,6 +191,33 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @param $request
+     * @param $id
+     * @return false
+     */
+    public function syncRole($request, $id)
+    {
+        try {
+            $params = $request->all();
+            $user = $this->model::find($id);
+            $userCollection = $user->syncRoles(Role::whereIn('id', $params['roles'])->get());
+            if ($userCollection) {
+                return $userCollection;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
+    }
+    /**
+     * @param $request
+     * @param $id
+     * @return false
+     */
     public function addRole($request, $id)
     {
         try {
@@ -206,7 +236,28 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
-    public function removeRole($request, $id)
+    /**
+     * @param $user_id
+     * @param $role_id
+     * @return false
+     */
+    public function removeRole($user_id, $role_id)
     {
+        try {
+            $user = $this->model::find($user_id);
+            //$role = Role::whereIn('id', $params['roles'])->get();
+
+            $userCollection = $user->removeRole($role_id);
+
+            if ($userCollection) {
+                return $userCollection;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
     }
 }

@@ -154,33 +154,61 @@ class UserController extends Controller
         $responseMessage = $this->error(__('users.restore.failed', ['id' => $id]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
-
     /**
+     * @param Request $request
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncRole(Request $request, $id)
+    {
+        $response = $this->userRepository->syncRole($request, $id);
+        $roles = implode(',', $request->get('roles'));
+        if ($response) {
+            $userCollection = UserResource::collection([$response]);
+
+            return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.roles.sync.failed'), ['user_id' => $id, 'role_id' => $roles]);
+        return response()->json($responseMessage, $responseMessage['code']);
+    }
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function addRole(Request $request, $id)
     {
         $response = $this->userRepository->addRole($request, $id);
-
+        $roles = implode(',', $request->get('roles'));
         if ($response) {
-
             $userCollection = UserResource::collection([$response]);
 
-            return response()->json($this->ok(__('users.roles.create.success'), $userCollection));
+            return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
         }
 
-        $responseMessage = $this->error(__('users.roles.create.show.failed'));
+        $responseMessage = $this->error(__('users.roles.create.failed'), ['user_id' => $id, 'role_id' => $roles]);
         return response()->json($responseMessage, $responseMessage['code']);
     }
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function removeRole($id)
-    {
-        $response = $this->userRepository->removeRole($request, $id);
 
-        return response()->json($response, $response['code']);
+    /**
+     * Removes a single role from a user, based on parameter keys
+     *
+     * @param $user_id
+     * @param $role_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeRole($user_id, $role_id)
+    {
+        $response = $this->userRepository->removeRole($user_id, $role_id);
+
+        if ($response) {
+            $userCollection = UserResource::collection([$response]);
+
+            return response()->json($this->ok(__('users.roles.remove.success', ['user_id' => $user_id, 'role_id' => $role_id]), $userCollection));
+        }
+
+        $responseMessage = $this->error(__('users.roles.remove.failed', ['user_id' => $user_id, 'role_id' => $role_id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 }
