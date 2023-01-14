@@ -230,4 +230,20 @@ class UserTest extends TestCase
             'message' =>  __('users.update.failed', ['id' => $user['data'][0]['id']])
         ]);
     }
+    /**
+     * ASSIGN MULTIPLE ROLES
+     */
+    public function testUserCanBeAssignedRoles()
+    {
+        $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users/' . $this->user->id . '/roles', [
+            'email' => $this->faker->email(),
+            'roles' => [1,2]
+        ]);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => '1,2'])
+        ]);
+    }
 }
