@@ -1,0 +1,36 @@
+
+    roleIndexSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+          example:
+          - id: 1
+            email: "super-admin"
+            created_at: "2022-07-07 09:54:43"
+            updated_at: "2022-07-07 09:54:43"
+          - id: 2
+            email: "manager"
+            created_at: "2022-08-07 09:54:43"
+            updated_at: "2022-08-07 09:54:43"

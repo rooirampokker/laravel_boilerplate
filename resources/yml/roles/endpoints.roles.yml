@@ -1,0 +1,14 @@
+
+  /roles:
+    get:
+      summary: roles
+      description: Returns a list of all roles.
+      tags:
+        - Roles
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of all assignable roles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleIndexSuccess"

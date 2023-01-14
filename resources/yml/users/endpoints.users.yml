@@ -89,6 +89,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userIndexAllSuccess"
+
   /users/{user_id}:
     delete:
       summary: users/{user_id}
@@ -159,8 +160,6 @@
           application/json:
             schema:
               $ref: "#/components/schemas/userUpdateRequest"
-
-
       responses:
         '200':    # status code
           description: A JSON object with a data payload of the deleted user
@@ -191,4 +190,3 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userCreateSuccess"
-

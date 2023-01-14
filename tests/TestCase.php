@@ -4,7 +4,7 @@ namespace Tests;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -52,6 +52,7 @@ abstract class TestCase extends BaseTestCase
             'email' => $email,
             'password' => $this->password,
             'c_password' => $this->password,
+            'roles' => [1],
             'data' => [
                 'first_name' => $this->newUserFirstName,
                 'last_name' => $this->newUserLastName

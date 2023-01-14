@@ -164,12 +164,12 @@ class UserController extends Controller
         $response = $this->userRepository->syncRole($request, $id);
         $roles = implode(',', $request->get('roles'));
         if ($response) {
-            $userCollection = UserResource::collection([$response]);
+            $userCollection = UserResource::collection($response);
 
             return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
         }
 
-        $responseMessage = $this->error(__('users.roles.sync.failed'), ['user_id' => $id, 'role_id' => $roles]);
+        $responseMessage = $this->error(__('users.roles.sync.failed', ['user_id' => $id, 'role_id' => $roles]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
@@ -182,12 +182,12 @@ class UserController extends Controller
         $response = $this->userRepository->addRole($request, $id);
         $roles = implode(',', $request->get('roles'));
         if ($response) {
-            $userCollection = UserResource::collection([$response]);
+            $userCollection = UserResource::collection($response);
 
             return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
         }
 
-        $responseMessage = $this->error(__('users.roles.create.failed'), ['user_id' => $id, 'role_id' => $roles]);
+        $responseMessage = $this->error(__('users.roles.create.failed',  ['user_id' => $id, 'role_id' => $roles]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -203,7 +203,7 @@ class UserController extends Controller
         $response = $this->userRepository->removeRole($user_id, $role_id);
 
         if ($response) {
-            $userCollection = UserResource::collection([$response]);
+            $userCollection = UserResource::collection($response);
 
             return response()->json($this->ok(__('users.roles.remove.success', ['user_id' => $user_id, 'role_id' => $role_id]), $userCollection));
         }
