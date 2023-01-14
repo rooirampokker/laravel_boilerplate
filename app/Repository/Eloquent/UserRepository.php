@@ -47,9 +47,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 $success['token'] = $user->createToken(config('app.name'))->accessToken;
 
                 return $this->ok(__('users.login.success'), $success);
-            } else {
-                return $this->unauthorised(__('users.login.invalid'));
             }
+            
+            return $this->unauthorised(__('users.login.invalid'));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
             return $this->exception($exception);
@@ -181,9 +181,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $userCollection = $this->model::with('data', 'roles')->find($id);
             if ($userCollection) {
                 return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
-            } else {
-                return false;
             }
+
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
