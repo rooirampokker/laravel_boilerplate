@@ -19,7 +19,7 @@ Route::group([
         'prefix' => '/{user_id}/roles'
     ], function() {
         Route::post('', 'UserController@addRole')->name('users.addRole');
-        Route::post('', 'UserController@syncRole')->name('users.syncRole');
+        Route::post('/sync', 'UserController@syncRole')->name('users.syncRole');
         Route::delete('/{role_id}', 'UserController@removeRole')->name('users.removeRole');
     });
 });

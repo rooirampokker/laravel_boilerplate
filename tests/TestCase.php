@@ -52,6 +52,7 @@ abstract class TestCase extends BaseTestCase
             'email' => $email,
             'password' => $this->password,
             'c_password' => $this->password,
+            'roles' => [1],
             'data' => [
                 'first_name' => $this->newUserFirstName,
                 'last_name' => $this->newUserLastName

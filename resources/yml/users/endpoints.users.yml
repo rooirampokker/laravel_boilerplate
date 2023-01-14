@@ -89,6 +89,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userIndexAllSuccess"
+
   /users/{user_id}:
     delete:
       summary: users/{user_id}
@@ -159,8 +160,6 @@
           application/json:
             schema:
               $ref: "#/components/schemas/userUpdateRequest"
-
-
       responses:
         '200':    # status code
           description: A JSON object with a data payload of the deleted user
@@ -192,3 +191,95 @@
               schema:
                 $ref: "#/components/schemas/userCreateSuccess"
 
+  /users/{user_id}/roles:
+    post:
+      summary: users/{user_id}/roles
+      description: Attaches roles to a user
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          description: The user id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRoleAddRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the deleted user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userCreateSuccess"
+
+  /users/{user_id}/roles/sync:
+    post:
+      summary: users/{user_id}/roles/sync
+      description: Syncs user roles with roles
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          description: The user id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRoleAddRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the deleted user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userCreateSuccess"
+
+  /users/{user_id}/roles/{role_id}:
+    delete:
+      summary: users/{user_id}/roles/{role_id}
+      description: Disassociates the specified user from the specified role
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          description: The user id
+          required: true
+          schema:
+            type: string
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the deleted user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userCreateSuccess"
