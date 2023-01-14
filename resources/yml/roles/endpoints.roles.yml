@@ -3,6 +3,9 @@
     get:
       summary: roles
       description: Returns a list of all roles.
+      security:
+        - OAuth2:
+            - read
       tags:
         - Roles
       responses:
