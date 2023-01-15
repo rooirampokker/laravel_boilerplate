@@ -12,4 +12,17 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     {
         $this->model = $model;
     }
+
+    public function index()
+    {
+        try {
+            $response = $this->model::with('permissions')->get();
+
+            return $response;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
+    }
 }
