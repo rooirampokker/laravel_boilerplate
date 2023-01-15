@@ -42,11 +42,11 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         }
     }
 
-    public function update($request, $id) {
-
-    }
-
-    public function store($request) {
-        
-    }
+//    public function update($request, $id) {
+//
+//    }
+//
+//    public function store($request) {
+//
+//    }
 }

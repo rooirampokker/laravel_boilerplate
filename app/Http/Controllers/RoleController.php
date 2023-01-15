@@ -22,9 +22,9 @@ class RoleController extends Controller
         $response = $this->roleRepository->index();
 
         if ($response) {
-            $roleCollection = RoleResource::collection($response);
+            $collection = RoleResource::collection($response);
 
-            return response()->json($this->ok(__('roles.index.success'), $roleCollection));
+            return response()->json($this->ok(__('roles.index.success'), $collection));
         }
 
         $responseMessage = $this->error(__('roles.index.failed'));
@@ -40,26 +40,26 @@ class RoleController extends Controller
         $response = $this->roleRepository->show($id);
 
         if ($response) {
-            $roleCollection = RoleResource::collection([$response]);
+            $collection = RoleResource::collection([$response]);
 
-            return response()->json($this->ok(__('roles.show.success'), $roleCollection));
+            return response()->json($this->ok(__('roles.show.success'), $collection));
         }
 
         $responseMessage = $this->error(__('roles.show.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+
     /**
      * @param Request $request
-     * @return mixed
-     * @throws \Exception
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $response = $this->roleRepository->store($request);
 
         if ($response) {
-            $userCollection = RoleResource::collection($response);
-            return response()->json($this->ok(__('roles.store.success'), $userCollection));
+            $collection = RoleResource::collection($response);
+            return response()->json($this->ok(__('roles.store.success'), $collection));
         }
 
         $responseMessage = $this->error(__('roles.store.failed'));
