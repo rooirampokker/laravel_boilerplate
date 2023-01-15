@@ -239,9 +239,10 @@ class UserTest extends TestCase
             'message' =>  __('users.update.failed', ['id' => $user['data'][0]['id']])
         ]);
     }
+
     /**
      * POST ..api/users/:user_id/roles
-     * ASSIGN MULTIPLE ROLES
+     * ASSIGN MULTIPLE ROLES - USERS WILL HAVE THESE ROLES IN ADDITION TO CURRENTLY ASSIGNED ROLES
      */
     public function testUserCanBeAssignedRoles()
     {
@@ -257,6 +258,43 @@ class UserTest extends TestCase
             'success' => true,
             'code' => 200,
             'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
+        ]);
+    }
+
+    /**
+     * DELETE ..api/users/:user_id/roles/:role_id
+     * REMOVE ROLE FROM USER - USE WILL RETAIN ALL ROLES, MINUS THE SPECIFIED ROLE
+     */
+    public function testUserCanBeRemovedFromRole()
+    {
+        $role = $this->user->roles()->first();
+        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/'.$role->id);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.roles.remove.success', ['user_id' => $this->user->id, 'role_id' => $role->id])
+        ]);
+    }
+
+    /**
+     * POST ..api/users/:user_id/roles
+     * SYNC USER WITH ROLES - USER WILL ONLY BE ASSIGNED TO THE FOLLOWING ROLES AFTER SYNC
+     */
+    public function testUserCanBeSyncedWithRoles()
+    {
+        $role1 = Role::create(['name' => 'test_role_1']);
+        $role2 = Role::create(['name' => 'test_role_2']);
+        $roleRequestArray = [$role1->id,$role2->id];
+        $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users/' . $this->user->id . '/roles/sync', [
+            'email' => $this->faker->email(),
+            'roles' => [$role1->id,$role2->id]
+        ]);
+
+        $response->assertJson([
+            'success' => true,
+            'code' => 200,
+            'message' =>  __('users.roles.sync.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
         ]);
     }
 }
