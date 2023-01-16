@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Validator;
 
-class UserControllerService
+class UserService
 {
     /**
      * @param $request

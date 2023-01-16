@@ -2,18 +2,18 @@
 
 namespace App\Repository\Eloquent;
 
-use App\Services\DocumentationControllerService;
+use App\Services\DocumentationService;
 use App\Repository\DocumentationRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 class DocumentationRepository extends BaseRepository implements DocumentationRepositoryInterface
 {
-    private DocumentationControllerService $service;
+    private DocumentationService $service;
     //private DocumentationRepository $documentationRepository;
 
     public function __construct()
     {
-        $this->service = new DocumentationControllerService();
+        $this->service = new DocumentationService();
     }
 
 

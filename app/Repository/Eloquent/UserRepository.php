@@ -5,8 +5,8 @@ namespace App\Repository\Eloquent;
 use App\Models\User;
 use App\Models\UserData;
 use App\Models\Role;
-use App\Services\UserControllerService;
-use App\Services\UserDataControllerService;
+use App\Services\UserService;
+use App\Services\UserDataService;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -15,15 +15,15 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    private UserControllerService $userControllerService;
+    private UserService $userService;
     private UserDataRepository $userDataRepository;
-    private UserDataControllerService $userDataControllerService;
+    private UserDataService $userDataService;
 
     public function __construct(User $model)
     {
         $this->model = $model;
-        $this->userControllerService = new UserControllerService();
-        $this->userDataControllerService = new UserDataControllerService();
+        $this->userService = new UserService();
+        $this->userDataService = new UserDataService();
         $this->userDataRepository = new UserDataRepository(new UserData());
     }
 
@@ -48,7 +48,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
                 return $this->ok(__('users.login.success'), $success);
             }
-            
+
             return $this->unauthorised(__('users.login.invalid'));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -65,7 +65,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
             $requestParams = $request->all();
-            $this->userControllerService->validateInput($request, 'store');
+            $this->userService->validateInput($request, 'store');
             //adds the use_id to the response - required for user-data storing
             if ($this->model->fill($request->all())->save()) {
                 if (array_key_exists('data', $requestParams)) {
@@ -76,7 +76,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 }
 
                 DB::commit();
-                return $this->userDataControllerService->hydrateUserWithAdditionalData([$this->model], 'data');
+                return $this->userDataService->hydrateUserWithAdditionalData([$this->model], 'data');
             }
 
             DB::rollBack();
@@ -99,7 +99,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            $this->userControllerService->validateInput($request, 'update');
+            $this->userService->validateInput($request, 'update');
 
             $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
             $request->request->remove('data');
@@ -108,7 +108,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user->fill($input)->save();
 
             if ($userDataUpdateResponse) {
-                if (count($input) == $this->userControllerService->fillableInputCount($input, $user)) {
+                if (count($input) == $this->userService->fillableInputCount($input, $user)) {
                     DB::commit();
                     return $this->ok(__('users.update.success', ['id' => $id]));
                 }
@@ -132,7 +132,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::with('data', 'roles')->get();
 
-            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
+            return $this->userDataService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -147,7 +147,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::withTrashed()->with('data', 'roles')->get();
 
-            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
+            return $this->userDataService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -162,7 +162,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::onlyTrashed()->with('data', 'roles')->get();
 
-            return $this->userDataControllerService->hydrateUserWithAdditionalData($userCollection, 'data');
+            return $this->userDataService->hydrateUserWithAdditionalData($userCollection, 'data');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -180,7 +180,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::with('data', 'roles')->find($id);
             if ($userCollection) {
-                return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
+                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
             }
 
             return false;
@@ -203,7 +203,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $this->model::find($id);
             $userCollection = $user->syncRoles(Role::whereIn('id', $params['roles'])->get());
             if ($userCollection) {
-                return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
+                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
             }
 
             return false;
@@ -225,7 +225,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $this->model::find($id);
             $userCollection = $user->assignRole(Role::whereIn('id', $params['roles'])->get());
             if ($userCollection) {
-                return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
+                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
             }
 
             return false;
@@ -248,7 +248,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $userCollection = $user->removeRole($role_id);
 
             if ($userCollection) {
-                return $this->userDataControllerService->hydrateUserWithAdditionalData([$userCollection], 'data');
+                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
             }
 
             return false;
