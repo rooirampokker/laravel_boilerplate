@@ -79,11 +79,33 @@ class RoleController extends Controller
         return response()->json($response, $response['code']);
     }
 
-    public function assignPermissions(Request $request, $id) {
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addPermission(Request $request, $id) {
+        $response = $this->roleRepository->addPermission($request, $id);
+        $permissions = implode(',', $request->get('permissions'));
+        if ($response) {
+            $roleCollection = RoleResource::collection([$response]);
 
+            return response()->json($this->ok(__('roles.permissions.create.success', ['role_id' => $id, 'permission_id' => $permissions]), $roleCollection));
+        }
+
+        $responseMessage = $this->error(__('roles.permissions.create.failed',  ['user_id' => $id, 'permission_id' => $permissions]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
-    public function revokePermissions(Request $request, $id) {
+    public function revokePermission($role_id, $permission_id) {
+        $response = $this->roleRepository->revokePermission($role_id, $permission_id);
+        if ($response) {
+            $roleCollection = RoleResource::collection([$response]);
 
+            return response()->json($this->ok(__('roles.permissions.delete.success', ['role_id' => $role_id, 'permission_id' => $permission_id]), $roleCollection));
+        }
+
+        $responseMessage = $this->error(__('roles.permissions.delete.failed',  ['role_id' => $role_id, 'permission_id' => $permission_id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 }

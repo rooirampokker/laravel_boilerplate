@@ -4,7 +4,9 @@ namespace App\Repository\Eloquent;
 
 use App\Repository\RoleRepositoryInterface;
 use App\Models\Role;
+use App\Models\Permission;
 use App\Services\RoleService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
@@ -91,11 +93,38 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         }
     }
 
-    public function assignPermissions (Request $request, $id) {
+    public function addPermission ($request, $id)
+    {
+        try {
+            $params = $request->all();
+            $role       = $this->model::find($id);
+            $collection = $role->givePermissionTo(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
+            if ($collection) {
+                return $collection;
+            }
 
+            return false;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
     }
 
-    public function revokePermissions (Request $request, $id) {
+    public function revokePermission ($role_id, $permission_id) {
+        try {
+            $role = $this->model::find($role_id);
+            $collection = $role->revokePermissionTo($permission_id);
 
+            if ($collection) {
+                return $collection;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
     }
 }

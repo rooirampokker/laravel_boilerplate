@@ -82,8 +82,8 @@ class RolePolicy
      * @param Role $model
      * @return bool
      */
-    public function assignPermissions(User $user, Role $model) {
-        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-assignPermissions');
+    public function addPermission(User $user, Role $model) {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-addPermission');
     }
 
     /**
@@ -91,7 +91,7 @@ class RolePolicy
      * @param Role $model
      * @return bool
      */
-    public function revokePermissions(User $user, Role $model) {
-        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-revokePermissions');
+    public function revokePermission(User $user, Role $model) {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-revokePermission');
     }
 }

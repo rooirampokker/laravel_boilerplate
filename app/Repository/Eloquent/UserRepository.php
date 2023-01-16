@@ -223,9 +223,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $params = $request->all();
             $user = $this->model::find($id);
-            $userCollection = $user->assignRole(Role::whereIn('id', $params['roles'])->get());
-            if ($userCollection) {
-                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
+            $collection = $user->assignRole(Role::whereIn('id', $params['roles'])->get());
+            if ($collection) {
+                return $this->userDataService->hydrateUserWithAdditionalData([$collection], 'data');
             }
 
             return false;
@@ -245,10 +245,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             $user = $this->model::find($user_id);
-            $userCollection = $user->removeRole($role_id);
+            $collection = $user->removeRole($role_id);
 
-            if ($userCollection) {
-                return $this->userDataService->hydrateUserWithAdditionalData([$userCollection], 'data');
+            if ($collection) {
+                return $this->userDataService->hydrateUserWithAdditionalData([$collection], 'data');
             }
 
             return false;
