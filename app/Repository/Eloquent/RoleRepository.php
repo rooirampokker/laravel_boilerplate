@@ -19,6 +19,9 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         $this->roleService = new RoleService();
     }
 
+    /**
+     * @return false|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]|mixed
+     */
     public function index()
     {
         try {
@@ -93,6 +96,11 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         }
     }
 
+    /**
+     * @param $request
+     * @param $id
+     * @return false
+     */
     public function addPermission ($request, $id)
     {
         try {
