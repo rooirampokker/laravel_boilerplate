@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
-    private UserDataService $userDataControllerService;
+    private UserDataService $userDataService;
 
     public function __construct(UserData $model)
     {
         $this->model = $model;
-        $this->userDataControllerService = new UserDataService();
+        $this->userDataService = new UserDataService();
     }
 
     /**
