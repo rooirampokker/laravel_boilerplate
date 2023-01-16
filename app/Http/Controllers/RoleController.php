@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repository\Eloquent\RoleRepository;
 use App\Http\Resources\RoleResource;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
@@ -58,7 +59,7 @@ class RoleController extends Controller
         $response = $this->roleRepository->store($request);
 
         if ($response) {
-            $collection = RoleResource::collection($response);
+            $collection = RoleResource::collection([$response]);
             return response()->json($this->ok(__('roles.store.success'), $collection));
         }
 
@@ -76,5 +77,13 @@ class RoleController extends Controller
         $response = $this->roleRepository->update($request, $id);
 
         return response()->json($response, $response['code']);
+    }
+
+    public function assignPermissions(Request $request, $id) {
+
+    }
+
+    public function revokePermissions(Request $request, $id) {
+
     }
 }

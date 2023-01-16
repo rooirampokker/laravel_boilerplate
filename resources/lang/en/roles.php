@@ -12,5 +12,9 @@ return [
     'store' => [
         'success' => 'Role stored',
         'failed' => 'Unable to store role'
+    ],
+    'update' => [
+        'success' => 'Role updated',
+        'failed' => 'Unable to update role'
     ]
 ];

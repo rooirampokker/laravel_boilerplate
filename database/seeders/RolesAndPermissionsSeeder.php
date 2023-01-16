@@ -32,8 +32,8 @@ class RolesAndPermissionsSeeder extends Seeder
         $role1->givePermissionTo(Permission::all());
 
         // create roles and assign existing permissions - employees are currently locked down with no permissions
-        $role2 = Role::create(['guard_name' => 'api', 'name' => 'user']);
-        $role2->givePermissionTo(Permission::where('name', 'user-indexAll')->get());
+        $role2 = Role::create(['guard_name' => 'api', 'name' => 'admin']);
+        $role2->givePermissionTo(Permission::all());
 
         $role3 = Role::create(['guard_name' => 'api', 'name' => 'manager']);
         $role3->givePermissionTo(Permission::where('name', 'user-indexAll')->get());

@@ -6,5 +6,7 @@ Route::group(['prefix' => 'roles'], function () {
     Route::get('/{id}', 'RoleController@show');
     Route::post('/', 'RoleController@store');
     Route::put('/{id}', 'RoleController@update');
+    Route::post('/{id}/permissions', 'RoleController@assignPermissions');
+    Route::delete('/{id}/permissions', 'RoleController@revokePermissions');
 });
 

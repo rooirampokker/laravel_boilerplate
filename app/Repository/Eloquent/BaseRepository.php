@@ -111,6 +111,7 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function update(array $data, $id)
     {
+
     }
 
     /**
