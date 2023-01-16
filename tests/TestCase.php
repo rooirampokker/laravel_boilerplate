@@ -41,7 +41,7 @@ abstract class TestCase extends BaseTestCase
         $this->superAdmin->assignRole($this->superAdminRole);
 
         $this->user = User::factory()->create();
-        $userRole   = Role::findByName('user', 'api');
+        $userRole   = Role::findByName('manager', 'api');
         $this->user->assignRole($userRole);
     }
 
