@@ -6,7 +6,6 @@ use App\Repository\RoleRepositoryInterface;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Services\RoleService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
