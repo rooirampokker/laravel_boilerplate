@@ -111,6 +111,11 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         }
     }
 
+    /**
+     * @param $role_id
+     * @param $permission_id
+     * @return false
+     */
     public function revokePermission ($role_id, $permission_id) {
         try {
             $role = $this->model::find($role_id);
