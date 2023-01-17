@@ -225,7 +225,6 @@ class UserTest extends TestCase
     {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
-
         $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
             'email' => $this->faker->email(),
             'data' => [
@@ -235,7 +234,7 @@ class UserTest extends TestCase
 
         $response->assertJson([
             'success' => false,
-            'code' => 422,
+            'code' => 500,
             'message' =>  __('users.update.failed', ['id' => $user['data'][0]['id']])
         ]);
     }

@@ -139,4 +139,21 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
             return false;
         }
     }
+    public function syncPermission ($request, $id)
+    {
+        try {
+            $params = $request->all();
+            $role       = $this->model::find($id);
+            $collection = $role->syncPermissions(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
+            if ($collection) {
+                return $collection;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+
+            return false;
+        }
+    }
 }

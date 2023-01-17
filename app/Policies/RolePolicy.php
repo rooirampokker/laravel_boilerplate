@@ -94,4 +94,13 @@ class RolePolicy
     public function revokePermission(User $user, Role $model) {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-revokePermission');
     }
+
+    /**
+     * @param User $user
+     * @param Role $model
+     * @return bool
+     */
+    public function syncPermission(User $user, Role $model) {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-syncPermission');
+    }
 }

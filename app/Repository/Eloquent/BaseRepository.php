@@ -123,9 +123,8 @@ class BaseRepository implements EloquentRepositoryInterface
         try {
             $collection = $this->model::find($id);
             if ($collection) {
-                $collection->delete();
 
-                return true;
+                return $collection->delete();
             }
 
             return false;

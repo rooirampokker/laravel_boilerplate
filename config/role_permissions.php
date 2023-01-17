@@ -12,6 +12,7 @@ return [
         'show',
         'addRole',
         'removeRole',
+        'syncRole',
     ],
     'role' => [
         'store',
@@ -20,6 +21,7 @@ return [
         'update',
         'delete',
         'addPermission',
-        'revokePermission'
+        'revokePermission',
+        'syncPermission'
     ]
 ];

@@ -6,8 +6,11 @@ Route::group(['prefix' => 'roles'], function () {
     Route::get('/{id}', 'RoleController@show');
     Route::post('/', 'RoleController@store');
     Route::put('/{id}', 'RoleController@update');
-    Route::post('/{role_id}/permissions', 'RoleController@addPermission');
-    Route::delete('/{role_id}/permissions/{permission_id}', 'RoleController@revokePermission');
-    Route::post('/{id}/permissions', 'RoleController@syncPermission');
+    Route::group([
+        'prefix' => '/{role_id}/permissions'
+    ], function() {
+    Route::post('', 'RoleController@addPermission');
+    Route::post('/sync', 'RoleController@syncPermission')->name('roles.syncPermission');
+    Route::delete('/{permission_id}', 'RoleController@revokePermission');
+    });
 });
-

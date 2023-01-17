@@ -109,13 +109,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             if ($userDataUpdateResponse) {
                 if (count($input) == $this->userService->fillableInputCount($input, $user)) {
+
                     DB::commit();
-                    return $this->ok(__('users.update.success', ['id' => $id]));
+                    return true;
                 }
             }
 
             DB::rollBack();
-            return $this->invalid(__('users.update.failed', ['id' => $id]));
+            return false;
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 

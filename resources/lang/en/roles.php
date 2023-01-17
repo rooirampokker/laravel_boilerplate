@@ -25,6 +25,10 @@ return [
         'delete' => [
             'success' => 'Permission :permission_id removed from role :role_id',
             'failed' => 'Failed to remove permission :permission_id from role :role_id'
-        ]
-    ]
+        ],
+        'sync' => [
+            'success' => "Role :role_id was successfully synced to permission(s) :permission_id",
+            'failed' => "Failed to sync permission(s) :permission_id to role :role_id",
+        ],
+    ],
 ];
