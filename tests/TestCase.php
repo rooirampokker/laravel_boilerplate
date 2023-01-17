@@ -15,8 +15,8 @@ abstract class TestCase extends BaseTestCase
 
     protected string $password;
     protected User $user;
-    protected User $superAdmin;
-    protected Role $superAdminRole;
+    protected User $admin;
+    protected Role $adminRole;
 
     protected function setUp(): void
     {
@@ -35,20 +35,35 @@ abstract class TestCase extends BaseTestCase
         $this->artisan("passport:install");
         $this->artisan('db:seed');
 
-        $this->superAdmin = User::factory()->create();
-        $this->superAdminRole = Role::findByName('super-admin', 'api');
+        $this->admin = User::factory()->create();
+        $this->adminRole = Role::findByName('admin', 'api');
 
-        $this->superAdmin->assignRole($this->superAdminRole);
+        $this->admin->assignRole($this->adminRole);
 
         $this->user = User::factory()->create();
-        $userRole   = Role::findByName('user', 'api');
+        $userRole   = Role::findByName('manager', 'api');
         $this->user->assignRole($userRole);
     }
 
+    /**
+     * @param $message
+     * @return void
+     */
+    protected function apiResponse($success, $code, $message) {
+        return [
+            'success' => $success,
+            'code' => $code,
+            'message' => $message,
+        ];
+    }
+    /**
+     * @param $email
+     * @return \Illuminate\Testing\TestResponse
+     */
     protected function createUserWithAdditionalData($email = null)
     {
         $email = $email ? $email : $this->faker->email();
-        $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users', [
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/users', [
             'email' => $email,
             'password' => $this->password,
             'c_password' => $this->password,

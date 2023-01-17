@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\File;
 
-class DocumentationControllerService
+class DocumentationService
 {
     private string $docPath;
 

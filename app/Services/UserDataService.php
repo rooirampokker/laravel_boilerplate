@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\UserData;
-use Illuminate\Support\Arr;
 
-class UserDataControllerService
+class UserDataService
 {
     public $userData;
 

@@ -17,6 +17,15 @@ class UserController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        $response = $this->userRepository->login($request);
+
+        return response()->json($response, $response['code']);
+    }
+    /**
      * returns all active/non-deleted users
      * @return \Illuminate\Http\JsonResponse
      */
@@ -24,9 +33,9 @@ class UserController extends Controller
     {
         $response = $this->userRepository->index();
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.index.success'), $userCollection));
+            return response()->json($this->ok(__('users.index.success'), $collection));
         }
 
         $responseMessage = $this->error(__('users.index.failed'));
@@ -41,9 +50,9 @@ class UserController extends Controller
     {
         $response = $this->userRepository->indexAll();
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.index.success'), $userCollection));
+            return response()->json($this->ok(__('users.index.success'), $collection));
         }
 
         $responseMessage = $this->error(__('users.index.failed'));
@@ -56,11 +65,10 @@ class UserController extends Controller
     public function indexTrashed()
     {
         $response = $this->userRepository->indexTrashed();
-
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.index.success'), $userCollection));
+            return response()->json($this->ok(__('users.index.success'), $collection));
         }
 
         $responseMessage = $this->error(__('users.index.failed'));
@@ -74,9 +82,9 @@ class UserController extends Controller
     {
         $response = $this->userRepository->show($id);
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.show.success'), $userCollection));
+            return response()->json($this->ok(__('users.show.success'), $collection));
         }
 
         $responseMessage = $this->error(__('users.show.failed'));
@@ -84,27 +92,16 @@ class UserController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Response
-     */
-    public function login(Request $request)
-    {
-        $response = $this->userRepository->login($request);
-
-        return response()->json($response, $response['code']);
-    }
-
-    /**
      * @param Request $request
-     * @return mixed
-     * @throws \Exception
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $response = $this->userRepository->store($request);
-
         if ($response) {
-            $userCollection = UserResource::collection($response);
-            return response()->json($this->ok(__('users.store.success'), $userCollection));
+            $collection = UserResource::collection($response);
+
+            return response()->json($this->ok(__('users.store.success'), $collection));
         }
 
         $responseMessage = $this->error(__('users.store.failed'));
@@ -119,8 +116,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $response = $this->userRepository->update($request, $id);
+        if ($response) {
+            return response()->json($this->ok(__('users.update.success', ['id' => $id])));
+        }
 
-        return response()->json($response, $response['code']);
+        $responseMessage = $this->error(__('users.update.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
     }
 
     /**
@@ -164,9 +165,9 @@ class UserController extends Controller
         $response = $this->userRepository->syncRole($request, $id);
         $roles = implode(',', $request->get('roles'));
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
+            return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $collection));
         }
 
         $responseMessage = $this->error(__('users.roles.sync.failed', ['user_id' => $id, 'role_id' => $roles]));
@@ -182,9 +183,9 @@ class UserController extends Controller
         $response = $this->userRepository->addRole($request, $id);
         $roles = implode(',', $request->get('roles'));
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $userCollection));
+            return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $collection));
         }
 
         $responseMessage = $this->error(__('users.roles.create.failed',  ['user_id' => $id, 'role_id' => $roles]));
@@ -203,9 +204,9 @@ class UserController extends Controller
         $response = $this->userRepository->removeRole($user_id, $role_id);
 
         if ($response) {
-            $userCollection = UserResource::collection($response);
+            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.roles.remove.success', ['user_id' => $user_id, 'role_id' => $role_id]), $userCollection));
+            return response()->json($this->ok(__('users.roles.remove.success', ['user_id' => $user_id, 'role_id' => $role_id]), $collection));
         }
 
         $responseMessage = $this->error(__('users.roles.remove.failed', ['user_id' => $user_id, 'role_id' => $role_id]));
