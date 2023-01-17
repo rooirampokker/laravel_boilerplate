@@ -15,3 +15,25 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/roleIndexSuccess"
+    post:
+      summary: roles
+      description: Creates a new role
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Roles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/roleCreateRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payloadof the newly created role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleCreateSuccess"
