@@ -17,6 +17,10 @@ return [
         'success' => 'Role updated',
         'failed' => 'Unable to update role'
     ],
+    'delete' => [
+        'success' => 'Role :id deleted',
+        'failed' => 'Unable to delete role :id'
+    ],
     'permissions' => [
         'create' => [
             'success' => 'Permission :permission_id attached to role :role_id',

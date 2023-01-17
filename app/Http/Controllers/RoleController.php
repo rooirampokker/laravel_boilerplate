@@ -64,7 +64,20 @@ class RoleController extends Controller
         $responseMessage = $this->error(__('roles.store.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($id)
+    {
+        $response = $this->roleRepository->delete($id);
+        if ($response) {
+            return response()->json($this->ok(__('roles.delete.success', ['id' => $id])));
+        }
 
+        $responseMessage = $this->error(__('roles.delete.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
+    }
     /**
      * @param Request $request
      * @param $id

@@ -38,7 +38,6 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function show($id)
     {
         try {
-
             return $this->model::with('permissions')->find($id);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
@@ -61,7 +60,6 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
             if ($thisRole) {
                 $success = $this->model->fill($request->all())->save();
                 return $this->ok(__('roles.update.success'), $success);
-                return true;
             }
 
             return false;
@@ -84,6 +82,7 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 
             $response = $this->model::create($request->all());
             if ($response) {
+
                 return $response;
             }
 
@@ -105,9 +104,12 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         try {
             $params = $request->all();
             $role       = $this->model::find($id);
-            $collection = $role->givePermissionTo(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
-            if ($collection) {
-                return $collection;
+            if($role) {
+                $collection = $role->givePermissionTo(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
+                if ($collection) {
+
+                    return $collection;
+                }
             }
 
             return false;
@@ -126,10 +128,12 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function revokePermission ($role_id, $permission_id) {
         try {
             $role = $this->model::find($role_id);
-            $collection = $role->revokePermissionTo($permission_id);
+            if ($role) {
+                $collection = $role->revokePermissionTo($permission_id);
+                if ($collection) {
 
-            if ($collection) {
-                return $collection;
+                    return $collection;
+                }
             }
 
             return false;
@@ -144,9 +148,12 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         try {
             $params = $request->all();
             $role       = $this->model::find($id);
-            $collection = $role->syncPermissions(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
-            if ($collection) {
-                return $collection;
+            if ($role) {
+                $collection = $role->syncPermissions(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
+                if ($collection) {
+
+                    return $collection;
+                }
             }
 
             return false;
