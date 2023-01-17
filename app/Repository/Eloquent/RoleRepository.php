@@ -55,10 +55,10 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     {
         try {
             $thisRole = $this->model::find($id);
-
-            $this->roleService->validateInput($request);
             if ($thisRole) {
+                $this->roleService->validateInput($request);
                 $success = $this->model->fill($request->all())->save();
+
                 return $this->ok(__('roles.update.success'), $success);
             }
 
@@ -77,9 +77,7 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function store($request): mixed
     {
         try {
-
             $this->roleService->validateInput($request);
-
             $response = $this->model::create($request->all());
             if ($response) {
 
@@ -102,9 +100,9 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function addPermission ($request, $id)
     {
         try {
-            $params = $request->all();
-            $role       = $this->model::find($id);
+            $role = $this->model::find($id);
             if($role) {
+                $params     = $request->all();
                 $collection = $role->givePermissionTo(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
                 if ($collection) {
 
@@ -146,9 +144,9 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function syncPermission ($request, $id)
     {
         try {
-            $params = $request->all();
-            $role       = $this->model::find($id);
+            $role = $this->model::find($id);
             if ($role) {
+                $params     = $request->all();
                 $collection = $role->syncPermissions(Permission::whereIn('id', $params['permissions'])->get()->pluck('name'));
                 if ($collection) {
 

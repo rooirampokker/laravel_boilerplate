@@ -45,6 +45,21 @@ abstract class TestCase extends BaseTestCase
         $this->user->assignRole($userRole);
     }
 
+    /**
+     * @param $message
+     * @return void
+     */
+    protected function apiResponse($success, $code, $message) {
+        return [
+            'success' => $success,
+            'code' => $code,
+            'message' => $message,
+        ];
+    }
+    /**
+     * @param $email
+     * @return \Illuminate\Testing\TestResponse
+     */
     protected function createUserWithAdditionalData($email = null)
     {
         $email = $email ? $email : $this->faker->email();

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\Role;
+use App\Models\Permission;
 use Tests\TestCase;
 
 class RoleTest extends TestCase
@@ -29,11 +29,11 @@ class RoleTest extends TestCase
     public function testUserCanGetRoleIndex() {
         $response = $this->actingAs($this->admin, 'api')->getJson('api/roles');
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('roles.index.success')
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.index.success'),
+        ));
     }
 
     /**
@@ -44,12 +44,11 @@ class RoleTest extends TestCase
     public function testUserCanGetRoleShow() {
         $response = $this->actingAs($this->admin, 'api')->getJson('api/roles/'.$this->adminRole->id);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('roles.show.success'),
-            'data' => []
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.show.success'),
+        ));
     }
     /**
      * POST ../api/roles
@@ -61,68 +60,99 @@ class RoleTest extends TestCase
             'name' => 'new_role'
         ]);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('roles.store.success'),
-            'data' => []
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.store.success'),
+        ));
     }
-//    /**
-//     * POST ..api/users/:user_id/roles
-//     * ASSIGN MULTIPLE ROLES - USERS WILL HAVE THESE ROLES IN ADDITION TO CURRENTLY ASSIGNED ROLES
-//     */
-//    public function testUserCanBeAssignedRoles()
-//    {
-//        $role1 = Role::create(['name' => 'test_role_1']);
-//        $role2 = Role::create(['name' => 'test_role_2']);
-//        $roleRequestArray = [$role1->id,$role2->id];
-//        $response = $this->actingAs($this->admin, 'api')->postJson('api/users/' . $this->user->id . '/roles', [
-//            'email' => $this->faker->email(),
-//            'roles' => [$role1->id,$role2->id]
-//        ]);
-//
-//        $response->assertJson([
-//            'success' => true,
-//            'code' => 200,
-//            'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
-//        ]);
-//    }
-//
-//    /**
-//     * DELETE ..api/users/:user_id/roles/:role_id
-//     * REMOVE ROLE FROM USER - USE WILL RETAIN ALL ROLES, MINUS THE SPECIFIED ROLE
-//     */
-//    public function testUserCanBeRemovedFromRole()
-//    {
-//        $role = $this->user->roles()->first();
-//        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/'.$role->id);
-//
-//        $response->assertJson([
-//            'success' => true,
-//            'code' => 200,
-//            'message' =>  __('users.roles.remove.success', ['user_id' => $this->user->id, 'role_id' => $role->id])
-//        ]);
-//    }
-//
-//    /**
-//     * POST ..api/users/:user_id/roles
-//     * SYNC USER WITH ROLES - USER WILL ONLY BE ASSIGNED TO THE FOLLOWING ROLES AFTER SYNC
-//     */
-//    public function testUserCanBeSyncedWithRoles()
-//    {
-//        $role1 = Role::create(['name' => 'test_role_1']);
-//        $role2 = Role::create(['name' => 'test_role_2']);
-//        $roleRequestArray = [$role1->id,$role2->id];
-//        $response = $this->actingAs($this->admin, 'api')->postJson('api/users/' . $this->user->id . '/roles/sync', [
-//            'email' => $this->faker->email(),
-//            'roles' => [$role1->id,$role2->id]
-//        ]);
-//
-//        $response->assertJson([
-//            'success' => true,
-//            'code' => 200,
-//            'message' =>  __('users.roles.sync.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
-//        ]);
-//    }
+    /**
+     * UPDATE ../api/roles/{role_id}
+     *
+     * @return void
+     */
+    public function testUserCanUpdateRole() {
+        $response = $this->actingAs($this->admin, 'api')->putJson('api/roles/'.$this->adminRole->id, [
+            'name' => 'new_role'
+        ]);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.update.success'),
+        ));
+    }
+    /**
+     * DELETE ../api/roles/{role_id}
+     *
+     * @return void
+     */
+    public function testUserCanDeleteRole() {
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/'.$this->adminRole->id);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.delete.success', ['id' => $this->adminRole->id]),
+        ));
+    }
+
+    /**
+     * POST ../api/roles/{role_id}/permissions
+     *
+     * @return void
+     */
+    public function testPermissionsCanBeAddedToRoles() {
+        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' =>'api'])->fresh();
+        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' =>'api'])->fresh();
+
+        $permissionIDArray = [$permission1->id, $permission2->id];
+
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/'.$this->adminRole->id.'/permissions', [
+            'permissions' => $permissionIDArray
+        ]);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.permissions.create.success', ['role_id' => $this->adminRole->id, 'permission_id' => implode(',', $permissionIDArray)]),
+        ));
+    }
+
+    /**
+     * DELETE ../api/roles/{role_id}/permissions
+     *
+     * @return void
+     */
+    public function testPermissionsCanBeRemovedFromRoles() {
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/'.$this->adminRole->id.'/permissions/'.$this->adminRole->permissions->first()->id);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.permissions.delete.success', ['role_id' => $this->adminRole->id, 'permission_id' => $this->adminRole->permissions->first()->id])
+        ));
+    }
+
+    /**
+     * POST ../api/roles/{role_id}/permissions/sync
+     *
+     * @return void
+     */
+    public function testPermissionsCanBeSyncedToRoles() {
+        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' =>'api'])->fresh();
+        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' =>'api'])->fresh();
+
+        $permissionIDArray = [$permission1->id, $permission2->id];
+
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/'.$this->adminRole->id.'/permissions/sync', [
+            'permissions' => $permissionIDArray
+        ]);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('roles.permissions.sync.success', ['role_id' => $this->adminRole->id, 'permission_id' => implode(',', $permissionIDArray)]),
+        ));
+    }
 }
