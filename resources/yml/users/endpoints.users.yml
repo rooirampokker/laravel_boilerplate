@@ -162,7 +162,7 @@
               $ref: "#/components/schemas/userUpdateRequest"
       responses:
         '200':    # status code
-          description: A JSON object with a data payload of the deleted user
+          description: A JSON object with a data payload of the updated user
           content:
             application/json:
               schema:
@@ -185,7 +185,7 @@
             type: string
       responses:
         '200':    # status code
-          description: A JSON object with a data payloadof the specified user
+          description: A JSON object with a data payload of the specified user
           content:
             application/json:
               schema:

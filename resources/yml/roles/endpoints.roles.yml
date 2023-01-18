@@ -2,7 +2,7 @@
   /roles:
     get:
       summary: roles
-      description: Returns a list of all roles.
+      description: Returns a list of all roles and matching permissions.
       security:
         - OAuth2:
             - read
@@ -32,7 +32,84 @@
               $ref: "#/components/schemas/roleCreateRequest"
       responses:
         '200':    # status code
-          description: A JSON object with a data payloadof the newly created role
+          description: A JSON object with a data payload of the newly created role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleCreateSuccess"
+
+  /roles/{role_id}:
+    delete:
+      summary: /roles/{role_id}
+      description: Deletes an existing role
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: A simple JSON object with a success message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/defaultSuccess"
+
+    put:
+      summary: roles/{role_id}
+      description: Updates an existing role
+      security:
+        - OAuth2:
+            - write
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/roleUpdateRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the updated role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleUpdateSuccess"
+
+    get:
+      summary: roles/{role_id}
+      description: Returns a single role with permissions
+      security:
+        - OAuth2:
+            - read
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the specified role and matching permissions
           content:
             application/json:
               schema:

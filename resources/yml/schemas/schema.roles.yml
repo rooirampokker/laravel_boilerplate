@@ -7,6 +7,14 @@
       required:
         - name
 
+    roleUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        guard_name:
+          type: string
+
     roleIndexSuccess:
       type: object
       properties:
@@ -26,6 +34,8 @@
               id:
                 type: integer
               name:
+                type: string
+              guard_name:
                 type: string
               created_at:
                 type: string
@@ -58,6 +68,8 @@
                 type: integer
               name:
                 type: string
+              guard_name:
+                type: string
               created_at:
                 type: string
                 default: "2022-07-07 09:54:43"
@@ -68,3 +80,19 @@
                 type: array
                 items:
                   type: string
+
+    roleUpdateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
