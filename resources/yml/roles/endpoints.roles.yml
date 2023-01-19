@@ -15,6 +15,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/roleIndexSuccess"
+
     post:
       summary: roles
       description: Creates a new role
@@ -40,7 +41,7 @@
 
   /roles/{role_id}:
     delete:
-      summary: /roles/{role_id}
+      summary: roles/{role_id}
       description: Deletes an existing role
       security:
         - OAuth2:
@@ -110,6 +111,100 @@
       responses:
         '200':    # status code
           description: A JSON object with a data payload of the specified role and matching permissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleCreateSuccess"
+
+  /roles/{role_id}/permissions:
+    post:
+      summary: roles/{role_id}/permissions
+      description: Assign the specified permissions to a role
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/roleAssignPermissionRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of the specied role with all assigned permissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleCreateSuccess"
+
+  /roles/{role_id}/permissions/sync:
+    post:
+      summary: roles/{role_id}/permissions/sync
+      description: Syncs the specified role with the specified permissions
+      security:
+        - OAuth2:
+            - read
+            - write
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/roleAssignPermissionRequest"
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of specified role with updated permissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/roleCreateSuccess"
+
+  /roles/{role_id}/permissions/{permission_id}:
+    delete:
+      summary: roles/{role_id}/permissions/{permission_id}
+      description: Removes a single permission from a role
+      security:
+        - OAuth2:
+            - read
+            - write
+            - delete
+      tags:
+        - Roles
+      parameters:
+        - name: role_id
+          in: path
+          description: The role id
+          required: true
+          schema:
+            type: string
+        - name: permission_id
+          in: path
+          description: The permission id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: A JSON object with a data payload of specified role with updated permissions
           content:
             application/json:
               schema:

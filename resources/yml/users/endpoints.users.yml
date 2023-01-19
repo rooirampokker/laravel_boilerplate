@@ -18,6 +18,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userLoginSuccess"
+
   /users:
     post:
       summary: users
@@ -57,6 +58,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userIndexSuccess"
+
   /users/trashed:
     get:
       summary: users/trashed
@@ -73,6 +75,7 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/userIndexTrashedSuccess"
+
   /users/all:
     get:
       summary: users/all
