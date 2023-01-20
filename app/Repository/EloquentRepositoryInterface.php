@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use Illuminate\Foundation\Http\FormRequest;
 
 interface EloquentRepositoryInterface
 {
@@ -36,7 +37,7 @@ interface EloquentRepositoryInterface
      * @param Request $request
      * @return mixed
      */
-    public function store(Request $request);
+    public function store(FormRequest $request);
 
     /**
      * Update an existing model
@@ -45,7 +46,7 @@ interface EloquentRepositoryInterface
      * @param $id
      * @return mixed
      */
-    public function update(array $data, $id);
+    public function update(FormRequest $data, $id);
 
     /**
      * $delete an existing model

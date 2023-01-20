@@ -29,14 +29,13 @@ class UserDataRepository extends BaseRepository implements UserDataRepositoryInt
     public function store($request): mixed
     {
         try {
-            $request = $request->all();
-
+            $user_id = $request->request->get('user_id');
             foreach ($request['data'] as $key => $value) {
                 $key = str_replace("&nbsp;", '', trim($key));
                 $value = str_replace("&nbsp;", '', trim($value));
                 UserData::updateOrCreate(
                     [
-                        'user_id' => $request['user_id'],
+                        'user_id' => $user_id,
                         'key'     => $key],
                     ['value' => $value]
                 );

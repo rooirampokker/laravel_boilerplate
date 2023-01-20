@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Repository\Eloquent\UserRepository;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Validator;
 
 class UserController extends Controller
@@ -95,7 +97,7 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
         $response = $this->userRepository->store($request);
         if ($response) {
@@ -113,7 +115,7 @@ class UserController extends Controller
      * @param $id
      * @return mixed
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         $response = $this->userRepository->update($request, $id);
         if ($response) {

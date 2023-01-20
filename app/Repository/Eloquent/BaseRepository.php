@@ -6,6 +6,7 @@ use App\Repository\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use App\Traits\ResponseTrait;
+use Illuminate\Foundation\Http\FormRequest;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
@@ -80,10 +81,10 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @param $request
+     * @param FormRequest $request
      * @return mixed
      */
-    public function store($request): mixed
+    public function store(FormRequest $request): mixed
     {
         try {
             $data = $request->all();
@@ -105,11 +106,11 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param FormRequest $request
      * @param $id
      * @return mixed|void
      */
-    public function update(array $data, $id)
+    public function update(FormRequest $request, $id)
     {
 
     }
