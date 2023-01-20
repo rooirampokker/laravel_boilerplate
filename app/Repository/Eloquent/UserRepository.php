@@ -5,7 +5,6 @@ namespace App\Repository\Eloquent;
 use App\Models\User;
 use App\Models\UserData;
 use App\Models\Role;
-use App\Services\UserService;
 use App\Services\UserDataService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Repository\UserRepositoryInterface;
@@ -16,14 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    private UserService $userService;
     private UserDataRepository $userDataRepository;
     private UserDataService $userDataService;
 
     public function __construct(User $model)
     {
         $this->model = $model;
-        $this->userService = new UserService();
         $this->userDataService = new UserDataService();
         $this->userDataRepository = new UserDataRepository(new UserData());
     }
@@ -99,7 +96,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             DB::beginTransaction();
-
             $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
             $input = $request->all();
             unset($input['data']);

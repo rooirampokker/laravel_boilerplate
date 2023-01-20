@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserStoreRequest extends FormRequest
+class RoleStoreRequest extends FormRequest
 {
 
     /**
@@ -17,10 +17,8 @@ class UserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'      => 'required|email',
-            'password'   => 'required',
-            'c_password' => 'required|same:password',
-            'roles'       => 'required',
+            'name'      => 'required|unique:roles',
+            'guard_name' => 'required'
         ];
     }
 

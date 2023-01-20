@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Repository\Eloquent\RoleRepository;
 use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleStoreRequest;
+use App\Http\Requests\RoleUpdateRequest;
 
 class RoleController extends Controller
 {
@@ -50,10 +52,10 @@ class RoleController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param RoleStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(RoleStoreRequest $request)
     {
         $response = $this->roleRepository->store($request);
         if ($response) {
@@ -64,8 +66,9 @@ class RoleController extends Controller
         $responseMessage = $this->error(__('roles.store.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+
     /**
-     * @param Request $request
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id)
@@ -78,12 +81,13 @@ class RoleController extends Controller
         $responseMessage = $this->error(__('roles.delete.failed', ['id' => $id]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+
     /**
-     * @param Request $request
+     * @param RoleUpdateRequest $request
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(RoleUpdateRequest $request, $id)
     {
         $response = $this->roleRepository->update($request, $id);
         if ($response) {

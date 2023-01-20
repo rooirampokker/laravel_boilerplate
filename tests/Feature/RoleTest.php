@@ -57,7 +57,8 @@ class RoleTest extends TestCase
      */
     public function testUserCanStoreRole() {
         $response = $this->actingAs($this->admin, 'api')->postJson('api/roles', [
-            'name' => 'new_role'
+            'name' => 'new_role',
+            'guard_name' => 'api'
         ]);
 
         $response->assertJson($this->apiResponse(

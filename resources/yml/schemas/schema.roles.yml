@@ -4,8 +4,11 @@
       properties:
         name:
           type: string
+        guard_name:
+          type: string
       required:
         - name
+        - guard_name
 
     roleUpdateRequest:
       type: object
