@@ -112,28 +112,26 @@
         message:
           type: string
         data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              email:
-                type: string
-              email_verified_at:
-                type: string
-                default: "2022-07-07 09:54:43"
-              created_at:
-                type: string
-                default: "2022-07-07 09:54:43"
-              updated_at:
-                type: string
-                default: "2022-07-07 09:54:43"
-              deleted_at:
-                type: string
-                default: "2022-07-08 09:54:43"
-              token:
-                type: string
+          type: object
+          properties:
+            id:
+              type: integer
+            email:
+              type: string
+            email_verified_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            created_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            updated_at:
+              type: string
+              default: "2022-07-07 09:54:43"
+            deleted_at:
+              type: string
+              default: "2022-07-08 09:54:43"
+            token:
+              type: string
 
     userRestoreSuccess:
       type: object
