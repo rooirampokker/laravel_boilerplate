@@ -55,7 +55,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $request
+     * @param FormRequest $request
      * @return mixed
      */
     public function store(FormRequest $request): mixed
@@ -63,14 +63,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
             $requestParams = $request->all();
-            //$this->userService->validateInput($request, 'store');
-            //adds the use_id to the response - required for user-data storing
+
             if ($this->model->fill($request->all())->save()) {
                 if (array_key_exists('data', $requestParams)) {
+                    //adds the use_id to the response - required for user-data storing
                     $request->request->add(['user_id' => $this->model->id]);
                     $this->userDataRepository->store($request);
                     $this->model->assignRole($requestParams['roles']);
-
                 }
 
                 DB::commit();
