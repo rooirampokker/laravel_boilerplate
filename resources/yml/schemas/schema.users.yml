@@ -4,8 +4,10 @@
       properties:
         email:
           type: string
+          example: "user_1@gmail.com"
         password:
           type: string
+          example: "1234"
       required:
         - email
         - password

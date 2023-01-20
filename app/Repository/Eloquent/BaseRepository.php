@@ -111,6 +111,7 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function update(array $data, $id)
     {
+
     }
 
     /**
@@ -122,9 +123,8 @@ class BaseRepository implements EloquentRepositoryInterface
         try {
             $collection = $this->model::find($id);
             if ($collection) {
-                $collection->delete();
 
-                return true;
+                return $collection->delete();
             }
 
             return false;

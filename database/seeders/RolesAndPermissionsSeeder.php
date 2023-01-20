@@ -20,23 +20,20 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['guard_name' => 'api', 'name' => 'user-store']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-index']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-indexAll']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-indexTrashed']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-update']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-delete']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-restore']);
-        Permission::create(['guard_name' => 'api', 'name' => 'user-show']);
-
+        $permissionsConfig = config('role_permissions');
+        foreach ($permissionsConfig as $modelName => $modelPermissions) {
+            foreach($modelPermissions as $permission) {
+                Permission::create(['guard_name' => 'api', 'name' => $modelName.'-'.$permission]);
+            }
+        }
 
         // create roles and assign existing permissions
         $role1 = Role::create(['guard_name' => 'api', 'name' => 'super-admin']);
         $role1->givePermissionTo(Permission::all());
 
         // create roles and assign existing permissions - employees are currently locked down with no permissions
-        $role2 = Role::create(['guard_name' => 'api', 'name' => 'user']);
-        $role2->givePermissionTo(Permission::where('name', 'user-indexAll')->get());
+        $role2 = Role::create(['guard_name' => 'api', 'name' => 'admin']);
+        $role2->givePermissionTo(Permission::all());
 
         $role3 = Role::create(['guard_name' => 'api', 'name' => 'manager']);
         $role3->givePermissionTo(Permission::where('name', 'user-indexAll')->get());

@@ -1,4 +1,29 @@
 
+    roleCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+
+    roleUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        guard_name:
+          type: string
+
+    roleAssignPermissionRequest:
+      type: array
+      items:
+        type: integer
+      example:
+        - 1
+        - 2
+        - 3
+
     roleIndexSuccess:
       type: object
       properties:
@@ -19,18 +44,92 @@
                 type: integer
               name:
                 type: string
+              guard_name:
+                type: string
               created_at:
                 type: string
                 default: "2022-07-07 09:54:43"
               updated_at:
                 type: string
                 default: "2022-07-07 09:54:43"
+              permissions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    created_at:
+                      type: string
+                      default: "2022-07-07 09:54:43"
           example:
           - id: 1
             email: "super-admin"
             created_at: "2022-07-07 09:54:43"
             updated_at: "2022-07-07 09:54:43"
+            permissions:
+              - id: 1
+                name: "user-create"
+                created_at: "2022-07-07 09:54:43"
+              - id: 2
+                name: "user-index"
+                created_at: "2022-07-07 09:54:43"
           - id: 2
             email: "manager"
             created_at: "2022-08-07 09:54:43"
-            updated_at: "2022-08-07 09:54:43"
+            updated_at: "2022-07-07 09:54:43"
+            permissions:
+              - id: 1
+                name: "user-create"
+                created_at: "2022-07-07 09:54:43"
+
+    roleCreateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              guard_name:
+                type: string
+              created_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              updated_at:
+                type: string
+                default: "2022-07-07 09:54:43"
+              permissions:
+                type: array
+                items:
+                  type: string
+
+    roleUpdateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        code:
+          type: integer
+          default: 200
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: string

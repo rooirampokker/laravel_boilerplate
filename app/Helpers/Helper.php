@@ -32,8 +32,13 @@ if (!function_exists('getModelNameFromRoute')) {
     function getModelNameFromRoute($request): string
     {
         $routePrefix = $request->route()->getPrefix(); //to be used as model
-        $controllerAndMethod = explode("/", $routePrefix);
-        $model = ucfirst(end($controllerAndMethod));
+        $controllerAndMethod = array_diff(
+            explode("/", $routePrefix), ['api']
+        );
+
+        $model = ucfirst(
+                    reset($controllerAndMethod)
+        );
         $model = Str::singular($model);
         return "App\Models\\" . $model;
     }

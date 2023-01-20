@@ -27,7 +27,7 @@ class Authorize
             return response()->json($response, $response['code']);
         }
         $user = $request->user();
-
+        //dd($controllerAndMethod[1]);
         if (!empty($user) && $user->can($controllerAndMethod[1], app($model))) {
             return $next($request);
         }

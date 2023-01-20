@@ -3,19 +3,18 @@
 namespace App\Repository\Eloquent;
 
 use App\Models\UserData;
-use App\Services\UserDataControllerService;
+use App\Services\UserDataService;
 use App\Repository\UserDataRepositoryInterface;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
-    private UserDataControllerService $userDataControllerService;
+    private UserDataService $userDataService;
 
     public function __construct(UserData $model)
     {
         $this->model = $model;
-        $this->userDataControllerService = new UserDataControllerService();
+        $this->userDataService = new UserDataService();
     }
 
     /**

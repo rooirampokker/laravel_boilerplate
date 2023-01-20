@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Validator;
 
-class UserControllerService
+class RoleService
 {
     /**
      * @param $request
@@ -12,24 +12,15 @@ class UserControllerService
      * @return void
      * @throws \Exception
      */
-    public function validateInput(&$request, $validationType)
+    public function validateInput(&$request)
     {
-        //use this array to validate creation of new users
-        $validateCreate = [
-            'email'      => 'required|email',
-            'password'   => 'required',
-            'c_password' => 'required|same:password',
-            'roles'       => 'required',
+        $validate = [
+            'name'      => 'required',
         ];
-        //use this array to validate updates
-        $validateUpdate = [
-            'email' => 'email'
-        ];
-        $validateThis   = ($validationType == 'store') ? $validateCreate : $validateUpdate;
-        $validated      = Validator::make($request->all(), $validateThis);
+
+        $validated      = Validator::make($request->all(), $validate);
         $errorMessages  = false;
         //password confirmation not required for storing - only validation
-        $request->request->remove('c_password');
         if ($validated->fails()) {
             $errors = $validated->errors();
             foreach ($errors->all() as $error) {

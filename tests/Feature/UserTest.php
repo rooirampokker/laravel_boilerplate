@@ -35,7 +35,7 @@ class UserTest extends TestCase
      */
     public function testSuccessfulLogin()
     {
-        $response = $this->login($this->superAdmin->email, $this->password);
+        $response = $this->login($this->admin->email, $this->password);
 
         $response->assertStatus(200);
     }
@@ -55,20 +55,19 @@ class UserTest extends TestCase
     {
         $response = $this->createUserWithAdditionalData();
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.store.success'),
-            'data' => []
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.store.success'),
+        ));
     }
     /**
      * SUPER ADMIN CAN DELETE NEW USER
      */
     public function testSuperAdminCanDeleteUser()
     {
-        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
-        $deletedUser = $this->actingAs($this->superAdmin, 'api')->getJson('api/users/' . $this->user->id);
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $deletedUser = $this->actingAs($this->admin, 'api')->getJson('api/users/' . $this->user->id);
 
         $response->assertStatus(200);
         $deletedUser->assertStatus(500);
@@ -78,8 +77,8 @@ class UserTest extends TestCase
      */
     public function testIndexDoesNotReturnDeletedUsers()
     {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
-        $response    = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users');
+        $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $response    = $this->actingAs($this->admin, 'api')->GETJson('api/users');
         $userIdArray = array_column($response['data'], 'id');
 
         $response->assertStatus(200);
@@ -90,12 +89,16 @@ class UserTest extends TestCase
      */
     public function testIndexAllReturnsDeletedUsers()
     {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id);
 
-        $response    = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/all');
+        $response    = $this->actingAs($this->admin, 'api')->GETJson('api/users/all');
         $userIdArray = array_column($response['data'], 'id');
 
-        $response->assertStatus(200);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.index.success')
+        ));
         $this->assertContains($this->user->id, $userIdArray);
     }
     /**
@@ -103,11 +106,15 @@ class UserTest extends TestCase
      */
     public function testIndexTrashedDoesReturnDeletedUsers()
     {
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
-        $response = $this->actingAs($this->superAdmin, 'api')->GETJson('api/users/trashed');
+        $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $response = $this->actingAs($this->admin, 'api')->GETJson('api/users/trashed');
         $userIdArray = array_column($response['data'], 'id');
 
-        $response->assertStatus(200);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.index.success', ['id' => $this->user->id])
+        ));
         $this->assertContains($this->user->id, $userIdArray);
         $this->assertCount(1, $response['data']);
     }
@@ -118,9 +125,14 @@ class UserTest extends TestCase
     public function testSuperAdminCanRestoreUser()
     {
         //DELETE FIRST, THEN RESTORE
-        $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id);
-        $restoreResponse = $this->actingAs($this->superAdmin, 'api')->patchJson('api/users/' . $this->user->id);
-        $restoreResponse->assertStatus(200);
+        $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id);
+        $response = $this->actingAs($this->admin, 'api')->patchJson('api/users/' . $this->user->id);
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.restore.success', ['id' => $this->user->id])
+        ));
     }
 
     /**
@@ -135,7 +147,11 @@ class UserTest extends TestCase
             'c_password' => $this->password
         ]);
 
-        $response->assertStatus(401);
+        $response->assertJson($this->apiResponse(
+            false,
+            401,
+            __('auth.unauthorized')
+        ));
     }
     /**
      * DELETE ..api/users/:user_id
@@ -143,9 +159,13 @@ class UserTest extends TestCase
      */
     public function testUserCantDeleteUser()
     {
-        $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->superAdmin->id);
+        $response = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->admin->id);
 
-        $response->assertStatus(401);
+        $response->assertJson($this->apiResponse(
+            false,
+            401,
+            __('auth.unauthorized')
+        ));
     }
     /**
      * DELETE ..api/users/:user_id
@@ -154,11 +174,19 @@ class UserTest extends TestCase
     public function testUserCantRestoreUser()
     {
         //DELETE FIRST, THEN RESTORE
-        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->superAdmin->id);
-        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->superAdmin->id);
+        $deleteResponse  = $this->actingAs($this->user, 'api')->deleteJson('api/users/' . $this->admin->id);
+        $restoreResponse = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->admin->id);
+        $deleteResponse->assertJson($this->apiResponse(
+            false,
+            401,
+            __('auth.unauthorized')
+        ));
 
-        $deleteResponse->assertStatus(401);
-        $restoreResponse->assertStatus(401);
+        $restoreResponse->assertJson($this->apiResponse(
+            false,
+            401,
+            __('auth.unauthorized')
+        ));
     }
     /**
      * PUT ..api/users/:user_id
@@ -166,14 +194,18 @@ class UserTest extends TestCase
      */
     public function testUserCantUpdateOtherProfile()
     {
-        $oldEmail = $this->superAdmin->email;
+        $oldEmail = $this->admin->email;
         $newEmail = $this->faker->email();
-        $response = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->superAdmin->id, [
+        $response = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->admin->id, [
             'email' => $newEmail,
         ]);
 
         //return failure - user can't change super-admin profile
-        $response->assertStatus(401);
+        $response->assertJson($this->apiResponse(
+            false,
+            401,
+            __('auth.unauthorized')
+        ));
     }
     /**
      * PUT ..api/users/:user_id
@@ -181,20 +213,18 @@ class UserTest extends TestCase
      */
     public function testUserCanUpdateOwnProfile()
     {
-        $oldEmail = $this->user->email;
-        $newEmail = $this->faker->email();
         $response = $this->actingAs($this->user, 'api')->putJson('api/users/' . $this->user->id, [
-            'email' => $newEmail
+            'email' => $this->faker->email()
         ]);
 
         //return success - user may update their own profile
         $response->assertStatus(200);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.update.success', ['id' => $this->user->id])
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.update.success', ['id' => $this->user->id])
+        ));
     }
     /**
      * PUT ..api/users/:user_id
@@ -205,17 +235,17 @@ class UserTest extends TestCase
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
 
-        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
+        $response = $this->actingAs($this->admin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
             'data' => [
                 'first_name' => $this->faker->firstName()
             ]
         ]);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.update.success', ['id' => $user['data'][0]['id']])
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.update.success', ['id' => $user['data'][0]['id']])
+        ));
     }
     /**
      * PUT ..api/users/:user_id
@@ -225,19 +255,18 @@ class UserTest extends TestCase
     {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
-
-        $response = $this->actingAs($this->superAdmin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
+        $response = $this->actingAs($this->admin, 'api')->putJson('api/users/' . $user['data'][0]['id'], [
             'email' => $this->faker->email(),
             'data' => [
                 'random_input' => $this->faker->firstName()
             ]
         ]);
 
-        $response->assertJson([
-            'success' => false,
-            'code' => 422,
-            'message' =>  __('users.update.failed', ['id' => $user['data'][0]['id']])
-        ]);
+        $response->assertJson($this->apiResponse(
+            false,
+            500,
+            __('users.update.failed', ['id' => $user['data'][0]['id']])
+        ));
     }
 
     /**
@@ -249,16 +278,16 @@ class UserTest extends TestCase
         $role1 = Role::create(['name' => 'test_role_1']);
         $role2 = Role::create(['name' => 'test_role_2']);
         $roleRequestArray = [$role1->id,$role2->id];
-        $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users/' . $this->user->id . '/roles', [
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/users/' . $this->user->id . '/roles', [
             'email' => $this->faker->email(),
             'roles' => [$role1->id,$role2->id]
         ]);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.roles.create.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
+        ));
     }
 
     /**
@@ -268,13 +297,13 @@ class UserTest extends TestCase
     public function testUserCanBeRemovedFromRole()
     {
         $role = $this->user->roles()->first();
-        $response = $this->actingAs($this->superAdmin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/'.$role->id);
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/'.$role->id);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.roles.remove.success', ['user_id' => $this->user->id, 'role_id' => $role->id])
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.roles.remove.success', ['user_id' => $this->user->id, 'role_id' => $role->id])
+        ));
     }
 
     /**
@@ -286,15 +315,15 @@ class UserTest extends TestCase
         $role1 = Role::create(['name' => 'test_role_1']);
         $role2 = Role::create(['name' => 'test_role_2']);
         $roleRequestArray = [$role1->id,$role2->id];
-        $response = $this->actingAs($this->superAdmin, 'api')->postJson('api/users/' . $this->user->id . '/roles/sync', [
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/users/' . $this->user->id . '/roles/sync', [
             'email' => $this->faker->email(),
             'roles' => [$role1->id,$role2->id]
         ]);
 
-        $response->assertJson([
-            'success' => true,
-            'code' => 200,
-            'message' =>  __('users.roles.sync.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
-        ]);
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.roles.sync.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
+        ));
     }
 }

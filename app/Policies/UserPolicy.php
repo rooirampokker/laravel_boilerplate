@@ -120,4 +120,29 @@ class UserPolicy
     {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-restore');
     }
+
+    /**
+     * @param User $user
+     * @param User $model
+     * @return bool
+     */
+    public function addRole(User $user, User $model)
+    {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-addRole');
+    }
+
+    /**
+     * @param User $user
+     * @param User $model
+     * @return bool
+     */
+    public function removeRole(User $user, User $model)
+    {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-removeRole');
+    }
+
+    public function syncRole(User $user, User $model)
+    {
+        return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-syncRole');
+    }
 }
