@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'passwords'], function () {
@@ -6,4 +7,3 @@ Route::group(['prefix' => 'passwords'], function () {
     Route::get('find/{token}', 'PasswordResetController@find');
     Route::post('reset', 'PasswordResetController@reset');
 });
-

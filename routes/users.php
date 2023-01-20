@@ -1,9 +1,10 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'users'
-], function() {
+], function () {
     Route::get('/', 'UserController@index')->name('users.index');
     Route::get('/all', 'UserController@indexAll')->name('users.indexAll');
     Route::get('trashed', 'UserController@indexTrashed')->name('users.index.trashed');
@@ -17,7 +18,7 @@ Route::group([
 
     Route::group([
         'prefix' => '/{user_id}/roles'
-    ], function() {
+    ], function () {
         Route::post('', 'UserController@addRole')->name('users.addRole');
         Route::post('/sync', 'UserController@syncRole')->name('users.syncRole');
         Route::delete('/{role_id}', 'UserController@removeRole')->name('users.removeRole');

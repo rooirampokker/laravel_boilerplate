@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 interface EloquentRepositoryInterface

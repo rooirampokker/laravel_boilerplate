@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -16,5 +18,14 @@ class UserUpdateRequest extends FormRequest
         return [
             'email' => 'sometimes|email|unique:users'
         ];
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
 }

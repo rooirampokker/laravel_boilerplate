@@ -8,7 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RoleUpdateRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +21,12 @@ class RoleUpdateRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator) {
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
         throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
 }
