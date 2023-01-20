@@ -190,7 +190,7 @@ class UserController extends Controller
             return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $collection));
         }
 
-        $responseMessage = $this->error(__('users.roles.create.failed',  ['user_id' => $id, 'role_id' => $roles]));
+        $responseMessage = $this->error(__('users.roles.create.failed', ['user_id' => $id, 'role_id' => $roles]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 

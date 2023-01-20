@@ -297,7 +297,7 @@ class UserTest extends TestCase
     public function testUserCanBeRemovedFromRole()
     {
         $role = $this->user->roles()->first();
-        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/'.$role->id);
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/users/' . $this->user->id . '/roles/' . $role->id);
 
         $response->assertJson($this->apiResponse(
             true,

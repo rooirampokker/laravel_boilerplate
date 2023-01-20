@@ -26,7 +26,8 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testUserCanGetRoleIndex() {
+    public function testUserCanGetRoleIndex()
+    {
         $response = $this->actingAs($this->admin, 'api')->getJson('api/roles');
 
         $response->assertJson($this->apiResponse(
@@ -41,8 +42,9 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testUserCanGetRoleShow() {
-        $response = $this->actingAs($this->admin, 'api')->getJson('api/roles/'.$this->adminRole->id);
+    public function testUserCanGetRoleShow()
+    {
+        $response = $this->actingAs($this->admin, 'api')->getJson('api/roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -55,7 +57,8 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testUserCanStoreRole() {
+    public function testUserCanStoreRole()
+    {
         $response = $this->actingAs($this->admin, 'api')->postJson('api/roles', [
             'name' => 'new_role',
             'guard_name' => 'api'
@@ -72,8 +75,9 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testUserCanUpdateRole() {
-        $response = $this->actingAs($this->admin, 'api')->putJson('api/roles/'.$this->adminRole->id, [
+    public function testUserCanUpdateRole()
+    {
+        $response = $this->actingAs($this->admin, 'api')->putJson('api/roles/' . $this->adminRole->id, [
             'name' => 'new_role'
         ]);
 
@@ -88,8 +92,9 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testUserCanDeleteRole() {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/'.$this->adminRole->id);
+    public function testUserCanDeleteRole()
+    {
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -103,13 +108,14 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testPermissionsCanBeAddedToRoles() {
-        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' =>'api'])->fresh();
-        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' =>'api'])->fresh();
+    public function testPermissionsCanBeAddedToRoles()
+    {
+        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' => 'api'])->fresh();
+        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' => 'api'])->fresh();
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/'.$this->adminRole->id.'/permissions', [
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/' . $this->adminRole->id . '/permissions', [
             'permissions' => $permissionIDArray
         ]);
 
@@ -125,8 +131,9 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testPermissionsCanBeRemovedFromRoles() {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/'.$this->adminRole->id.'/permissions/'.$this->adminRole->permissions->first()->id);
+    public function testPermissionsCanBeRemovedFromRoles()
+    {
+        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/' . $this->adminRole->id . '/permissions/' . $this->adminRole->permissions->first()->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -140,13 +147,14 @@ class RoleTest extends TestCase
      *
      * @return void
      */
-    public function testPermissionsCanBeSyncedToRoles() {
-        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' =>'api'])->fresh();
-        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' =>'api'])->fresh();
+    public function testPermissionsCanBeSyncedToRoles()
+    {
+        $permission1 = Permission::create(['name' => 'model-index', 'guard_name' => 'api'])->fresh();
+        $permission2 = Permission::create(['name' => 'model-show', 'guard_name' => 'api'])->fresh();
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/'.$this->adminRole->id.'/permissions/sync', [
+        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/' . $this->adminRole->id . '/permissions/sync', [
             'permissions' => $permissionIDArray
         ]);
 

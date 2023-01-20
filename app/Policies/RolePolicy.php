@@ -82,7 +82,8 @@ class RolePolicy
      * @param Role $model
      * @return bool
      */
-    public function addPermission(User $user, Role $model) {
+    public function addPermission(User $user, Role $model)
+    {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-addPermission');
     }
 
@@ -91,7 +92,8 @@ class RolePolicy
      * @param Role $model
      * @return bool
      */
-    public function revokePermission(User $user, Role $model) {
+    public function revokePermission(User $user, Role $model)
+    {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-revokePermission');
     }
 
@@ -100,7 +102,8 @@ class RolePolicy
      * @param Role $model
      * @return bool
      */
-    public function syncPermission(User $user, Role $model) {
+    public function syncPermission(User $user, Role $model)
+    {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-syncPermission');
     }
 }

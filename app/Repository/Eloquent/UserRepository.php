@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     private UserDataRepository $userDataRepository;

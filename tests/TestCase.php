@@ -49,7 +49,8 @@ abstract class TestCase extends BaseTestCase
      * @param $message
      * @return void
      */
-    protected function apiResponse($success, $code, $message) {
+    protected function apiResponse($success, $code, $message)
+    {
         return [
             'success' => $success,
             'code' => $code,

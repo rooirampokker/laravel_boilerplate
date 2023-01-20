@@ -113,7 +113,7 @@ class RoleController extends Controller
             return response()->json($this->ok(__('roles.permissions.create.success', ['role_id' => $id, 'permission_id' => $permissions]), $collection));
         }
 
-        $responseMessage = $this->error(__('roles.permissions.create.failed',  ['role_id' => $id, 'permission_id' => $permissions]));
+        $responseMessage = $this->error(__('roles.permissions.create.failed', ['role_id' => $id, 'permission_id' => $permissions]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -131,7 +131,7 @@ class RoleController extends Controller
             return response()->json($this->ok(__('roles.permissions.delete.success', ['role_id' => $role_id, 'permission_id' => $permission_id]), $collection));
         }
 
-        $responseMessage = $this->error(__('roles.permissions.delete.failed',  ['role_id' => $role_id, 'permission_id' => $permission_id]));
+        $responseMessage = $this->error(__('roles.permissions.delete.failed', ['role_id' => $role_id, 'permission_id' => $permission_id]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -150,7 +150,7 @@ class RoleController extends Controller
             return response()->json($this->ok(__('roles.permissions.sync.success', ['role_id' => $id, 'permission_id' => $permissions]), $collection));
         }
 
-        $responseMessage = $this->error(__('roles.permissions.sync.failed',  ['role_id' => $id, 'permission_id' => $permissions]));
+        $responseMessage = $this->error(__('roles.permissions.sync.failed', ['role_id' => $id, 'permission_id' => $permissions]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }
