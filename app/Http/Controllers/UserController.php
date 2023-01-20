@@ -94,7 +94,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param UserStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(UserStoreRequest $request)
@@ -111,9 +111,9 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param UserUpdateRequest $request
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UserUpdateRequest $request, $id)
     {
@@ -128,7 +128,7 @@ class UserController extends Controller
 
     /**
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id)
     {
@@ -144,7 +144,7 @@ class UserController extends Controller
 
     /**
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
     {

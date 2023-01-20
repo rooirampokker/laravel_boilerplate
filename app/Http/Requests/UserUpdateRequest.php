@@ -14,7 +14,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'email'
+            'email' => 'sometimes|email|unique:users'
         ];
     }
 }
