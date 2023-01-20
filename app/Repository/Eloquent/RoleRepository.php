@@ -5,17 +5,14 @@ namespace App\Repository\Eloquent;
 use App\Repository\RoleRepositoryInterface;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Services\RoleService;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {
-    private RoleService $roleService;
-
     public function __construct(Role $model)
     {
         $this->model = $model;
-        $this->roleService = new RoleService();
     }
 
     /**
@@ -47,16 +44,15 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param FormRequest $request
      * @param $id
-     * @return mixed|void
+     * @return array|false|mixed|void
      */
-    public function update($request, $id)
+    public function update(FormRequest $request, $id)
     {
         try {
             $thisRole = $this->model::find($id);
             if ($thisRole) {
-                $this->roleService->validateInput($request);
                 $success = $this->model->fill($request->all())->save();
 
                 return $this->ok(__('roles.update.success'), $success);
@@ -71,13 +67,12 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     }
 
     /**
-     * @param $request
-     * @return array|false|mixed
+     * @param FormRequest $request
+     * @return mixed
      */
-    public function store($request): mixed
+    public function store(FormRequest $request): mixed
     {
         try {
-            $this->roleService->validateInput($request);
             $response = $this->model::create($request->all());
             if ($response) {
 

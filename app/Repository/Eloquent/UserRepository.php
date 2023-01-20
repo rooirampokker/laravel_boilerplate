@@ -5,8 +5,8 @@ namespace App\Repository\Eloquent;
 use App\Models\User;
 use App\Models\UserData;
 use App\Models\Role;
-use App\Services\UserService;
 use App\Services\UserDataService;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -15,14 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    private UserService $userService;
     private UserDataRepository $userDataRepository;
     private UserDataService $userDataService;
 
     public function __construct(User $model)
     {
         $this->model = $model;
-        $this->userService = new UserService();
         $this->userDataService = new UserDataService();
         $this->userDataRepository = new UserDataRepository(new UserData());
     }
@@ -57,22 +55,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $request
+     * @param FormRequest $request
      * @return mixed
      */
-    public function store($request): mixed
+    public function store(FormRequest $request): mixed
     {
         try {
             DB::beginTransaction();
             $requestParams = $request->all();
-            $this->userService->validateInput($request, 'store');
-            //adds the use_id to the response - required for user-data storing
+
             if ($this->model->fill($request->all())->save()) {
                 if (array_key_exists('data', $requestParams)) {
+                    //adds the use_id to the response - required for user-data storing
                     $request->request->add(['user_id' => $this->model->id]);
                     $this->userDataRepository->store($request);
                     $this->model->assignRole($requestParams['roles']);
-
                 }
 
                 DB::commit();
@@ -90,29 +87,27 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $request
+     * @param FormRequest $request
      * @param $id
      * @return mixed
      */
-    public function update($request, $id): mixed
+    public function update(FormRequest $request, $id): mixed
     {
         try {
             DB::beginTransaction();
-
-            $this->userService->validateInput($request, 'update');
-
             $userDataUpdateResponse = $this->userDataRepository->update($request, $id);
-            $request->request->remove('data');
             $input = $request->all();
-            $user  = User::findOrFail($id);
-            $user->fill($input)->save();
-
+            unset($input['data']);
+            //did the user-data update succeed?
             if ($userDataUpdateResponse) {
-                if (count($input) == $this->userService->fillableInputCount($input, $user)) {
-
-                    DB::commit();
-                    return true;
+                //is there anything left in the request bag for the user model?
+                if (count($input)) {
+                    $user  = User::findOrFail($id);
+                    $user->fill($input)->save();
                 }
+
+                DB::commit();
+                return true;
             }
 
             DB::rollBack();
