@@ -15,12 +15,12 @@ class TenantsTableSeeder extends Seeder
         $tenants = [
          [
              'name' => 'BNP',
-             'domain' => 'bnp',
+             'domain' => 'bnp.eventogy_v2',
              'database' => 'eventogy_v2_bnp'
          ],
          [
             'name' => 'Clifford Chance',
-            'domain' => 'cliffordchace',
+            'domain' => 'cliffordchance.eventogy_v2',
             'database' => 'eventogy_v2_cliffordchance'
          ],
         ];
