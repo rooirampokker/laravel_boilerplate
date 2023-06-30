@@ -18,7 +18,8 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::group([
       'middleware' => [
           'auth:api',
-          'authorize'
+          'authorize',
+          'tenant'
       ],
     ], function () {
         require 'users.php';
