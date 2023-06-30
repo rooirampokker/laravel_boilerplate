@@ -22,8 +22,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // create permissions
         $permissionsConfig = config('role_permissions');
         foreach ($permissionsConfig as $modelName => $modelPermissions) {
-            foreach ($modelPermissions as $permission) {
-                Permission::create(['guard_name' => 'api', 'name' => $modelName . '-' . $permission]);
+            foreach($modelPermissions as $permission) {
+                Permission::create(['guard_name' => 'api', 'name' => $modelName.'-'.$permission]);
             }
         }
 

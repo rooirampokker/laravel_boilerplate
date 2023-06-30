@@ -8,6 +8,7 @@
         "php": "^8.1",
         "askedio/laravel-soft-cascade": "^10.0",
         "aws/aws-sdk-php": "^3.249",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/helpers": "^1.2",
@@ -15,7 +16,6 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "~3.10",
         "nesbot/carbon": "^2.36",
-        "doctrine/dbal": "^3.5.0",
         "spatie/laravel-multitenancy": "^3.0",
         "spatie/laravel-permission": "^5.10"
     },
