@@ -10,7 +10,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class User extends Authenticatable
 {
@@ -21,7 +20,6 @@ class User extends Authenticatable
     use softDeletes;
     use SoftCascadeTrait;
     use HasUuids;
-    use UsesTenantConnection;
 
     /**
      * The attributes that are mass assignable.
