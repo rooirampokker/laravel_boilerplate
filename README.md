@@ -28,10 +28,9 @@
    3: php artisan cache:forget spatie.permission.cache
    4: php artisan optimize:clear
    5: # update your .env file with correct database and other details
-   6: php artisan migrate --path=database/migrations/landlord --database=landlord
-   7: php artisan db:seed --class=TenantsTableSeeder --database=landlord
-   8: # create schemas for all entries in the tenants table
-   9: php artisan tenants:artisan "migrate --database=tenant --seed"
-   10: php artisan passport:keys
+   6: php artisan migrate 
+   7: php artisan db:seed
+   8: php artisan tenants:seed
+   9: php artisan passport:keys
    
    ```

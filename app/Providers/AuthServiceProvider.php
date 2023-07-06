@@ -10,6 +10,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
+use Route;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,5 +34,22 @@ class AuthServiceProvider extends ServiceProvider
           Gate::before(function ($user) {
             return $user->hasRole('super-admin') ? true : null;
           });
+
+        Route::group([
+            'as' => 'passport.',
+            'middleware' => [
+                'universal',
+                InitializeTenancyByDomain::class, // Use tenancy initialization middleware of your choice
+            ],
+            'prefix' => config('passport.path', 'oauth'),
+            'namespace' => 'Laravel\Passport\Http\Controllers',
+        ], function () {
+            $this->loadRoutesFrom(base_path() . "/vendor/laravel/passport/routes/web.php");
+        });
+    }
+
+    public function register()
+    {
+        Passport::ignoreRoutes();
     }
 }

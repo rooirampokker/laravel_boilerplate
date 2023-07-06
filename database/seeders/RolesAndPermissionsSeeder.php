@@ -16,16 +16,16 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-        // Reset cached roles and permissions
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
-
-        // create permissions
-        $permissionsConfig = config('role_permissions');
-        foreach ($permissionsConfig as $modelName => $modelPermissions) {
-            foreach($modelPermissions as $permission) {
-                Permission::create(['guard_name' => 'api', 'name' => $modelName.'-'.$permission]);
-            }
-        }
+//        // Reset cached roles and permissions
+//        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+//
+//        // create permissions
+//        $permissionsConfig = config('role_permissions');
+//        foreach ($permissionsConfig as $modelName => $modelPermissions) {
+//            foreach($modelPermissions as $permission) {
+//                Permission::create(['guard_name' => 'api', 'name' => $modelName.'-'.$permission]);
+//            }
+//        }
 
         // create roles and assign existing permissions
         $role1 = Role::create(['guard_name' => 'api', 'name' => 'super-admin']);

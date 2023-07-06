@@ -20,7 +20,8 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
           'auth:api',
           'authorize',
           InitializeTenancyByDomain::class,
-          PreventAccessFromCentralDomains::class,
+          'universal',
+          //PreventAccessFromCentralDomains::class,
       ],
     ], function () {
         require 'users.php';
