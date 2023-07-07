@@ -16,8 +16,8 @@ class TenantDatabaseSeeder extends Seeder
     {
         $client = new ClientRepository();
 
-        $client->createPasswordGrantClient(null, 'Default password grant client', '');
-        $client->createPersonalAccessClient(null, 'Default personal access client', '');
+        $client->createPasswordGrantClient(null, 'Default password grant client', 'https://eventogy_v2');
+        $client->createPersonalAccessClient(null, 'Default personal access client', 'https://eventogy_v2');
 
         $this->call(UserTableSeeder::class);
         $this->call(RolesAndPermissionsSeeder::class);

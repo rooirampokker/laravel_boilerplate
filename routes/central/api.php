@@ -17,8 +17,10 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     //Authenticated routes...
     Route::group([
         'middleware' => [
-            InitializeTenancyByDomain::class,
+            'auth:api',
+            'authorize',
             'universal',
+            InitializeTenancyByDomain::class,
         ],
     ], function () {
         require 'tenants.php';

@@ -19,8 +19,8 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
   //Authenticated routes...
     Route::group([
       'middleware' => [
-          InitializeTenancyByDomain::class,
-          PreventAccessFromCentralDomains::class,
+          'auth:api',
+          'authorize',
       ],
     ], function () {
         require 'users.php';
