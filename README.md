@@ -12,8 +12,8 @@
 - Implements UUIDs
 - Code Sniffer (phpcs) and linter (phpcbf) (https://github.com/squizlabs/PHP_CodeSniffer)
 ```
-./vendor/bin/phpcs --standard=PSR12 /var/www/html/eventogy.manager/app/
-./vendor/bin/phpcbf --standard=PSR12 /var/www/html/eventogy.manager/app/
+./vendor/bin/phpcs --standard=PSR12 /var/www/html/eventogy_v2/app/
+./vendor/bin/phpcbf --standard=PSR12 /var/www/html/eventogy_v2/app/
 ```
 - Packages to:
     - Create seeds from existing database (https://github.com/orangehill/iseed)
@@ -23,11 +23,11 @@
 - MySQL
 ## Installation:
 ```0: Create database if it doesn't exist already or ensure that it's empty if it does exist (drop tables, leave database intact)
-   1: composer install
-   2: composer dumpautoload
-   3: php artisan cache:forget spatie.permission.cache
-   4: php artisan optimize:clear
-   5: # update your .env file with correct database and other details
+   1: create `.env` based on `.env.example` and update necessary constants 
+   2: composer install
+   3: composer dumpautoload
+   4: php artisan cache:forget spatie.permission.cache
+   5: php artisan optimize:clear
    6: php artisan migrate 
    7: php artisan db:seed
    8: php artisan tenants:seed

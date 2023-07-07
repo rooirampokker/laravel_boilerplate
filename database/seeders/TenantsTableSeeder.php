@@ -3,6 +3,7 @@
 namespace database\seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Tenant;
 
 class TenantsTableSeeder extends Seeder
 {
@@ -15,14 +16,12 @@ class TenantsTableSeeder extends Seeder
     {
         $tenants = [
          [
-             'id' => 'test',
-             'created_at' => date("Y-m-d H:i:s"),
-             'updated_at' => date("Y-m-d H:i:s"),
-             'data' => ["tenancy_db_name" => "eventogy_test_tenant"],
-         ],
+             'id' => 'test'
+         ]
         ];
         foreach ($tenants as $tenant) {
-            \App\Models\Tenant::create($tenant);
+            $thisTenant = Tenant::create($tenant);
+            $thisTenant->domains()->create(['domain' => $tenant['id'] . "." . env('APP_DOMAIN')]);
         }
     }
 }

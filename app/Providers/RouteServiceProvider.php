@@ -36,8 +36,10 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-        $this->mapWebRoutes();
-        $this->mapApiRoutes();
+        $this->routes(function () {
+            $this->mapCentralApiRoutes();
+            $this->mapTenantApiRoutes();
+        });
     }
 
     /**
@@ -54,24 +56,21 @@ class RouteServiceProvider extends ServiceProvider
             }
         );
     }
-
-    protected function mapWebRoutes()
+    protected function mapTenantApiRoutes()
     {
-        foreach ($this->centralDomains() as $domain) {
-            Route::middleware('web')
-                ->domain($domain)
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
-        }
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
-    protected function mapApiRoutes()
+    protected function mapCentralApiRoutes()
     {
         foreach ($this->centralDomains() as $domain) {
             Route::prefix('api')
                 ->domain($domain)
                 ->middleware('api')
                 ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
+                ->group(base_path('routes/central/api.php'));
         }
     }
 
