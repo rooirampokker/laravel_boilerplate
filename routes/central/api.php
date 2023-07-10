@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Routes restricted to the central/landlord API
  */
@@ -21,9 +22,9 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
             'authorize',
         ],
     ], function () {
-        require base_path().'/routes/central/tenants.php';
-        require base_path().'/routes/users.php';
-        require base_path().'/routes/user-data.php';
-        require base_path().'/routes/roles.php';
+        require base_path() . '/routes/central/tenants.php';
+        require base_path() . '/routes/users.php';
+        require base_path() . '/routes/user-data.php';
+        require base_path() . '/routes/roles.php';
     });
 });

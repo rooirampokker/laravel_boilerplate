@@ -44,3 +44,14 @@ if (!function_exists('getModelNameFromRoute')) {
         return "App\Models\\" . $model;
     }
 }
+
+if (!function_exists('getControllerNameAndAction')) {
+    function getControllerNameAndAction($request): array
+    {
+        $controller = $request->route()->getActionName();
+        $controllerAndMethod = preg_split("/[@]/", $controller);
+
+        return $controllerAndMethod;
+    }
+
+}

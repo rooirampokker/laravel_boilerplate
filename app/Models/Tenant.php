@@ -10,8 +10,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains, HasFactory;
+    use HasDatabase;
+    use HasDomains;
+    use HasFactory;
 
-    protected $fillable = ['id'];
-    protected $attributes = ["guard_name" => "api"];
+    protected $fillable = [
+        'name',
+        'description'
+    ];
+
+    /**
+     * Add Custom columns (that won't be stored in the data JSON column) here.
+     * Id column should always be included, even though it's not custom
+     * @return string[]
+     */
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id',
+            'description',
+            'name'
+        ];
+    }
 }

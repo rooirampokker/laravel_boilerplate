@@ -16,7 +16,7 @@ class TenantUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id'      => 'sometimes|required|unique:tenants',
+            'name'    => 'required|required|unique:tenants',
         ];
     }
 

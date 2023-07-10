@@ -16,12 +16,14 @@ class TenantsTableSeeder extends Seeder
     {
         $tenants = [
          [
-             'id' => 'test'
+             'name' => 'test',
+             'tenancy_db_name' => 'laravel_test_tenant',
+             'description' => 'test tenant generated during initial seeding'
          ]
         ];
         foreach ($tenants as $tenant) {
             $thisTenant = Tenant::create($tenant);
-            $thisTenant->domains()->create(['domain' => $tenant['id'] . "." . env('APP_DOMAIN')]);
+            $thisTenant->domains()->create(['domain' => $tenant['name'] . "." . env('APP_DOMAIN')]);
         }
     }
 }

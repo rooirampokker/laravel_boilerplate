@@ -28,9 +28,9 @@
    3: composer dumpautoload
    4: php artisan cache:forget spatie.permission.cache
    5: php artisan optimize:clear
-   6: php artisan migrate 
+   6: php artisan migrate:fresh 
    7: php artisan db:seed
    8: php artisan tenants:seed
-   9: php artisan passport:keys
+   9: php artisan passport:install
    
    ```
