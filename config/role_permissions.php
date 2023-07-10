@@ -14,6 +14,13 @@ return [
         'removeRole',
         'syncRole',
     ],
+    'tenant' => [
+        'store',
+        'index',
+        'show',
+        'update',
+        'delete',
+    ],
     'role' => [
         'store',
         'index',

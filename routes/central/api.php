@@ -19,11 +19,9 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
         'middleware' => [
             'auth:api',
             'authorize',
-            'universal',
-            InitializeTenancyByDomain::class,
         ],
     ], function () {
-        require 'tenants.php';
+        require base_path().'/routes/central/tenants.php';
         require base_path().'/routes/users.php';
         require base_path().'/routes/user-data.php';
         require base_path().'/routes/roles.php';

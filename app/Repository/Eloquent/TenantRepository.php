@@ -21,7 +21,7 @@ class TenantRepository extends BaseRepository implements TenantRepositoryInterfa
     public function index()
     {
         try {
-            return $this->model::with('permissions')->get();
+            return $this->model->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
