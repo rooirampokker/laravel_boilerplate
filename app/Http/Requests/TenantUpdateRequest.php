@@ -26,7 +26,6 @@ class TenantUpdateRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        dd($validator->errors());
         throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
 }

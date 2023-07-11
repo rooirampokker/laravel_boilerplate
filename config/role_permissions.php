@@ -17,9 +17,12 @@ return [
     'tenant' => [
         'store',
         'index',
-        'show',
+        'indexAll',
+        'indexTrashed',
         'update',
         'delete',
+        'restore',
+        'show',
     ],
     'role' => [
         'store',

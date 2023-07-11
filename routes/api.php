@@ -21,11 +21,11 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
       'middleware' => [
           'auth:api',
           'authorize',
+          'universal',
       ],
     ], function () {
         require 'users.php';
         require 'user-data.php';
         require 'roles.php';
-        require base_path() . '/routes/central/tenants.php';
     });
 });

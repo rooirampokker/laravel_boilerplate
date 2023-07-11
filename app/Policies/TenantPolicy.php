@@ -84,8 +84,5 @@ class TenantPolicy
     public function delete(User $user, Tenant $model)
     {
         return $this->policyService->doesUserWithRolesHavePermission($user, $this->model . '-delete');
-
-        //should users be able to delete their own profiles?
-        //return $user->id == $model->user_id;
     }
 }

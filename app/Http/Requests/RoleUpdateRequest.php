@@ -16,7 +16,7 @@ class RoleUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'sometimes|unique:roles',
+            'name'      => 'sometimes|required|unique:roles',
             'guard_name' => 'sometimes|required'
         ];
     }
