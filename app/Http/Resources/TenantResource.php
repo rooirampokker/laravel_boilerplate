@@ -22,6 +22,7 @@ class TenantResource extends JsonResource
             'tenancy_db_name' => $this->tenancy_db_name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
             //only include this with the 'show' method
             'domains' => $this->when($controllerAndAction[1] === 'show', $this->domains->pluck('domain')),
         ];

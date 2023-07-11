@@ -61,7 +61,7 @@ class UserController extends Controller
         return response()->json($responseMessage, $responseMessage['code']);
     }
     /**
-     * returns all active/non-deleted users
+     * returns all inactive/soft-deleted users
      * @return \Illuminate\Http\JsonResponse
      */
     public function indexTrashed()

@@ -21,4 +21,8 @@ return [
         'success' => 'Tenant :id deleted',
         'failed' => 'Unable to delete tenant :id'
     ],
+    'restore' => [
+        'success' => 'tenant :id restored',
+        'failed' => 'Failed to restore tenant :id'
+    ],
 ];

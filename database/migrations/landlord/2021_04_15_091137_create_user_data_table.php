@@ -1,26 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenantsTable extends Migration
+class CreateUserDataTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('tenants', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name')->unique();
-            $table->string('description')->nullable();
-            $table->string('tenancy_db_name')->unique();
-            $table->json('data')->nullable();
+        Schema::create('user_data', function (Blueprint $table) {
+            $table->uuid('id')->id()->primary();
+            $table->uuid('user_id')->id()->index('FK_users_user_data');
+            $table->string('key', 255);
+            $table->string('value', 255);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
             $table->softDeletes('deleted_at', 0);
@@ -32,8 +29,8 @@ class CreateTenantsTable extends Migration
      *
      * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('tenants');
+        Schema::dropIfExists('user_data');
     }
 }

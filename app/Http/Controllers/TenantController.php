@@ -33,7 +33,38 @@ class TenantController extends Controller
         $responseMessage = $this->error(__('tenants.index.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+    /**
+     * returns all active/non-deleted tenants
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function indexAll()
+    {
+        $response = $this->tenantRepository->indexAll();
+        if ($response) {
+            $collection = TenantResource::collection($response);
 
+            return response()->json($this->ok(__('tenants.index.success'), $collection));
+        }
+
+        $responseMessage = $this->error(__('tenants.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
+    }
+    /**
+     * returns all inactive/soft-deleted tenants
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function indexTrashed()
+    {
+        $response = $this->tenantRepository->indexTrashed();
+        if ($response) {
+            $collection = TenantResource::collection($response);
+
+            return response()->json($this->ok(__('tenants.index.success'), $collection));
+        }
+
+        $responseMessage = $this->error(__('tenants.index.failed'));
+        return response()->json($responseMessage, $responseMessage['code']);
+    }
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -66,7 +97,21 @@ class TenantController extends Controller
         $responseMessage = $this->error(__('tenants.store.failed'));
         return response()->json($responseMessage, $responseMessage['code']);
     }
+    /**
+     * @param TenantUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(TenantUpdateRequest $request, $id)
+    {
+        $response = $this->tenantRepository->update($request, $id);
+        if ($response) {
+            return response()->json($this->ok(__('tenants.update.success', ['id' => $id])));
+        }
 
+        $responseMessage = $this->error(__('tenants.update.failed', ['id' => $id]));
+        return response()->json($responseMessage, $responseMessage['code']);
+    }
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -81,20 +126,19 @@ class TenantController extends Controller
         $responseMessage = $this->error(__('tenants.delete.failed', ['id' => $id]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
-
     /**
-     * @param TenantUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(TenantUpdateRequest $request, $id)
+    public function restore($id)
     {
-        $response = $this->tenantRepository->update($request, $id);
+        $response = $this->tenantRepository->restore($id);
+
         if ($response) {
-            return response()->json($this->ok(__('tenants.update.success', ['id' => $id])));
+            return response()->json($this->ok(__('tenants.restore.success', ['id' => $id])));
         }
 
-        $responseMessage = $this->error(__('tenants.update.failed', ['id' => $id]));
+        $responseMessage = $this->error(__('tenants.restore.failed', ['id' => $id]));
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }

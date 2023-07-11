@@ -16,7 +16,8 @@ class TenantStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'    => 'required|unique:tenants'
+            'name'    => 'required|unique:tenants',
+            'tenancy_db_name' => 'required|unique:tenants',
         ];
     }
 
