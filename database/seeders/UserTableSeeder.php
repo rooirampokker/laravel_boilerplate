@@ -14,7 +14,7 @@ class UserTableSeeder extends Seeder
    */
     public function run()
     {
-        $password = bcrypt('1234');
+        $password = '1234';
         $users = [
          [
              'id' => Uuid::uuid4()->toString(),
