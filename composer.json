@@ -5,28 +5,38 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
-        "askedio/laravel-soft-cascade": "^10.0",
-        "aws/aws-sdk-php": "^3.249",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^10.0",
-        "laravel/helpers": "^1.2",
-        "laravel/passport": "^11.3",
-        "laravel/tinker": "^2.8",
-        "league/flysystem-aws-s3-v3": "~3.10",
-        "nesbot/carbon": "^2.36",
-	"doctrine/dbal": "^3.5.0",
-        "spatie/laravel-permission": "^5.7"
+        "php": "^8.4",
+        "askedio/laravel-soft-cascade": "^12.0",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "bkwld/cloner": "^3.14",
+        "cweagans/composer-patches": "~2.0",
+        "guzzlehttp/guzzle": "^7.9",
+        "laravel/framework": "^12.18",
+        "laravel/helpers": "^1.7",
+        "laravel/passport": "^13.0",
+        "laravel/reverb": "^1.5",
+        "laravel/tinker": "^2.10",
+        "laravel/ui": "^4.6",
+        "aws/aws-sdk-php": "^3.8",
+        "league/flysystem-aws-s3-v3": "~3.29",
+        "shiftonelabs/laravel-sqs-fifo-queue": "^3.0",
+        "maatwebsite/excel": "^3.1",
+        "nesbot/carbon": "^3.10",
+        "spatie/laravel-activitylog": "^4.10",
+        "spatie/laravel-permission": "^6.20"
     },
     "require-dev": {
-        "orangehill/iseed": "^3.0",
-        "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.18",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^6.3",
-        "phpunit/phpunit": "^10.0",
+        "orangehill/iseed": "^3.1",
+        "laravel/telescope": "^5.9",
+        "brianium/paratest": "^7.10",
+        "fakerphp/faker": "^1.24",
+        "laravel/sail": "^1.43",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.0",
+        "phpunit/phpunit": "^12.0",
+        "spatie/laravel-ignition": "^2.9",
         "squizlabs/php_codesniffer": "3.*",
-	"spatie/laravel-ignition": "^2.0"
+        "symfony/yaml": "^7.0"
     },
     "autoload": {
         "files": [
@@ -63,7 +73,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "cweagans/composer-patches": true,
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
