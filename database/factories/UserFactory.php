@@ -23,7 +23,7 @@ class UserFactory extends Factory
     {
         return [
             'email' => $this->faker->email,
-            'password' => bcrypt('1234')
+            'password' => '1234'
         ];
     }
 }

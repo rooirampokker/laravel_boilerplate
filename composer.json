@@ -7,7 +7,6 @@
     "require": {
         "php": "^8.4",
         "askedio/laravel-soft-cascade": "^12.0",
-        "aws/aws-sdk-php": "^3.8",
         "barryvdh/laravel-dompdf": "^3.1",
         "bkwld/cloner": "^3.14",
         "cweagans/composer-patches": "~2.0",
@@ -15,19 +14,16 @@
         "laravel/framework": "^12.18",
         "laravel/helpers": "^1.7",
         "laravel/passport": "^13.0",
-        "laravel/pulse": "^1.4",
         "laravel/reverb": "^1.5",
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.6",
+        "aws/aws-sdk-php": "^3.8",
         "league/flysystem-aws-s3-v3": "~3.29",
+        "shiftonelabs/laravel-sqs-fifo-queue": "^3.0",
         "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^3.10",
-        "predis/predis": "^3.0",
-        "pusher/pusher-php-server": "^7.2",
-        "shiftonelabs/laravel-sqs-fifo-queue": "^3.0",
         "spatie/laravel-activitylog": "^4.10",
-        "spatie/laravel-permission": "^6.20",
-        "stancl/tenancy": "^3.9"
+        "spatie/laravel-permission": "^6.20"
     },
     "require-dev": {
         "orangehill/iseed": "^3.1",
