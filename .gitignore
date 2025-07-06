@@ -1,7 +1,7 @@
 /node_modules
+/vendor
 /public/hot
 *.key
-/vendor
 .env
 .env.backup
 .env.example
@@ -16,6 +16,7 @@ yarn-error.log
 
 # Dynamic Content
 public\storage
+public\vendor
 storage\**\*
 
 # Allow
