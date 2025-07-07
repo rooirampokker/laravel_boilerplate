@@ -24,5 +24,5 @@
    3: php artisan cache:forget spatie.permission.cache
    4: php artisan optimize:clear
    5: php artisan migrate:fresh --seed
-   6: php artisan passport:install
+   6: php artisan passport:install 
    ```
