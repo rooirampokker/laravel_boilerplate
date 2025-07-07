@@ -9,11 +9,10 @@ jobs:
 
     steps:
       - checkout
-      - browser-tools/install-browser-tools
       - browser-tools/install_chrome
       - browser-tools/install_chromedriver
-      - browser-tools/install_firefox
-      - browser-tools/install_firefoxdriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       # Download and cache dependencies
       - restore_cache:
           keys:
