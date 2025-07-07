@@ -56,7 +56,8 @@ jobs:
 
       - run:
           name: "Run Tests"
-          command: sudo /usr/bin/php artisan test
+          command: |
+            sudo php artisan test
 
       - run:
           name: "removes .env to ensure it doesn't override the one already on server"
