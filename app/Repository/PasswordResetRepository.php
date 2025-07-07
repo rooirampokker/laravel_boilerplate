@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
-use Validator;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
-use App\Repository\PasswordResetRepositoryInterface;
+use App\Repository\Interfaces\PasswordResetRepositoryInterface;
+use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Traits\ResponseTrait;
+use Validator;
 
 class PasswordResetRepository extends BaseRepository implements PasswordResetRepositoryInterface
 {

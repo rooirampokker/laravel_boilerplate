@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\Eloquent\RoleRepository;
-use App\Http\Resources\RoleResource;
-use Illuminate\Http\Request;
 use App\Http\Requests\RoleStoreRequest;
 use App\Http\Requests\RoleUpdateRequest;
+use App\Http\Resources\RoleResource;
+use App\Repository\RoleRepository;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {

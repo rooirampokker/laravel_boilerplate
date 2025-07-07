@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
-use App\Repository\EloquentRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
+use App\Repository\Interfaces\EloquentRepositoryInterface;
 use App\Traits\ResponseTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class BaseRepository implements EloquentRepositoryInterface
 {

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Repository;
-
-use Illuminate\Http\Request;
+namespace App\Repository\Interfaces;
 
 interface RoleRepositoryInterface extends EloquentRepositoryInterface
 {

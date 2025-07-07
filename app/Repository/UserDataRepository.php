@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
 use App\Models\UserData;
+use App\Repository\Interfaces\UserDataRepositoryInterface;
 use App\Services\UserDataService;
-use App\Repository\UserDataRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface

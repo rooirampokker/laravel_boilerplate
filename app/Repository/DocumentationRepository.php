@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
+use App\Repository\Interfaces\DocumentationRepositoryInterface;
 use App\Services\DocumentationService;
-use App\Repository\DocumentationRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 class DocumentationRepository extends BaseRepository implements DocumentationRepositoryInterface

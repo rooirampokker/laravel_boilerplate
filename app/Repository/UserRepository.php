@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserData;
-use App\Models\Role;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Services\UserDataService;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -164,6 +164,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return false;
         }
     }
+
     /**
      * Fetches a single User with associated data, if any
      *
@@ -208,6 +209,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return false;
         }
     }
+
     /**
      * @param $request
      * @param $id

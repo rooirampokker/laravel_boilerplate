@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository;
 
-use App\Repository\RoleRepositoryInterface;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Repository\Interfaces\RoleRepositoryInterface;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
