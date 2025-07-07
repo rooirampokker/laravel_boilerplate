@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\PasswordResetRepository;
 use Illuminate\Http\Request;
-use App\Repository\Eloquent\PasswordResetRepository;
 
 class PasswordResetController extends Controller
 {

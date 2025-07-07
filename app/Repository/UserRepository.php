@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class UserRepository extends BaseRepositorys implements UserRepositoryInterface
+class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    private UserDataRpository $userDataRepository;
+    private UserDataRepository $userDataRepository;
     private UserDataService $userDataService;
 
     public function __construct(User $model)
@@ -124,7 +124,6 @@ class UserRepository extends BaseRepositorys implements UserRepositoryInterface
      */
     public function index()
     {
-        dd('here');
         try {
             $userCollection = $this->model::with('data', 'roles')->get();
 
@@ -165,6 +164,7 @@ class UserRepository extends BaseRepositorys implements UserRepositoryInterface
             return false;
         }
     }
+
     /**
      * Fetches a single User with associated data, if any
      *
@@ -209,6 +209,7 @@ class UserRepository extends BaseRepositorys implements UserRepositoryInterface
             return false;
         }
     }
+
     /**
      * @param $request
      * @param $id

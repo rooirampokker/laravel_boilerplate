@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\Eloquent\DocumentationRepository;
+use App\Repository\DocumentationRepository;
 
 class DocumentationController extends Controller
 {
