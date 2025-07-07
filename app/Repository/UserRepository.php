@@ -241,8 +241,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function removeRole($user_id, $role_id)
     {
         try {
-            $user = $this->model::find($user_id);
-            $collection = $user->removeRole($role_id);
+            //get the user and his roles, where the role id matches $role_id -
+            // should only even return a single user with a single role
+            $user = $this->model::with('roles')->whereHas('roles', function($query) use($role_id) {
+                $query->where('id', $role_id);
+            })->find($user_id);
+
+            $collection = $user->removeRole($user->roles->first());
 
             if ($collection) {
                 return $this->userDataService->hydrateUserWithAdditionalData([$collection], 'data');
