@@ -119,9 +119,14 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     public function revokePermission($role_id, $permission_id)
     {
         try {
-            $role = $this->model::find($role_id);
+            //get the role and its permissions, where the permissions id matches $permission_id -
+            // should only even return a single role with a single permission
+            $role = $this->model::with('permissions')->whereHas('permissions', function($query) use($permission_id) {
+                $query->where('id', $permission_id);
+            })->find($role_id);
             if ($role) {
-                $collection = $role->revokePermissionTo($permission_id);
+                $collection = $role->revokePermissionTo($role->permissions->first());
+
                 if ($collection) {
                     return $collection;
                 }

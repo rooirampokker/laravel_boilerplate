@@ -17,7 +17,7 @@ abstract class TestCase extends BaseTestCase
     protected User $user;
     protected User $admin;
     protected Role $adminRole;
-
+    public $mockConsoleOutput = false;
     protected function setUp(): void
     {
         parent::setup();
@@ -32,7 +32,7 @@ abstract class TestCase extends BaseTestCase
         $this->newUserFirstName = $this->faker->firstName();
         $this->newUserLastName  = $this->faker->lastName();
 
-        $this->artisan("passport:install");
+        $this->artisan('passport:install', ['--no-interaction' => true]);
         $this->artisan('db:seed');
 
         $this->admin = User::factory()->create();
