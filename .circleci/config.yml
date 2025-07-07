@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@1.1
+  browser-tools: circleci/browser-tools@2.1.2
 jobs:
   build:
     docker:
@@ -9,8 +9,10 @@ jobs:
 
     steps:
       - checkout
-      - browser-tools/install-browser-tools
-
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       # Download and cache dependencies
       - restore_cache:
           keys:
