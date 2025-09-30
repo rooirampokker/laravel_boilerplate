@@ -31,16 +31,23 @@ if (!function_exists('eavParser')) {
 if (!function_exists('getModelNameFromRoute')) {
     function getModelNameFromRoute($request): string
     {
+        //we can simply add additional api versions here as they become available
+        $availableAPIVersions = ['v1', 'v2'];
         $routePrefix = $request->route()->getPrefix(); //to be used as model
+
         $controllerAndMethod = array_diff(
             explode("/", $routePrefix),
-            ['api']
+            array_merge(['api'], $availableAPIVersions)
         );
 
-        $model = ucfirst(
-            reset($controllerAndMethod)
-        );
+        //removes empty array elements that might have crept in
+        // with the array_diff above if there are double slashes in the URL
+        $controllerAndMethod =  array_filter($controllerAndMethod);
+        $model = ucfirst(array_shift($controllerAndMethod));
+        //removes hyphens from multi-word models, eg attendee-types
+        $model = str_replace('-', '', ucwords($model, '-'));
         $model = Str::singular($model);
+
         return "App\Models\\" . $model;
     }
 }

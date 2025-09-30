@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\v1;
 
 use App\Repository\DocumentationRepository;
+use function App\Http\Controllers\httpStatusCode;
 
 class DocumentationController extends Controller
 {
