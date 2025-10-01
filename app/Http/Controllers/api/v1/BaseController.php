@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Traits\ResponseTrait;
-use App\Traits\ControllerTrait;
 use Illuminate\Routing\Controller;
+use App\Traits\ResponseTrait;
+
+use App\Traits\ControllerTrait;
 
 class BaseController extends Controller
 {
