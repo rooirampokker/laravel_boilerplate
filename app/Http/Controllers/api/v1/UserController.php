@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Http\Repository\api\v1\UserRepository;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
-use App\Repository\UserRepository;
 use Illuminate\Http\Request;
 use Validator;
 

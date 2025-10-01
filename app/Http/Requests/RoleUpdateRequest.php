@@ -5,9 +5,12 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use \App\Traits\ResponseTrait;
 
 class RoleUpdateRequest extends FormRequest
 {
+    use ResponseTrait;
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,6 +30,9 @@ class RoleUpdateRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json($validator->errors(), 422));
+        throw new HttpResponseException(response()->json(
+            $this->error(__('roles.store.failed'), $validator->errors()->toArray(), 422),
+            422
+        ));
     }
 }

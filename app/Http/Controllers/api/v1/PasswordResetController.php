@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Repository\PasswordResetRepository;
+use App\Http\Repository\api\v1\PasswordResetRepository;
 use Illuminate\Http\Request;
 
 class PasswordResetController extends Controller
