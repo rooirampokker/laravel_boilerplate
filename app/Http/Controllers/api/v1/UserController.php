@@ -6,7 +6,7 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\api\v1\UserResource;
 use Illuminate\Http\Request;
-use Validator;
+
 
 class UserController extends BaseController
 {
@@ -34,14 +34,7 @@ class UserController extends BaseController
     public function store(UserStoreRequest $request)
     {
         $response = $this->repository->store($request);
-        if ($response) {
-            $collection = UserResource::collection($response);
-
-            return response()->json($this->ok(__('users.store.success'), $collection));
-        }
-
-        $responseMessage = $this->error(__('users.store.failed'));
-        return response()->json($responseMessage, $responseMessage['code']);
+        return $this->processStoreResponse($response);
     }
 
     /**
@@ -52,12 +45,7 @@ class UserController extends BaseController
     public function update(UserUpdateRequest $request, $id)
     {
         $response = $this->repository->update($request, $id);
-        if ($response) {
-            return response()->json($this->ok(__('users.update.success', ['id' => $id])));
-        }
-
-        $responseMessage = $this->error(__('users.update.failed', ['id' => $id]));
-        return response()->json($responseMessage, $responseMessage['code']);
+        return $this->processUpdateResponse($response);
     }
 
     /**
@@ -69,14 +57,19 @@ class UserController extends BaseController
     {
         $response = $this->repository->syncRole($request, $id);
         $roles = implode(',', $request->get('roles'));
-        if ($response) {
+        if (!empty($response)) {
             $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.roles.sync.success', ['user_id' => $id, 'role_id' => $roles]), $collection));
+            return response()->json($this->ok(__(
+                $this->language . '.roles.sync.success',
+                ['user_id' => $id, 'role_id' => $roles]
+            ), $collection));
         }
 
-        $responseMessage = $this->error(__('users.roles.sync.failed', ['user_id' => $id, 'role_id' => $roles]));
-        return response()->json($responseMessage, $responseMessage['code']);
+        return response()->json($this->error(__(
+            $this->language . '.roles.sync.failed',
+            ['user_id' => $id, 'role_id' => $roles]
+        )));
     }
     /**
      * @param Request $request
@@ -87,34 +80,44 @@ class UserController extends BaseController
     {
         $response = $this->repository->addRole($request, $id);
         $roles = implode(',', $request->get('roles'));
-        if ($response) {
-            $collection = UserResource::collection($response);
 
-            return response()->json($this->ok(__('users.roles.create.success', ['user_id' => $id, 'role_id' => $roles]), $collection));
+        if (!empty($response)) {
+            $collection = UserResource::collection([$response]);
+
+            return response()->json($this->ok(__(
+                $this->language . '.roles.create.success',
+                ['user_id' => $id, 'role_id' => $roles]
+            ), $collection));
         }
 
-        $responseMessage = $this->error(__('users.roles.create.failed', ['user_id' => $id, 'role_id' => $roles]));
-        return response()->json($responseMessage, $responseMessage['code']);
+        return response()->json($this->error(__(
+            $this->language . '.roles.create.failed',
+            ['user_id' => $id, 'role_id' => $roles]
+        )));
     }
 
     /**
      * Removes a single role from a user, based on parameter keys
      *
-     * @param $user_id
-     * @param $role_id
+     * @param $userId
+     * @param $roleId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeRole($user_id, $role_id)
+    public function removeRole($userId, $roleId)
     {
-        $response = $this->repository->removeRole($user_id, $role_id);
+        $response = $this->repository->removeRole($userId, $roleId);
 
-        if ($response) {
-            $collection = UserResource::collection($response);
-
-            return response()->json($this->ok(__('users.roles.remove.success', ['user_id' => $user_id, 'role_id' => $role_id]), $collection));
+        if (!empty($response)) {
+            $collection = UserResource::collection([$response]);
+            return response()->json($this->ok(__(
+                $this->language . '.roles.remove.success',
+                ['user_id' => $userId, 'role_id' => $roleId]
+            ), $collection));
         }
 
-        $responseMessage = $this->error(__('users.roles.remove.failed', ['user_id' => $user_id, 'role_id' => $role_id]));
-        return response()->json($responseMessage, $responseMessage['code']);
+        return response()->json($this->error(__(
+            $this->language . '.roles.remove.failed',
+            ['user_id' => $userId, 'role_id' => $roleId]
+        )));
     }
 }
