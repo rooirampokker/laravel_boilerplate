@@ -27,7 +27,6 @@
     },
     "require-dev": {
         "orangehill/iseed": "^3.1",
-        "rampokker/laravel_crud_generator": "@dev",
         "laravel/telescope": "^5.9",
         "brianium/paratest": "^7.10",
         "fakerphp/faker": "^1.24",
@@ -39,15 +38,6 @@
         "squizlabs/php_codesniffer": "3.*",
         "symfony/yaml": "^7.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../laravel_crud_generator",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "autoload": {
         "files": [
             "app/Helpers/Helper.php"

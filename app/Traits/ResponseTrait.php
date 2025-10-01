@@ -28,7 +28,7 @@ trait ResponseTrait
      * @param $pagination
      * @return array
      */
-    public static function okPaginated($message = '', $data = [], $pagination): array
+    public static function okPaginated($pagination, $message = '', $data = []): array
     {
         return [
             'success' => true,
