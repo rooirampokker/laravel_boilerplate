@@ -20,8 +20,8 @@ return [
         'failed' => 'Unable to retrieve the user',
     ],
     'update' => [
-        'success' => 'User :id updated',
-        'failed' => 'Unable to update user :id',
+        'success' => 'User updated',
+        'failed' => 'Unable to update user',
         'with_data' => [
             'success' => 'User and User Data was successfully updated for :id',
         ],

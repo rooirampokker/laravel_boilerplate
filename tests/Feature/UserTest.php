@@ -70,7 +70,7 @@ class UserTest extends TestCase
         $deletedUser = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/' . $this->user->id);
 
         $response->assertStatus(200);
-        $deletedUser->assertStatus(500);
+        $deletedUser->assertStatus(404);
     }
     /**
      * DELETED RECORDS ARE NOT INCLUDED IN INDEX
@@ -79,7 +79,7 @@ class UserTest extends TestCase
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
         $response    = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users');
-        $userIdArray = array_column($response['data'], 'id');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertStatus(200);
         $this->assertNotContains($this->user->id, $userIdArray);
@@ -91,8 +91,8 @@ class UserTest extends TestCase
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
 
-        $response    = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users/all');
-        $userIdArray = array_column($response['data'], 'id');
+        $response    = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/all');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -107,8 +107,8 @@ class UserTest extends TestCase
     public function testIndexTrashedDoesReturnDeletedUsers()
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
-        $response = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users/trashed');
-        $userIdArray = array_column($response['data'], 'id');
+        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/trashed');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -116,7 +116,7 @@ class UserTest extends TestCase
             __('users.index.success', ['id' => $this->user->id])
         ));
         $this->assertContains($this->user->id, $userIdArray);
-        $this->assertCount(1, $response['data']);
+        $this->assertCount(1, $response['data']['users']);
     }
     /**
      * DELETE/PATCH ..api/users/:user_id
@@ -235,7 +235,7 @@ class UserTest extends TestCase
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
 
-        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data'][0]['id'], [
+        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['user']['id'], [
             'data' => [
                 'first_name' => $this->faker->firstName()
             ]
@@ -244,7 +244,7 @@ class UserTest extends TestCase
         $response->assertJson($this->apiResponse(
             true,
             200,
-            __('users.update.success', ['id' => $user['data'][0]['id']])
+            __('users.update.success', ['id' => $user['data']['user']['id']])
         ));
     }
     /**
@@ -255,17 +255,19 @@ class UserTest extends TestCase
     {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
-        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data'][0]['id'], [
+
+        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['user']['id'], [
             'email' => $this->faker->email(),
             'data' => [
                 'random_input' => $this->faker->firstName()
             ]
         ]);
 
+
         $response->assertJson($this->apiResponse(
             false,
             500,
-            __('users.update.failed', ['id' => $user['data'][0]['id']])
+            __('users.update.failed', ['id' => $user['data']['user']['id']])
         ));
     }
 

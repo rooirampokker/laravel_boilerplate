@@ -4,17 +4,13 @@ namespace App\Http\Repository\api\v1;
 
 use App\Http\Repository\api\v1\Interfaces\UserDataRepositoryInterface;
 use App\Models\UserData;
-use App\Services\UserDataService;
 use Illuminate\Support\Facades\Log;
 
 class UserDataRepository extends BaseRepository implements UserDataRepositoryInterface
 {
-    private UserDataService $userDataService;
-
     public function __construct(UserData $model)
     {
         $this->model = $model;
-        $this->userDataService = new UserDataService();
     }
 
     /**
