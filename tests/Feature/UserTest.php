@@ -70,7 +70,7 @@ class UserTest extends TestCase
         $deletedUser = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/' . $this->user->id);
 
         $response->assertStatus(200);
-        $deletedUser->assertStatus(500);
+        $deletedUser->assertStatus(404);
     }
     /**
      * DELETED RECORDS ARE NOT INCLUDED IN INDEX

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\api\v1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Spatie\Permission\Models\Role;

@@ -23,6 +23,24 @@ if (!function_exists('eavParser')) {
 }
 
 /**
+ * As advertised - seperates controller
+ * Uppercases and singularizes and returns it
+ * @param $request
+ * @return string
+ */
+if (!function_exists('getControllerNameAndAction')) {
+    /**
+     * @param $request
+     * @return array
+     */
+    function getControllerNameAndAction($request): array
+    {
+        $controller = $request->route()->getActionName();
+        return explode("@", $controller);
+    }
+}
+
+/**
  * Extracts the model name from the route prefix (last path element)
  * Uppercases and singularizes and returns it
  * @param $request
@@ -49,5 +67,18 @@ if (!function_exists('getModelNameFromRoute')) {
         $model = Str::singular($model);
 
         return "App\Models\\" . $model;
+    }
+
+    if (!function_exists('getApiVersionFromUrl')) {
+        /**
+         * @return string
+         */
+        function getApiVersionFromUrl()
+        {
+            $urlElements = explode('/', \Request::getPathInfo());
+            $cleanedArray = array_values(array_filter($urlElements));
+
+            return $cleanedArray[0] . '\\' . $cleanedArray[1];
+        }
     }
 }
