@@ -4,7 +4,6 @@ namespace App\Http\Repository\api\v1;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Repository\api\v1\Interfaces\EloquentRepositoryInterface;
