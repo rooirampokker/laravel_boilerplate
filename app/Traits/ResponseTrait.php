@@ -23,7 +23,6 @@ trait ResponseTrait
     }
 
     /**
-     * DEPRECATED: 10-02-2024
      * @param $message
      * @param $data
      * @param $pagination
@@ -119,7 +118,7 @@ trait ResponseTrait
             'errors'  => $errors
         ];
     }
-    
+
     /**
      * Return an exception response, with code 500
      *
