@@ -82,7 +82,7 @@ class UserController extends BaseController
         $roles = implode(',', $request->get('roles'));
 
         if (!empty($response)) {
-            $collection = UserResource::collection([$response]);
+            $collection = UserResource::collection($response);
 
             return response()->json($this->ok(__(
                 $this->language . '.roles.create.success',
@@ -108,7 +108,7 @@ class UserController extends BaseController
         $response = $this->repository->removeRole($userId, $roleId);
 
         if (!empty($response)) {
-            $collection = UserResource::collection([$response]);
+            $collection = UserResource::collection($response);
             return response()->json($this->ok(__(
                 $this->language . '.roles.remove.success',
                 ['user_id' => $userId, 'role_id' => $roleId]

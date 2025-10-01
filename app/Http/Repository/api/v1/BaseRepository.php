@@ -2,23 +2,27 @@
 
 namespace App\Http\Repository\api\v1;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+
 use App\Http\Repository\api\v1\Interfaces\EloquentRepositoryInterface;
 use App\Repository\Request;
 use App\Traits\ResponseTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
+use App\Services\DataService;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
     use ResponseTrait;
 
-    protected Model $model;
     protected Request $request;
+    protected DataService $dataService;
 
     public function __construct(Model $model)
     {
         $this->model = $model;
+        $this->dataService = new DataService();
     }
 
     /**
