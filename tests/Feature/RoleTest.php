@@ -28,7 +28,7 @@ class RoleTest extends TestCase
      */
     public function testUserCanGetRoleIndex()
     {
-        $response = $this->actingAs($this->admin, 'api')->getJson('api/roles');
+        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'roles');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -44,7 +44,7 @@ class RoleTest extends TestCase
      */
     public function testUserCanGetRoleShow()
     {
-        $response = $this->actingAs($this->admin, 'api')->getJson('api/roles/' . $this->adminRole->id);
+        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -59,7 +59,7 @@ class RoleTest extends TestCase
      */
     public function testUserCanStoreRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles', [
+        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles', [
             'name' => 'new_role',
             'guard_name' => 'api'
         ]);
@@ -77,7 +77,7 @@ class RoleTest extends TestCase
      */
     public function testUserCanUpdateRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->putJson('api/roles/' . $this->adminRole->id, [
+        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'roles/' . $this->adminRole->id, [
             'name' => 'new_role'
         ]);
 
@@ -94,7 +94,7 @@ class RoleTest extends TestCase
      */
     public function testUserCanDeleteRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/' . $this->adminRole->id);
+        $response = $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -115,7 +115,7 @@ class RoleTest extends TestCase
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/' . $this->adminRole->id . '/permissions', [
+        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions', [
             'permissions' => $permissionIDArray
         ]);
 
@@ -133,7 +133,7 @@ class RoleTest extends TestCase
      */
     public function testPermissionsCanBeRemovedFromRoles()
     {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson('api/roles/' . $this->adminRole->id . '/permissions/' . $this->adminRole->permissions->first()->id);
+        $response = $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/' . $this->adminRole->permissions->first()->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -154,7 +154,7 @@ class RoleTest extends TestCase
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/roles/' . $this->adminRole->id . '/permissions/sync', [
+        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/sync', [
             'permissions' => $permissionIDArray
         ]);
 

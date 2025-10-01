@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Http\Repository\api\v1\RoleRepository;
 use App\Http\Requests\RoleStoreRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use App\Http\Resources\RoleResource;
-use App\Repository\RoleRepository;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller

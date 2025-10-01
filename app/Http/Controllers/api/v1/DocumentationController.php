@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Repository\DocumentationRepository;
+use App\Http\Repository\api\v1\DocumentationRepository;
 use function App\Http\Controllers\httpStatusCode;
 
 class DocumentationController extends Controller

@@ -16,6 +16,7 @@ abstract class TestCase extends BaseTestCase
     protected string $password;
     protected User $user;
     protected User $admin;
+    protected string $apiVersion;
     protected Role $adminRole;
     public $mockConsoleOutput = false;
     protected function setUp(): void
@@ -31,6 +32,7 @@ abstract class TestCase extends BaseTestCase
         $this->password         = '1234';
         $this->newUserFirstName = $this->faker->firstName();
         $this->newUserLastName  = $this->faker->lastName();
+        $this->apiVersion  = 'api/v1/';
 
         $this->artisan('passport:install', ['--no-interaction' => true]);
         $this->artisan('db:seed');
@@ -46,8 +48,10 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @param $success
+     * @param $code
      * @param $message
-     * @return void
+     * @return array
      */
     protected function apiResponse($success, $code, $message)
     {
@@ -57,14 +61,16 @@ abstract class TestCase extends BaseTestCase
             'message' => $message,
         ];
     }
+
     /**
      * @param $email
      * @return \Illuminate\Testing\TestResponse
      */
     protected function createUserWithAdditionalData($email = null)
     {
-        $email = $email ? $email : $this->faker->email();
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/users', [
+        $email = $email ?? $this->faker->email();
+
+        return $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'users', [
             'email' => $email,
             'password' => $this->password,
             'c_password' => $this->password,
@@ -74,7 +80,5 @@ abstract class TestCase extends BaseTestCase
                 'last_name' => $this->newUserLastName
             ]
         ]);
-
-        return $response;
     }
 }

@@ -27,7 +27,7 @@ class PasswordTest extends TestCase
     {
         //Notification::fake();
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/passwords/create', [
+        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'passwords/create', [
             'email' => $this->user->email
         ]);
 
@@ -45,7 +45,7 @@ class PasswordTest extends TestCase
     {
         //Notification::fake();
 
-        $response = $this->actingAs($this->admin, 'api')->postJson('api/passwords/create', [
+        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'passwords/create', [
             'email' => "john@doe.com"
         ]);
 

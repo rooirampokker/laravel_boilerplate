@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 trait ResponseTrait
 {
@@ -21,6 +22,22 @@ trait ResponseTrait
         ];
     }
 
+    /**
+     * @param $message
+     * @param $data
+     * @param $pagination
+     * @return array
+     */
+    public static function okPaginated($message = '', $data = [], $pagination): array
+    {
+        return [
+            'success' => true,
+            'code'    => Response::HTTP_OK,
+            'message' => self::getMessage($message),
+            'pagination' => $pagination,
+            'data'    => $data,
+        ];
+    }
     /**
      * Return a bad request response, with code 400
      *
@@ -43,7 +60,7 @@ trait ResponseTrait
      * @param array $errors
      * @return array
      */
-    public static function invalidResponse($message, array $errors = []): array
+    public static function invalidRequest($message, array $errors = []): array
     {
         return [
             'success' => false,
@@ -65,7 +82,8 @@ trait ResponseTrait
         return [
             'success' => false,
             'code'    => Response::HTTP_NOT_FOUND,
-            'message' => self::getMessage($message)
+            'message' => self::getMessage($message),
+            'data'    => []
         ];
     }
 
@@ -91,11 +109,11 @@ trait ResponseTrait
      * @param array $errors
      * @return array
      */
-    public static function error($message, array $errors = []): array
+    public static function error($message, array $errors = [], $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR): array
     {
         return [
             'success' => false,
-            'code'    => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'code'    => $httpCode,
             'message' => self::getMessage($message),
             'errors'  => $errors
         ];
@@ -146,5 +164,14 @@ trait ResponseTrait
         }
 
         return $message;
+    }
+
+    public function responseWrapperGeneric($response)
+    {
+        if ($response) {
+            return response()->json($this->ok(__('general.index.success'), $response));
+        } else {
+            throw new HttpResponseException(response()->json($this->unauthorised(__('auth.unauthorized')), 401));
+        }
     }
 }
