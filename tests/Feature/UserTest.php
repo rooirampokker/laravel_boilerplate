@@ -79,7 +79,7 @@ class UserTest extends TestCase
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
         $response    = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users');
-        $userIdArray = array_column($response['data'], 'id');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertStatus(200);
         $this->assertNotContains($this->user->id, $userIdArray);
@@ -91,8 +91,8 @@ class UserTest extends TestCase
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
 
-        $response    = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users/all');
-        $userIdArray = array_column($response['data'], 'id');
+        $response    = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/all');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -107,8 +107,8 @@ class UserTest extends TestCase
     public function testIndexTrashedDoesReturnDeletedUsers()
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
-        $response = $this->actingAs($this->admin, 'api')->GETJson($this->apiVersion . 'users/trashed');
-        $userIdArray = array_column($response['data'], 'id');
+        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/trashed');
+        $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -116,7 +116,7 @@ class UserTest extends TestCase
             __('users.index.success', ['id' => $this->user->id])
         ));
         $this->assertContains($this->user->id, $userIdArray);
-        $this->assertCount(1, $response['data']);
+        $this->assertCount(1, $response['data']['users']);
     }
     /**
      * DELETE/PATCH ..api/users/:user_id

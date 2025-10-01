@@ -28,39 +28,6 @@ class UserController extends BaseController
     }
 
     /**
-     * returns all active/non-deleted users
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function indexAll()
-    {
-        $response = $this->repository->indexAll();
-        if ($response) {
-            $collection = UserResource::collection($response);
-
-            return response()->json($this->ok(__('users.index.success'), $collection));
-        }
-
-        $responseMessage = $this->error(__('users.index.failed'));
-        return response()->json($responseMessage, $responseMessage['code']);
-    }
-    /**
-     * returns all active/non-deleted users
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function indexTrashed()
-    {
-        $response = $this->repository->indexTrashed();
-        if ($response) {
-            $collection = UserResource::collection($response);
-
-            return response()->json($this->ok(__('users.index.success'), $collection));
-        }
-
-        $responseMessage = $this->error(__('users.index.failed'));
-        return response()->json($responseMessage, $responseMessage['code']);
-    }
-
-    /**
      * @param UserStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
