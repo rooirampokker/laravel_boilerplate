@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9db9c259d3fbaea7138a83032c3091a1",
+    "content-hash": "4414b0ca2c11cfead71f94434c67d75e",
     "packages": [
         {
             "name": "askedio/laravel-soft-cascade",
@@ -118,16 +118,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.356.28",
+            "version": "3.356.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "aaf809461033836d120f3bbf7a4cf67e946281d1"
+                "reference": "3e413221956aa969f379ff6fa67a303ce76aad13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/aaf809461033836d120f3bbf7a4cf67e946281d1",
-                "reference": "aaf809461033836d120f3bbf7a4cf67e946281d1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3e413221956aa969f379ff6fa67a303ce76aad13",
+                "reference": "3e413221956aa969f379ff6fa67a303ce76aad13",
                 "shasum": ""
             },
             "require": {
@@ -209,9 +209,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.28"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.29"
             },
-            "time": "2025-09-29T18:04:14+00:00"
+            "time": "2025-09-30T18:12:45+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -2200,16 +2200,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.32.1",
+            "version": "v12.32.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d41e4ba47706ec85bda85fe9362515592871cd21"
+                "reference": "77b2740391cd2a825ba59d6fada45e9b8b9bcc5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d41e4ba47706ec85bda85fe9362515592871cd21",
-                "reference": "d41e4ba47706ec85bda85fe9362515592871cd21",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/77b2740391cd2a825ba59d6fada45e9b8b9bcc5a",
+                "reference": "77b2740391cd2a825ba59d6fada45e9b8b9bcc5a",
                 "shasum": ""
             },
             "require": {
@@ -2415,7 +2415,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-09-30T12:22:56+00:00"
+            "time": "2025-09-30T17:39:22+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -4804,16 +4804,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "693f6fe5b09173981458f7a9dd0a18b90f8947da"
+                "reference": "4a2ab4341bc5802e1db1f761a9eab15fbb34f967"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/693f6fe5b09173981458f7a9dd0a18b90f8947da",
-                "reference": "693f6fe5b09173981458f7a9dd0a18b90f8947da",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/4a2ab4341bc5802e1db1f761a9eab15fbb34f967",
+                "reference": "4a2ab4341bc5802e1db1f761a9eab15fbb34f967",
                 "shasum": ""
             },
             "require": {
@@ -4839,9 +4839,6 @@
                 "files": [
                     "autoload.php"
                 ],
-                "psr-0": {
-                    "ParagonIE_Sodium_": "src"
-                },
                 "psr-4": {
                     "ParagonIE\\Sodium\\": "namespaced/"
                 }
@@ -4897,9 +4894,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v2.3.0"
+                "source": "https://github.com/paragonie/sodium_compat/tree/v2.3.1"
             },
-            "time": "2025-09-30T07:27:45+00:00"
+            "time": "2025-09-30T15:08:52+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -11321,90 +11318,6 @@
             "time": "2025-09-28T12:10:54+00:00"
         },
         {
-            "name": "rampokker/laravel_crud_generator",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "../laravel_crud_generator",
-                "reference": "2710e7673f2fdf724d6d6788c89c9e3eb8c28feb"
-            },
-            "require": {
-                "php": "^8.2",
-                "spatie/laravel-package-tools": "^1.14.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^7.9",
-                "nunomaduro/larastan": "^2.0.1",
-                "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^2.0",
-                "pestphp/pest-plugin-arch": "^2.0",
-                "pestphp/pest-plugin-laravel": "^2.0",
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan-deprecation-rules": "^1.0",
-                "phpstan/phpstan-phpunit": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Rampokker\\LaravelCrudGenerator\\LaravelCrudGeneratorServiceProvider"
-                    ],
-                    "aliases": {
-                        "LaravelCrudGenerator": "Rampokker\\LaravelCrudGenerator\\Facades\\LaravelCrudGenerator"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Rampokker\\LaravelCrudGenerator\\": "src/",
-                    "Rampokker\\LaravelCrudGenerator\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Rampokker\\LaravelCrudGenerator\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@php ./vendor/bin/testbench package:discover --ansi"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Leslie Albrecht",
-                    "email": "rooirampokker@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Automatically creates all files required for a default CRUD functional cross-section",
-            "homepage": "https://github.com/rooirampokker/laravel_crud_generator",
-            "keywords": [
-                "Laravel",
-                "Laravel Crud Generator"
-            ],
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
             "name": "sebastian/cli-parser",
             "version": "4.2.0",
             "source": {
@@ -12947,9 +12860,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "rampokker/laravel_crud_generator": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
