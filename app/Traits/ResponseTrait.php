@@ -119,23 +119,7 @@ trait ResponseTrait
             'errors'  => $errors
         ];
     }
-
-    /**
-     * Return an error response, with code 500
-     *
-     * @param $message
-     * @param array $errors
-     * @return array
-     */
-    public static function errorCustom($message, array $errors = [], $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR): array
-    {
-        return [
-            'success' => false,
-            'code'    => $httpCode,
-            'message' => self::getMessage($message),
-            'data'  => $errors
-        ];
-    }
+    
     /**
      * Return an exception response, with code 500
      *
