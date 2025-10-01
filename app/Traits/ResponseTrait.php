@@ -43,7 +43,7 @@ trait ResponseTrait
      * @param array $errors
      * @return array
      */
-    public static function invalid($message, array $errors = []): array
+    public static function invalidResponse($message, array $errors = []): array
     {
         return [
             'success' => false,
