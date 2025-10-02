@@ -26,7 +26,7 @@ class BaseController extends Controller
     {
         $this->apiVersion = '\api\\v1\\';
         $this->modelName = $modelName;
-        $this->request = request()->all();
+        $this->request = request()->query();
         $this->modelPath = 'App\\Models\\' . $modelName;
         $this->repositoryPath = "App\Http\Repository" . $this->apiVersion . $modelName . "Repository";
     }
@@ -79,29 +79,6 @@ class BaseController extends Controller
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function indexTrashed()
-    {
-        $response = $this->repository->indexTrashed($this->request);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
-        if (!empty($collection)) {
-            return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
-        }
-
-        $responseMessage = $this->notFound(__(
-            $this->language . '.index.failed'
-        ));
-        return response()->json($responseMessage, $responseMessage['code']);
-    }
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse

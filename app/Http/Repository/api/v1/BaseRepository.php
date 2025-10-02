@@ -67,24 +67,30 @@ class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @param $id
-     * @return mixed
+     * @return false|\Illuminate\Support\Collection|mixed
      */
     public function show($id)
     {
         try {
-            return $this->model::find($id);
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
+            //prevents N+1 query when outputting the eav-keyed 'data' items with eager-loading
+            $includedRelationships = method_exists($this->model, 'data') ? ['data'] : [];
+            $model = $this->model->with($includedRelationships)->find($id);
+            if (!empty($model)) {
+                return collect([$model]);
+            }
+            return false;
 
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
             return new $this->model();
         }
     }
 
     /**
-     * @param FormRequest $request
+     * @param $request
      * @return mixed
      */
-    public function store(FormRequest $request): mixed
+    public function store($request): mixed
     {
         try {
             $data = $request->all();
@@ -97,26 +103,41 @@ class BaseRepository implements BaseRepositoryInterface
             }
             $this->model->save();
 
-            return $this->model;
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+            return collect([$this->model]);
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
             return false;
         }
     }
 
     /**
-     * @param FormRequest $request
+     * @param $request
      * @param $id
-     * @return mixed|void
+     * @return false|\Illuminate\Support\Collection|mixed
      */
-    public function update(FormRequest $request, $id)
+    public function update($request, $id)
     {
+        try {
+            $record = $this->model->find($id);
+            if ($record) {
+                $update = $record->fill($request->all())->save();
+
+                if ($update) {
+                    $model = $record->fresh();
+                    return collect([$model]);
+                }
+            }
+
+            return false;
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
+            return false;
+        }
     }
 
     /**
      * @param $id
-     * @return array|mixed
+     * @return false|mixed
      */
     public function delete($id)
     {
@@ -127,8 +148,8 @@ class BaseRepository implements BaseRepositoryInterface
             }
 
             return false;
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
 
             return false;
         }
@@ -136,7 +157,7 @@ class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @param $id
-     * @return array
+     * @return bool
      */
     public function restore($id)
     {
@@ -149,9 +170,8 @@ class BaseRepository implements BaseRepositoryInterface
             }
 
             return false;
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
             return false;
         }
     }

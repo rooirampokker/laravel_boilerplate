@@ -127,73 +127,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
-//    /**
-//     * @return array|mixed
-//     */
-//    public function index()
-//    {
-//        try {
-//            $userCollection = $this->model::with('data', 'roles')->get();
-//
-//            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
-//        } catch (\Exception $exception) {
-//            Log::error($exception->getMessage(), $exception->getTrace());
-//
-//            return false;
-//        }
-//    }
-    /**
-     * @return array|mixed
-     */
-    public function indexAll()
-    {
-        try {
-            $userCollection = $this->model::withTrashed()->with('data', 'roles')->get();
-
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
-            return false;
-        }
-    }
-    /**
-     * @return array|mixed
-     */
-    public function indexTrashed()
-    {
-        try {
-            $userCollection = $this->model::onlyTrashed()->with('data', 'roles')->get();
-
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
-            return false;
-        }
-    }
-
     /**
      * Fetches a single User with associated data, if any
      *
      * @param $id
      * @return array|mixed|void
      */
-    public function show($id)
-    {
-        try {
-            $userCollection = $this->model::with('data', 'roles')->find($id);
-            if ($userCollection) {
-                return $this->dataService->hydrateCollectionWithAdditionalData([$userCollection]);
-            }
 
-            return false;
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
-            return false;
-        }
-    }
 
     /**
      * @param $request

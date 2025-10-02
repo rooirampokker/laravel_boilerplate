@@ -13,12 +13,7 @@ interface BaseRepositoryInterface
      * @return mixed
      */
     public function index($request);
-    /**
-     * Get all trashed models
-     *
-     * @return mixed
-     */
-    public function indexTrashed();
+
     /**
      * Get all trashed models
      *
