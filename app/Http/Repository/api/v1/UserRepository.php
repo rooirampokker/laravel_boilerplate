@@ -49,6 +49,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             // @codeCoverageIgnoreStart
         } catch (\Throwable $exception) {
             $this->logError($exception);
+
             return $this->exception($exception);
         }
         // @codeCoverageIgnoreEnd
@@ -84,6 +85,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         } catch (\Throwable $exception) {
             DB::rollBack();
             $this->logError($exception);
+
             return false;
         }
     }
@@ -133,7 +135,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::with('data', 'roles')->get();
 
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection, 'data');
+            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -148,7 +150,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::withTrashed()->with('data', 'roles')->get();
 
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection, 'data');
+            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -163,7 +165,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::onlyTrashed()->with('data', 'roles')->get();
 
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection, 'data');
+            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -182,7 +184,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             $userCollection = $this->model::with('data', 'roles')->find($id);
             if ($userCollection) {
-                return $this->dataService->hydrateCollectionWithAdditionalData([$userCollection], 'data');
+                return $this->dataService->hydrateCollectionWithAdditionalData([$userCollection]);
             }
 
             return false;
@@ -205,7 +207,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $this->model::find($id);
             $userCollection = $user->syncRoles(Role::whereIn('id', $params['roles'])->get());
             if ($userCollection) {
-                return $this->dataService->hydrateCollectionWithAdditionalData([$userCollection], 'data');
+                return $this->dataService->hydrateCollectionWithAdditionalData([$userCollection]);
             }
 
             return false;
@@ -228,7 +230,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $this->model::find($id);
             $collection = $user->assignRole(Role::whereIn('id', $params['roles'])->get());
             if ($collection) {
-                return $this->dataService->hydrateCollectionWithAdditionalData([$collection], 'data');
+                return $this->dataService->hydrateCollectionWithAdditionalData([$collection]);
             }
 
             return false;
@@ -256,7 +258,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $collection = $user->removeRole($user->roles->first());
 
             if ($collection) {
-                return $this->dataService->hydrateCollectionWithAdditionalData([$collection], 'data');
+                return $this->dataService->hydrateCollectionWithAdditionalData([$collection]);
             }
 
             return false;
