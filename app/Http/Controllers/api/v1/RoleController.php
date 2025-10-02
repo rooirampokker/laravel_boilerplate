@@ -29,7 +29,7 @@ class RoleController extends BaseController
     }
 
     /**
-     * @param UserUpdateRequest $request
+     * @param RoleUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
