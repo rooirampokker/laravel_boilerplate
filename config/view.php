@@ -1,7 +1,8 @@
 <?php
 
 return [
-
+    'pagination_default_limit' => env('PAGINATE_DEFAULT_LIMIT', 15),
+    'pagination_upper_limit' => env('PAGINATE_UPPER_LIMIT', 250),
     /*
     |--------------------------------------------------------------------------
     | View Storage Paths

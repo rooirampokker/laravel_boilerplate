@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
-use App\Http\Repository\api\v1\Interfaces\EloquentRepositoryInterface;
+use App\Http\Repository\api\v1\Interfaces\BaseRepositoryInterface;
 use App\Repository\Request;
 use App\Traits\ResponseTrait;
 use App\Services\DataService;
 
-class BaseRepository implements EloquentRepositoryInterface
+class BaseRepository implements BaseRepositoryInterface
 {
     use ResponseTrait;
 
@@ -25,12 +25,23 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @return false|\Illuminate\Database\Eloquent\Collection|Model[]|mixed
+     * @param $request
+     * @return array|false|mixed
      */
-    public function index()
+    public function index($request)
     {
         try {
-            return $this->model::all();
+            $limit = $request['limit'] ?? null;
+            $trashed = $request['trashed'] ?? null;
+
+            $collection = $this->model
+                ->when(($trashed), function ($query) {
+                    return $query->onlyTrashed();
+                })
+                ->paginate($limit);
+
+            return paginateCollection($collection);
+
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 
@@ -47,20 +58,6 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         try {
             return $this->model::withTrashed()->get();
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
-            return false;
-        }
-    }
-
-    /**
-     * @return false|mixed
-     */
-    public function indexTrashed()
-    {
-        try {
-            return $this->model::onlyTrashed()->get();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), $exception->getTrace());
 

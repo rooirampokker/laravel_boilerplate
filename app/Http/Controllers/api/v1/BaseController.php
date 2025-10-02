@@ -26,7 +26,7 @@ class BaseController extends Controller
     {
         $this->apiVersion = '\api\\v1\\';
         $this->modelName = $modelName;
-        $this->request = request()->query();
+        $this->request = request()->all();
         $this->modelPath = 'App\\Models\\' . $modelName;
         $this->repositoryPath = "App\Http\Repository" . $this->apiVersion . $modelName . "Repository";
     }

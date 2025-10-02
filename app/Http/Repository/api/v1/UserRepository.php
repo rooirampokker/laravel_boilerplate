@@ -127,21 +127,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function index()
-    {
-        try {
-            $userCollection = $this->model::with('data', 'roles')->get();
-
-            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
-            return false;
-        }
-    }
+//    /**
+//     * @return array|mixed
+//     */
+//    public function index()
+//    {
+//        try {
+//            $userCollection = $this->model::with('data', 'roles')->get();
+//
+//            return $this->dataService->hydrateCollectionWithAdditionalData($userCollection);
+//        } catch (\Exception $exception) {
+//            Log::error($exception->getMessage(), $exception->getTrace());
+//
+//            return false;
+//        }
+//    }
     /**
      * @return array|mixed
      */
