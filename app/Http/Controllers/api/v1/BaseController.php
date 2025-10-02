@@ -80,29 +80,6 @@ class BaseController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function indexTrashed()
-    {
-        $response = $this->repository->indexTrashed($this->request);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
-        if (!empty($collection)) {
-            return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
-        }
-
-        $responseMessage = $this->notFound(__(
-            $this->language . '.index.failed'
-        ));
-        return response()->json($responseMessage, $responseMessage['code']);
-    }
-    /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */

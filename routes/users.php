@@ -7,7 +7,6 @@ Route::group([
 ], function () {
     Route::get('/', 'UserController@index')->name('users.index');
     Route::get('/all', 'UserController@indexAll')->name('users.indexAll');
-    Route::get('trashed', 'UserController@indexTrashed')->name('users.index.trashed');
     Route::post('/', 'UserController@store')->name('users.store');
     //Route::post('login', 'UserController@login');
     Route::get('logout', 'UserController@logout')->name('users.logout');

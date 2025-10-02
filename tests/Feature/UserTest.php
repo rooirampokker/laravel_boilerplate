@@ -107,7 +107,8 @@ class UserTest extends TestCase
     public function testIndexTrashedDoesReturnDeletedUsers()
     {
         $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'users/' . $this->user->id);
-        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users/trashed');
+        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'users?trashed=1');
+
         $userIdArray = array_column($response['data']['users'], 'id');
 
         $response->assertJson($this->apiResponse(
