@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class User extends Authenticatable
 {
@@ -19,16 +20,24 @@ class User extends Authenticatable
     use Notifiable;
     use softDeletes;
     use SoftCascadeTrait;
-    use HasUuids;
+    use HasUlids;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['email', 'password'];
+    protected $fillable = [
+        'email',
+        'first_name',
+        'last_name',
+        'password'
+    ];
 
-    protected $softCascade = ['data'];
+    protected $softCascade = [
+        'data'
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -56,6 +65,7 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\UserData');
     }
 
+    //ensures the password is always encrypted
     protected function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);

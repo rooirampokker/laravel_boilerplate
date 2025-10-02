@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -137,6 +138,21 @@ trait ResponseTrait
                 'line'    => $exception->getLine()
             ]
         ];
+    }
+
+    /**
+     * Outputs dump to API too after logging for debugging
+     *
+     * @param $exception
+     * @return void
+     */
+    public static function logError($exception)
+    {
+        Log::error($exception->getMessage(), $exception->getTrace());
+
+        if (in_array(config('app.env'), ['local', 'dev'])) {
+            dd($exception); // this is real code; not debug
+        }
     }
 
     /**
