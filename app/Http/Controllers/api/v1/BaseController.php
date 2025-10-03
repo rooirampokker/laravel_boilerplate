@@ -88,13 +88,15 @@ class BaseController extends Controller
     public function show($id)
     {
         $response = $this->repository->show($id);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
-        $collection = $this->updateResponseForShow($collection);
+        if (!empty($response)) {
+            $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+            $collection = $this->updateResponseForShow($collection);
 
-        if (!empty($collection)) {
-            return response()->json($this->ok(__(
-                $this->language . '.show.success'
-            ), $collection));
+            if (!empty($collection)) {
+                return response()->json($this->ok(__(
+                    $this->language . '.show.success'
+                ), $collection));
+            }
         }
 
         $responseMessage = $this->notFound(__(

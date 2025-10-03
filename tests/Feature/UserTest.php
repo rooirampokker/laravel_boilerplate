@@ -257,7 +257,7 @@ class UserTest extends TestCase
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
 
-        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['user']['id'], [
+        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['users'][0]['id'], [
             'email' => $this->faker->email(),
             'data' => [
                 'random_input' => $this->faker->firstName()
@@ -268,7 +268,7 @@ class UserTest extends TestCase
         $response->assertJson($this->apiResponse(
             false,
             500,
-            __('users.update.failed', ['id' => $user['data']['user']['id']])
+            __('users.update.failed', ['id' => $user['data']['users'][0]['id']])
         ));
     }
 
