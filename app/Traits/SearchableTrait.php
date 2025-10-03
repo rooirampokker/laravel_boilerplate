@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Models\EavKey;
+use Illuminate\Validation\ValidationException;
 
 trait SearchableTrait
 {
@@ -56,22 +56,26 @@ trait SearchableTrait
     {
         //this needs to be camelCased to match the relation named in the target model
         $relation = Str::camel($relation);
-        $relationInstance = $this->model->$relation()->getRelated();
-        $this->searchableAttributes = $relationInstance::$searchable ?? [];
-        //was a searchfield specified?
-        //is the specified field searchable?
-        if (!isset($this->searchField) || in_array($this->searchField, $this->searchableAttributes)) {
-            $results = $this->searchRelatedModel($relation);
-        } else {
-            //specified field was not searchable...
-            //check the EAVKey model for any whitelisted keys associated to the current model and search againts that
-            $relatedModel = class_basename($relationInstance);
-            $eavKeys = EavKey::where('model_type', 'LIKE', '%' . $relatedModel)
-                             ->where('key', '=', $this->searchField)->first();
-            $results = $this->searchRelatedEAVTable($relatedModel, $eavKeys);
+        if ($this->model->$relation) {
+            $relationInstance = $this->model->$relation()->getRelated();
+            $this->searchableAttributes = $relationInstance::$searchable ?? [];
+            //was a searchfield specified?
+            //is the specified field searchable?
+            if (!isset($this->searchField) || in_array($this->searchField, $this->searchableAttributes)) {
+                $results = $this->searchRelatedModel($relation);
+            } else {
+                //specified field was not searchable...
+                //check the EAVKey model for any whitelisted keys associated to the current model and search againts that
+                $relatedModel = class_basename($relationInstance);
+                $eavKeys = EavKey::where('model_type', 'LIKE', '%' . $relatedModel)
+                    ->where('key', '=', $this->searchField)->first();
+                $results = $this->searchRelatedEAVTable($relatedModel, $eavKeys);
+            }
+
+            return $results;
         }
 
-        return $results;
+        throw ValidationException::withMessages(['invalid relation specified']);
     }
 
     /**

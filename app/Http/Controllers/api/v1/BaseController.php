@@ -37,19 +37,21 @@ class BaseController extends Controller
     public function index()
     {
         $response = $this->repository->index($this->request);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
-        $collection = appendPaginationToResponse($collection, $response);
-
-        if (!empty($collection)) {
-            return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
+        if (!empty($response)) {
+            $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+            $collection = appendPaginationToResponse($collection, $response);
+            if (!empty($collection)) {
+                return response()->json(
+                    $this->ok(
+                        __(
+                            $this->language . '.index.success'
+                        ),
+                        $collection
+                    )
+                );
+            }
         }
+
 
         $responseMessage = $this->notFound(__(
             $this->language . '.index.failed'

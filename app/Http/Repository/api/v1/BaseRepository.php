@@ -31,8 +31,10 @@ class BaseRepository implements BaseRepositoryInterface
             $limit = $request['limit'] ?? null;
             $trashed = $request['trashed'] ?? null;
             $search = $request['search'] ?? null;
+            $relationshipList = $this->dataService->buildRelationshipListForEagerLoading($this->model, $request);
 
             $collection = $this->model
+                ->with($relationshipList)
                 ->when(($search), function ($query) use ($request) {
                     return $query->search($request);
                 })
@@ -43,7 +45,8 @@ class BaseRepository implements BaseRepositoryInterface
 
             return paginateCollection($collection);
 
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
+            dd($exception->getMessage());
             Log::error($exception->getMessage(), $exception->getTrace());
 
             return false;
