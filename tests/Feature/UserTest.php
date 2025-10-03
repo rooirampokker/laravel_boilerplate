@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\Role;
+use App\Models\User;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -235,8 +236,7 @@ class UserTest extends TestCase
     {
         $email = $this->faker->email();
         $user = $this->createUserWithAdditionalData($email);
-
-        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['user']['id'], [
+        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'users/' . $user['data']['users'][0]['id'], [
             'data' => [
                 'first_name' => $this->faker->firstName()
             ]
@@ -245,7 +245,7 @@ class UserTest extends TestCase
         $response->assertJson($this->apiResponse(
             true,
             200,
-            __('users.update.success', ['id' => $user['data']['user']['id']])
+            __('users.update.success', ['id' => $user['data']['users'][0]['id']])
         ));
     }
     /**
@@ -328,5 +328,29 @@ class UserTest extends TestCase
             200,
             __('users.roles.sync.success', ['user_id' => $this->user->id, 'role_id' => implode(',', $roleRequestArray)])
         ));
+    }
+
+    /**
+     * GET ../api/user?search=:search_string
+     *
+     * @return void
+     */
+    public function testAdminUserCanSearchUserByName()
+    {
+
+        $searchTarget = "Unit Test SearchTarget";
+        User::factory()->count(4)->create();
+        User::factory()->create(['first_name' => $searchTarget]);
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'users?search=' . $searchTarget);
+
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.index.success'),
+        ));
+        $this->assertEquals($searchTarget, $response['data']['users'][0]['first_name'], $searchTarget);
+        $this->assertCount(1, $response['data']['users']);
     }
 }

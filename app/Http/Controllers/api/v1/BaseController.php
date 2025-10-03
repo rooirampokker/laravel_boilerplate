@@ -38,6 +38,8 @@ class BaseController extends Controller
     {
         $response = $this->repository->index($this->request);
         $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+        $collection = appendPaginationToResponse($collection, $response);
+
         if (!empty($collection)) {
             return response()->json(
                 $this->ok(
@@ -87,6 +89,7 @@ class BaseController extends Controller
     {
         $response = $this->repository->show($id);
         $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+        $collection = $this->updateResponseForShow($collection);
 
         if (!empty($collection)) {
             return response()->json($this->ok(__(

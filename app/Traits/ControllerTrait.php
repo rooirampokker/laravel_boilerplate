@@ -17,13 +17,13 @@ trait ControllerTrait
     ];
 
     /**
-     * Small utility function - to be called from the extending controller constructor
+     * Small utility function - to be called from the extending controller constructor to set context
      *
      * @return array|false|string|string[]
      */
     protected function setModelAndRepository()
     {
-        $this->model = class_exists($this->modelPath) ? new $this->modelPath() : $this->modelName;
+        $this->model = new $this->modelPath();
         //injects 'model' dependency by passing it as an associative array
         $this->repository = app()->makeWith($this->repositoryPath, [
             'model' => $this->model,
@@ -32,7 +32,8 @@ trait ControllerTrait
     }
 
     /**
-     * pass any included relations through its respective resources, add to the collections array & include pagination
+     * Ensures any included relations are rendered through its Resource class
+     * pass any included relations through its respective resources, add to the collections array
      *
      * @param $response
      * @param $parentResource
@@ -47,15 +48,6 @@ trait ControllerTrait
         if (!empty($responseCollection)) {
             $parentResource = 'App\Http\Resources\\' . getApiVersionFromUrl() . '\\' . class_basename($parentModel) . "Resource";
             $collection[$this->parentModelKey] = $parentResource::collection($responseCollection);
-            $collection = $this->updateResponseForShow($collection);
-
-            if (isset($response['pagination'])) {
-                $collection['pagination'] = $response['pagination'];
-            }
-
-            if (isset($response['cursor_pagination'])) {
-                $collection['cursor_pagination'] = $response['cursor_pagination'];
-            }
 
             return $collection;
         }
@@ -138,11 +130,9 @@ trait ControllerTrait
             ), $collection));
         }
 
-        // @codeCoverageIgnoreStart
         $responseMessage = $this->error(__(
             $this->language . '.update.failed'
         ));
         return response()->json($responseMessage, $responseMessage['code']);
-        // @codeCoverageIgnoreEnd
     }
 }

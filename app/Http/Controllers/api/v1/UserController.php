@@ -71,6 +71,7 @@ class UserController extends BaseController
             ['user_id' => $id, 'role_id' => $roles]
         )));
     }
+    
     /**
      * @param Request $request
      * @param $id

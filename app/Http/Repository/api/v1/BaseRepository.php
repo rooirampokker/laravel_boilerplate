@@ -3,20 +3,17 @@
 namespace App\Http\Repository\api\v1;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Repository\api\v1\Interfaces\BaseRepositoryInterface;
-use App\Repository\Request;
 use App\Traits\ResponseTrait;
 use App\Services\DataService;
 
 class BaseRepository implements BaseRepositoryInterface
 {
     use ResponseTrait;
-
-    protected Request $request;
     protected DataService $dataService;
+    protected $model;
 
     public function __construct(Model $model)
     {
@@ -33,8 +30,12 @@ class BaseRepository implements BaseRepositoryInterface
         try {
             $limit = $request['limit'] ?? null;
             $trashed = $request['trashed'] ?? null;
+            $search = $request['search'] ?? null;
 
             $collection = $this->model
+                ->when(($search), function ($query) use ($request) {
+                    return $query->search($request);
+                })
                 ->when(($trashed), function ($query) {
                     return $query->onlyTrashed();
                 })
