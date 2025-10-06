@@ -41,14 +41,9 @@ class BaseController extends Controller
             $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
             $collection = appendPaginationToResponse($collection, $response);
             if (!empty($collection)) {
-                return response()->json(
-                    $this->ok(
-                        __(
+                return response()->json($this->ok(__(
                             $this->language . '.index.success'
-                        ),
-                        $collection
-                    )
-                );
+                        ), $collection));
             }
         }
 
@@ -56,6 +51,7 @@ class BaseController extends Controller
         $responseMessage = $this->notFound(__(
             $this->language . '.index.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -68,18 +64,14 @@ class BaseController extends Controller
         $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
         if (!empty($collection)) {
             return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
+                $this->ok(__($this->language . '.index.success'
+                    ), $collection));
         }
 
         $responseMessage = $this->notFound(__(
             $this->language . '.index.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -104,6 +96,7 @@ class BaseController extends Controller
         $responseMessage = $this->notFound(__(
             $this->language . '.show.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -126,6 +119,7 @@ class BaseController extends Controller
             $this->language . '.delete.failed',
             ['id' => $id]
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -145,6 +139,7 @@ class BaseController extends Controller
             $this->language . '.restore.failed',
             ['id' => $id]
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -167,6 +162,7 @@ class BaseController extends Controller
             $this->language . '.clone.failed',
             ['id' => $id]
         ));
+        
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }
