@@ -353,4 +353,32 @@ class UserTest extends TestCase
         $this->assertEquals($searchTarget, $response['data']['users'][0]['first_name'], $searchTarget);
         $this->assertCount(1, $response['data']['users']);
     }
+
+    /**
+     * GET ../api/users?search=:queryString&relation=:relation
+     *
+     * @return void
+     */
+    public function testAdminUserCanSearchUserRelation()
+    {
+        $users = User::factory()->count(2)->create();
+        $findUser = $users->first();
+        $role1 = Role::create(['name' => 'test_role_1']);
+        $role2 = Role::create(['name' => 'test_role_2']);
+        $users->first()->assignRole($role1->name);
+        $users->last()->assignRole($role2->name);
+
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'users?search=' . $role1->name . '&relation=roles');
+
+
+        $response->assertJson($this->apiResponse(
+            true,
+            200,
+            __('users.index.success'),
+        ));
+
+        $this->assertEquals($findUser->email, $response['data']['users'][0]['email']);
+        $this->assertCount(1, $response['data']['users']);
+    }
 }
