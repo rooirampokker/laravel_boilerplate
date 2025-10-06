@@ -10,7 +10,10 @@ use Illuminate\Notifications\Notifiable;
 
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
+
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
+use App\Traits\SearchableTrait;
+use App\Traits\FilterableTrait;
 
 class User extends Authenticatable
 {
@@ -19,8 +22,10 @@ class User extends Authenticatable
     use HasRoles;
     use Notifiable;
     use softDeletes;
-    use SoftCascadeTrait;
     use HasUlids;
+    use SoftCascadeTrait;
+    use SearchableTrait;
+    use FilterableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +39,11 @@ class User extends Authenticatable
         'password'
     ];
 
+    public static $searchable = [
+        'email',
+        'first_name',
+        'last_name'
+    ];
     protected $softCascade = [
         'data'
     ];

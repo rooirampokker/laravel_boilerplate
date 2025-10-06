@@ -8,8 +8,11 @@
 - Positive/Negative feature tests for users and password resets
 - Soft-deletes with soft-cascading on deletes
 - API response messages fetched from locales
+- Search, order, and filtering by field and relations
+- Pagination
+- Ability to include (or not) relations in responses via an `includes=<relation_name>` parameter
 - Provision for localization of emails 
-- Implements UUIDs
+- Implements ULIDs
 - API documentation at https://laravel-boilerplate.readme.io/reference
 - Packages to:
     - Create seeds from existing database (https://github.com/orangehill/iseed)
@@ -19,10 +22,9 @@
 - MySQL
 ## Installation:
 ```0: Create database if it doesn't exist already or ensure that it's empty if it does exist (drop tables, leave database intact)
-   1: composer install
-   2: composer dumpautoload
-   3: php artisan cache:forget spatie.permission.cache
-   4: php artisan optimize:clear
-   5: php artisan migrate:fresh --seed
-   6: php artisan passport:install 
+   1: composer install -o
+   2: php artisan cache:forget spatie.permission.cache
+   3: php artisan optimize:clear
+   4: php artisan migrate:fresh --seed
+   5: php artisan passport:install 
    ```

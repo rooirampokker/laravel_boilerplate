@@ -63,4 +63,19 @@ if (!function_exists('getCursorPaginationData')) {
             ];
         }
     }
+
+    if (!function_exists('applyPagination')) {
+        function appendPaginationToResponse($collection, $response)
+        {
+            if (isset($response['pagination'])) {
+                $collection['pagination'] = $response['pagination'];
+            }
+
+            if (isset($response['cursor_pagination'])) {
+                $collection['cursor_pagination'] = $response['cursor_pagination'];
+            }
+
+            return $collection;
+        }
+    }
 }

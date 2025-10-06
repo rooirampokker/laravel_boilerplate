@@ -37,21 +37,21 @@ class BaseController extends Controller
     public function index()
     {
         $response = $this->repository->index($this->request);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
-        if (!empty($collection)) {
-            return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
+        if (!empty($response)) {
+            $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+            $collection = appendPaginationToResponse($collection, $response);
+            if (!empty($collection)) {
+                return response()->json($this->ok(__(
+                            $this->language . '.index.success'
+                        ), $collection));
+            }
         }
+
 
         $responseMessage = $this->notFound(__(
             $this->language . '.index.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -64,18 +64,14 @@ class BaseController extends Controller
         $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
         if (!empty($collection)) {
             return response()->json(
-                $this->ok(
-                    __(
-                        $this->language . '.index.success'
-                    ),
-                    $collection
-                )
-            );
+                $this->ok(__($this->language . '.index.success'
+                    ), $collection));
         }
 
         $responseMessage = $this->notFound(__(
             $this->language . '.index.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -86,17 +82,21 @@ class BaseController extends Controller
     public function show($id)
     {
         $response = $this->repository->show($id);
-        $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+        if (!empty($response)) {
+            $collection = $this->formatCollectionRelations($response, $this->request, new $this->model());
+            $collection = $this->updateResponseForShow($collection);
 
-        if (!empty($collection)) {
-            return response()->json($this->ok(__(
-                $this->language . '.show.success'
-            ), $collection));
+            if (!empty($collection)) {
+                return response()->json($this->ok(__(
+                    $this->language . '.show.success'
+                ), $collection));
+            }
         }
 
         $responseMessage = $this->notFound(__(
             $this->language . '.show.failed'
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -119,6 +119,7 @@ class BaseController extends Controller
             $this->language . '.delete.failed',
             ['id' => $id]
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -138,6 +139,7 @@ class BaseController extends Controller
             $this->language . '.restore.failed',
             ['id' => $id]
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 
@@ -160,6 +162,7 @@ class BaseController extends Controller
             $this->language . '.clone.failed',
             ['id' => $id]
         ));
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }

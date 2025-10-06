@@ -2,11 +2,13 @@
 
 namespace App\Http\Resources\api\v1;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use Spatie\Permission\Models\Role;
-
-class UserResource extends JsonResource
+class UserResource extends BaseResource
 {
+    public function __construct($resource)
+    {
+        parent::__construct($resource);
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -15,7 +17,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = [
+        $coreModel = [
             'id' => $this->id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -23,16 +25,11 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
-            'data' => $this->data,
-            'roles' => [],
         ];
 
-        if (count($this->roles)) {
-            //roles returns as collection when assigning new roles, but as array otherwise
-            $roles = is_array($this->roles) ? Role::hydrate($this->roles) : $this->roles;
-            $user['roles'] = RoleResource::collection($roles);
-        }
+        $relations['data'] = $this->router->allowedactions(['show', 'store', 'update'], 'data') ? $this->hydrateData($request, $this->data) : null;
+        $relations['roles'] = $this->router->allowedActions(['store'], 'roles') ? $this->setResource($this, 'roles') : null;
 
-        return $user;
+        return $this->composeResourceReturnArray($coreModel, $relations);
     }
 }

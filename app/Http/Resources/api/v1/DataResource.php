@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\api\v1;
 
-class PermissionResource extends BaseResource
+class DataResource extends BaseResource
 {
     public function __construct($resource)
     {
@@ -18,8 +18,7 @@ class PermissionResource extends BaseResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            $this->key => $this->value,
         ];
     }
 }

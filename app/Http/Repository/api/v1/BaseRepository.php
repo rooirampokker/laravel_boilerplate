@@ -3,20 +3,16 @@
 namespace App\Http\Repository\api\v1;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 use App\Http\Repository\api\v1\Interfaces\BaseRepositoryInterface;
-use App\Repository\Request;
 use App\Traits\ResponseTrait;
 use App\Services\DataService;
 
 class BaseRepository implements BaseRepositoryInterface
 {
     use ResponseTrait;
-
-    protected Request $request;
     protected DataService $dataService;
+    protected $model;
 
     public function __construct(Model $model)
     {
@@ -33,18 +29,24 @@ class BaseRepository implements BaseRepositoryInterface
         try {
             $limit = $request['limit'] ?? null;
             $trashed = $request['trashed'] ?? null;
+            $search = $request['search'] ?? null;
+            $relationshipList = $this->dataService->buildRelationshipListForEagerLoading($this->model, $request);
 
             $collection = $this->model
+                ->with($relationshipList)
+                ->when(($search), function ($query) use ($request) {
+                    return $query->search($request);
+                })
                 ->when(($trashed), function ($query) {
                     return $query->onlyTrashed();
                 })
+                ->filterResults($request)
                 ->paginate($limit);
 
             return paginateCollection($collection);
 
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+        } catch (\Throwable $exception) {
+            $this->logError($exception);
             return false;
         }
     }
@@ -59,8 +61,7 @@ class BaseRepository implements BaseRepositoryInterface
         try {
             return $this->model::withTrashed()->get();
         } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+            $this->logError($exception);
             return false;
         }
     }
@@ -82,7 +83,7 @@ class BaseRepository implements BaseRepositoryInterface
 
         } catch (\Throwable $exception) {
             $this->logError($exception);
-            return new $this->model();
+            return false;
         }
     }
 
@@ -94,7 +95,6 @@ class BaseRepository implements BaseRepositoryInterface
     {
         try {
             $data = $request->all();
-
             foreach ($data as $key => $value) {
                 //complex data types should be saved in the model-specific repository
                 if (!is_array($value)) {
@@ -102,7 +102,6 @@ class BaseRepository implements BaseRepositoryInterface
                 }
             }
             $this->model->save();
-
             return collect([$this->model]);
         } catch (\Throwable $exception) {
             $this->logError($exception);
@@ -150,7 +149,6 @@ class BaseRepository implements BaseRepositoryInterface
             return false;
         } catch (\Throwable $exception) {
             $this->logError($exception);
-
             return false;
         }
     }
@@ -165,7 +163,6 @@ class BaseRepository implements BaseRepositoryInterface
             $model = $this->model::withTrashed()->find($id);
             if ($model) {
                 $model->restore();
-
                 return true;
             }
 
