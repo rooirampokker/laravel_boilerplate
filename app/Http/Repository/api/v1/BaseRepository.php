@@ -46,9 +46,7 @@ class BaseRepository implements BaseRepositoryInterface
             return paginateCollection($collection);
 
         } catch (\Throwable $exception) {
-            dd($exception->getMessage());
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+            $this->logError($exception);
             return false;
         }
     }
@@ -63,8 +61,7 @@ class BaseRepository implements BaseRepositoryInterface
         try {
             return $this->model::withTrashed()->get();
         } catch (\Exception $exception) {
-            Log::error($exception->getMessage(), $exception->getTrace());
-
+            $this->logError($exception);
             return false;
         }
     }
@@ -86,7 +83,7 @@ class BaseRepository implements BaseRepositoryInterface
 
         } catch (\Throwable $exception) {
             $this->logError($exception);
-            return new $this->model();
+            return false;
         }
     }
 
@@ -98,7 +95,6 @@ class BaseRepository implements BaseRepositoryInterface
     {
         try {
             $data = $request->all();
-
             foreach ($data as $key => $value) {
                 //complex data types should be saved in the model-specific repository
                 if (!is_array($value)) {
@@ -106,7 +102,6 @@ class BaseRepository implements BaseRepositoryInterface
                 }
             }
             $this->model->save();
-
             return collect([$this->model]);
         } catch (\Throwable $exception) {
             $this->logError($exception);
@@ -154,7 +149,6 @@ class BaseRepository implements BaseRepositoryInterface
             return false;
         } catch (\Throwable $exception) {
             $this->logError($exception);
-
             return false;
         }
     }
@@ -169,7 +163,6 @@ class BaseRepository implements BaseRepositoryInterface
             $model = $this->model::withTrashed()->find($id);
             if ($model) {
                 $model->restore();
-
                 return true;
             }
 
