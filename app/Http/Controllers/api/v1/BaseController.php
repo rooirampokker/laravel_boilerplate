@@ -162,7 +162,7 @@ class BaseController extends Controller
             $this->language . '.clone.failed',
             ['id' => $id]
         ));
-        
+
         return response()->json($responseMessage, $responseMessage['code']);
     }
 }

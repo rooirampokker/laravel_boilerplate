@@ -3,7 +3,6 @@
 namespace App\Http\Repository\api\v1;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 use App\Http\Repository\api\v1\Interfaces\BaseRepositoryInterface;
 use App\Traits\ResponseTrait;
