@@ -5,7 +5,6 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Models\EavKey;
 
 trait FilterableTrait
 {
@@ -47,11 +46,6 @@ trait FilterableTrait
                 $relationshipName = Str::camel($modelName);
                 $query->whereHas($relationshipName, function (Builder $subQuery) use ($params, $tableName, $relationshipName) {
                     $modelName = ucfirst(Str::camel(Str::singular($relationshipName)));
-                    $related = $subQuery->getModel();
-                    //almost exclusively for attendeeActivities
-                    if (method_exists($related, 'scopeIsLastActivityByModel')) {
-                        $subQuery->isLastActivityByModel();
-                    }
                     foreach ($params as $filterField => $filterValue) {
                         if (
                             !in_array($filterField, $this->reservedFieldNamesArray, true) &&
@@ -113,8 +107,7 @@ trait FilterableTrait
             $shortClassName = explode('\\', $relatedModel);
             $shortClassName = end($shortClassName);
 
-            $eavKeys = EavKey::where('model_type', $relatedModel)
-                ->whereIn('key', array_keys($params))->get();
+            $eavKeys = $relatedModel::where('key', array_keys($params))->get();
             $query = $this->filterRelatedEAVTable($eavKeys, $params, $query) ?? $query;
         }
 
@@ -129,6 +122,7 @@ trait FilterableTrait
     private function filterRelatedEAVTable($eavKeys, $params, $query)
     {
         $availableEavKeys = array_flip($eavKeys->pluck('key')->toArray());
+
         $params = array_intersect_key($params, $availableEavKeys);
         if ($params) {
             return $query->whereHas('data', function ($queryBuilder) use ($eavKeys, $params) {
@@ -138,7 +132,7 @@ trait FilterableTrait
                             $key = $eavKeys->where('key', $filterField)->first();
                             $value = explode(',', $filterValue);
                             $query->whereIn('value', $value)
-                                ->where('eav_key_id', $key->id);
+                                ->where('key', $key);
                         }
                     }
                 });

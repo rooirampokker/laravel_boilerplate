@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources\api\v1;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class RoleResource extends JsonResource
+class RoleResource extends BaseResource
 {
+    public function __construct($resource)
+    {
+        parent::__construct($resource);
+    }
     /**
      * Transform the resource into an array.
      *
@@ -14,13 +16,18 @@ class RoleResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $coreModel = [
             'id' => $this->id,
             'name' => $this->name,
             'guard_name' => $this->guard_name,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'permissions' => PermissionResource::collection($this->permissions)
+            'updated_at' => $this->updated_at
         ];
+
+        $relations['permissions'] = $this->router->allowedActions([], 'permissions') ? $this->setResource($this, 'permissions') : null;
+        $relations['users'] = $this->router->allowedActions([], 'users') ? $this->setResource($this, 'users') : null;
+
+        return $this->composeResourceReturnArray($coreModel, $relations);
     }
+
 }

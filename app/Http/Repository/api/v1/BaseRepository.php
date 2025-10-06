@@ -41,6 +41,7 @@ class BaseRepository implements BaseRepositoryInterface
                 ->when(($trashed), function ($query) {
                     return $query->onlyTrashed();
                 })
+                ->filterResults($request)
                 ->paginate($limit);
 
             return paginateCollection($collection);
