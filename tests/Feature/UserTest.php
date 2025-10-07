@@ -147,6 +147,35 @@ class UserTest extends TestCase
     }
 
     /**
+     * GET ..api/users?includes=:relation_name
+     *
+     * USER CAN INCLUDE ADDITIONAL RELATIONS WITH AN INDEX
+     */
+    public function testIndexIncludesRelatedData()
+    {
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'users?includes=roles');
+
+        $response->assertStatus(200);
+        $this->assertArrayHasKey('roles', $response['data']['users'][0]);
+    }
+
+    /**
+     * GET ..api/users?includes=:relation_name.:relation_relation_name
+     *
+     * USER CAN INCLUDE NESTED RELATIONS WITH AN INDEX
+     */
+    public function testIndexIncludesNestedRelatedData()
+    {
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'users?includes=roles.permissions');
+
+        $response->assertStatus(200);
+        $this->assertArrayHasKey('roles', $response['data']['users'][0]);
+        $this->assertArrayHasKey('permissions', $response['data']['users'][0]['roles'][0]);
+    }
+
+    /**
      * GET ..api/users/all
      *
      * ALL RECORDS, INCLUDING DELETED ARE NOT RETURNED WITH INDEXALL
