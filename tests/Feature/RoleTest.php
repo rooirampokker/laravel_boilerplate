@@ -28,7 +28,8 @@ class RoleTest extends TestCase
      */
     public function testUserCanGetRoleIndex()
     {
-        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'roles');
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'roles');
 
         $response->assertJson($this->apiResponse(
             true,
@@ -38,13 +39,14 @@ class RoleTest extends TestCase
     }
 
     /**
-     * GET ../api/roles/{role_id}
+     * GET ../api/roles/:role_id
      *
      * @return void
      */
     public function testUserCanGetRoleShow()
     {
-        $response = $this->actingAs($this->admin, 'api')->getJson($this->apiVersion . 'roles/' . $this->adminRole->id);
+        $response = $this->actingAs($this->admin, 'api')
+            ->getJson($this->apiVersion . 'roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -52,6 +54,7 @@ class RoleTest extends TestCase
             __('roles.show.success'),
         ));
     }
+
     /**
      * POST ../api/roles
      *
@@ -59,10 +62,12 @@ class RoleTest extends TestCase
      */
     public function testUserCanStoreRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles', [
-            'name' => 'new_role',
-            'guard_name' => 'api'
-        ]);
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson($this->apiVersion . 'roles',
+                [
+                    'name' => 'new_role',
+                    'guard_name' => 'api'
+                ]);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -70,16 +75,19 @@ class RoleTest extends TestCase
             __('roles.store.success'),
         ));
     }
+
     /**
-     * UPDATE ../api/roles/{role_id}
+     * PUT ../api/roles/:role_id
      *
      * @return void
      */
     public function testUserCanUpdateRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->putJson($this->apiVersion . 'roles/' . $this->adminRole->id, [
-            'name' => 'new_role'
-        ]);
+        $response = $this->actingAs($this->admin, 'api')
+            ->putJson($this->apiVersion . 'roles/' . $this->adminRole->id,
+                [
+                    'name' => 'new_role'
+                ]);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -87,14 +95,16 @@ class RoleTest extends TestCase
             __('roles.update.success'),
         ));
     }
+
     /**
-     * DELETE ../api/roles/{role_id}
+     * DELETE ../api/roles/:role_id
      *
      * @return void
      */
     public function testUserCanDeleteRole()
     {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id);
+        $response = $this->actingAs($this->admin, 'api')
+            ->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id);
 
         $response->assertJson($this->apiResponse(
             true,
@@ -104,7 +114,7 @@ class RoleTest extends TestCase
     }
 
     /**
-     * POST ../api/roles/{role_id}/permissions
+     * POST ../api/roles/:role_id/permissions
      *
      * @return void
      */
@@ -115,35 +125,48 @@ class RoleTest extends TestCase
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions', [
-            'permissions' => $permissionIDArray
-        ]);
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions',
+                [
+                    'permissions' => $permissionIDArray
+                ]);
 
         $response->assertJson($this->apiResponse(
             true,
             200,
-            __('roles.permissions.create.success', ['role_id' => $this->adminRole->id, 'permission_id' => implode(',', $permissionIDArray)]),
+            __('roles.permissions.create.success',
+                [
+                    'role_id' => $this->adminRole->id,
+                    'permission_id' => implode(',', $permissionIDArray)
+                ]),
         ));
     }
 
     /**
-     * DELETE ../api/roles/{role_id}/permissions
+     * DELETE ../api/roles/:role_id/permissions
      *
      * @return void
      */
     public function testPermissionsCanBeRemovedFromRoles()
     {
-        $response = $this->actingAs($this->admin, 'api')->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/' . $this->adminRole->permissions->first()->id);
+        $roleToUpdate = $this->adminRole->permissions->first()->id;
+
+        $response = $this->actingAs($this->admin, 'api')
+            ->deleteJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/' . $roleToUpdate);
 
         $response->assertJson($this->apiResponse(
             true,
             200,
-            __('roles.permissions.delete.success', ['role_id' => $this->adminRole->id, 'permission_id' => $this->adminRole->permissions->first()->id])
+            __('roles.permissions.delete.success',
+                [
+                    'role_id' => $this->adminRole->id,
+                    'permission_id' => $this->adminRole->permissions->first()->id
+                ])
         ));
     }
 
     /**
-     * POST ../api/roles/{role_id}/permissions/sync
+     * POST ../api/roles/:role_id/permissions/sync
      *
      * @return void
      */
@@ -154,14 +177,20 @@ class RoleTest extends TestCase
 
         $permissionIDArray = [$permission1->id, $permission2->id];
 
-        $response = $this->actingAs($this->admin, 'api')->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/sync', [
-            'permissions' => $permissionIDArray
-        ]);
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson($this->apiVersion . 'roles/' . $this->adminRole->id . '/permissions/sync',
+                [
+                    'permissions' => $permissionIDArray
+                ]);
 
         $response->assertJson($this->apiResponse(
             true,
             200,
-            __('roles.permissions.sync.success', ['role_id' => $this->adminRole->id, 'permission_id' => implode(',', $permissionIDArray)]),
+            __('roles.permissions.sync.success',
+                [
+                    'role_id' => $this->adminRole->id,
+                    'permission_id' => implode(',', $permissionIDArray)
+                ]),
         ));
     }
 }
